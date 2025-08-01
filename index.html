@@ -1016,20 +1016,20 @@
         let stripe = null;
         const STRIPE_PUBLISHABLE_KEY = 'pk_test_51LpKw0CtSj5okMU0TjB37Dyhmw8KgGnVBg4euuYX0w9aaf2Z7zpwJMjzYNJrg9Pe2N6u5NFAs2GRXTwiSynEnDum00XefsKYzD';
         
-        // Prix des plans (tes IDs Stripe réels)
+        // Prix des plans (tes NOUVEAUX Price IDs Stripe VALIDES)
         const PLAN_PRICES = {
             'Néophyte': {
-                priceId: 'price_1RqmVSCtSj5okMU0c4256A4P',
+                priceId: 'price_1R67tECtSj5okMU0H2QgNHTv',
                 amount: 2400,
                 currency: 'eur'
             },
             'Métrios': {
-                priceId: 'price_1RqmVyCtSj5okMU0tQL3vHRu',
+                priceId: 'price_1R67taCtSj5okMU0lVFBu6s5',
                 amount: 4900,
                 currency: 'eur'
             },
             'Archon': {
-                priceId: 'price_1RqmWJCtSj5okMU0IIz58109',
+                priceId: 'price_1R67tnCtSj5okMU0NJleCRfn',
                 amount: 9700,
                 currency: 'eur'
             }
@@ -1385,7 +1385,10 @@
             try {
                 showNotification('💳 Création de la session de paiement...');
                 
-                // Appel à ta fonction Netlify
+                // Appel à ta fonction Netlify avec gestion d'erreur améliorée
+                console.log('🌐 URL de base:', window.location.origin);
+                console.log('📡 Appel API vers:', '/.netlify/functions/create-checkout-session');
+                
                 const response = await fetch('/.netlify/functions/create-checkout-session', {
                     method: 'POST',
                     headers: {
@@ -1406,8 +1409,14 @@
                     })
                 });
                 
+                console.log('📊 Response status:', response.status);
+                console.log('📊 Response headers:', response.headers);
+                
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    console.error('❌ Erreur HTTP:', response.status, response.statusText);
+                    const errorText = await response.text();
+                    console.error('❌ Contenu erreur:', errorText);
+                    throw new Error(`HTTP error! status: ${response.status} - ${errorText || response.statusText}`);
                 }
                 
                 const session = await response.json();
@@ -1667,14 +1676,14 @@
                     }
                 });
                 
-                console.log('✅ Hermès Tool initialisé avec Stripe intégré !');
+                console.log('✅ Hermès Tool initialisé avec Stripe et Price IDs VALIDES !');
                 
             } catch (error) {
                 console.error('❌ Erreur d\'initialisation:', error);
             }
         });
         
-        console.log('🎯 Hermès Tool - Prêt pour la production avec Stripe !');
+        console.log('🎯 Hermès Tool - Prêt pour la production avec Stripe et Price IDs VALIDES !');
     </script>
 </body>
 </html>
