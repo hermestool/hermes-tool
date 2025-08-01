@@ -1,0 +1,1680 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hermès Tool - Automatise ton Vinted avec l'IA</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #0a0a0c 0%, #1a1a1e 100%);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            font-size: 2rem;
+            background: linear-gradient(45deg, #ff8c42, #f57c00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav a:hover {
+            color: #ff8c42;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #ff8c42, #f57c00);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 140, 66, 0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #e5e5e5;
+            border: 2px solid #ff8c42;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-secondary:hover {
+            background: #ff8c42;
+            transform: translateY(-2px);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #0a0a0c 0%, #1a1a1e 100%);
+            color: #e5e5e5;
+            padding: 120px 0 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="50" cy="10" r="1" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ff8c42, #f57c00, #ff9a57);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+        
+        .play-button {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #ff8c42, #f57c00);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(255, 140, 66, 0.3);
+        }
+        
+        .play-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(255, 140, 66, 0.4);
+        }
+        
+        .play-button i {
+            font-size: 2rem;
+            color: white;
+            margin-left: 5px;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #0a0a0c;
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border: 1px solid #f0f0f0;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ff8c42, #f57c00);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-icon i {
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #0a0a0c;
+        }
+        
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* Why Section */
+        .why-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+        
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+        
+        .why-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .why-icon {
+            width: 12px;
+            height: 12px;
+            background: linear-gradient(135deg, #ff8c42, #f57c00);
+            border-radius: 50%;
+            margin-top: 8px;
+            flex-shrink: 0;
+        }
+        
+        .why-item p {
+            font-size: 1.1rem;
+            color: #0a0a0c;
+            font-weight: 500;
+        }
+        
+        /* Pricing Section */
+        .pricing {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .pricing-card {
+            background: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .pricing-card.popular {
+            border-color: #ff8c42;
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(255, 140, 66, 0.2);
+        }
+        
+        .pricing-card.popular::before {
+            content: 'Populaire';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ff8c42, #f57c00);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        
+        .pricing-card.popular:hover {
+            transform: scale(1.05) translateY(-5px);
+        }
+        
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #0a0a0c;
+        }
+        
+        .price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #0a0a0c;
+            margin-bottom: 0.5rem;
+        }
+        
+        .price-period {
+            font-size: 1rem;
+            color: #666;
+            font-weight: normal;
+        }
+        
+        .pricing-features {
+            list-style: none;
+            margin: 2rem 0;
+            text-align: left;
+        }
+        
+        .pricing-features li {
+            padding: 0.5rem 0;
+            color: #666;
+            display: flex;
+            align-items: center;
+        }
+        
+        .pricing-features li i {
+            color: #ff8c42;
+            margin-right: 0.5rem;
+            width: 16px;
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #0a0a0c 0%, #1a1a1e 100%);
+            color: #e5e5e5;
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .testimonial-card {
+            background: rgba(255,255,255,0.1);
+            padding: 2rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        
+        .testimonial-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ff8c42, #f57c00);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        
+        .testimonial-icon i {
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .testimonial-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .testimonial-card p {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem;
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+            border-radius: 8px;
+            z-index: 9999;
+            font-weight: bold;
+        }
+        
+        .page {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            min-height: 100vh;
+            width: 100%;
+            position: relative;
+        }
+        
+        .page.active {
+            display: block !important;
+            opacity: 1 !important;
+            min-height: 100vh !important;
+            width: 100% !important;
+        }
+        
+        /* Modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.8);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #8898aa;
+            cursor: pointer;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { 
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            50% { 
+                transform: scale(1.05);
+                opacity: 1;
+            }
+        }
+        
+        .fade-in {
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .pricing-card.popular {
+                transform: none;
+            }
+            
+            .pricing-card.popular:hover {
+                transform: translateY(-5px);
+            }
+        }
+        
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <!-- Page d'accueil -->
+    <div id="homePage" class="page active">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <a href="#" class="logo" onclick="showHome()">
+                        <i class="fas fa-bolt"></i>
+                        HERMÈS TOOL
+                    </a>
+                    <nav class="nav">
+                        <a href="#fonctionnalites" onclick="scrollToSection('fonctionnalites')">Fonctionnalités</a>
+                        <a href="#tarifs" onclick="scrollToSection('tarifs')">Tarifs</a>
+                        <a href="#pourquoi" onclick="scrollToSection('pourquoi')">Pourquoi nous</a>
+                        <a href="#temoignages" onclick="scrollToSection('temoignages')">Témoignages</a>
+                        <button class="btn-primary" onclick="showLogin()">Se connecter</button>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content fade-in">
+                    <h1>L'outil ultime pour automatiser ton Vinted</h1>
+                    <p>Vends plus, bosse moins. Hermès tool gère tout pour toi : reposts automatiques, dashboard détaillé, messages IA, génération d'image, recherche produits gagnants selon ta niche, compta intégrée...</p>
+                    <div class="hero-buttons">
+                        <button class="btn-primary" onclick="showSignup()">Essayer gratuitement</button>
+                        <a href="#fonctionnalites" class="btn-secondary" onclick="scrollToSection('fonctionnalites')">Voir les fonctionnalités</a>
+                    </div>
+                    <div class="play-button" onclick="playDemo()">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features" id="fonctionnalites">
+            <div class="container">
+                <h2 class="section-title">Fonctionnalités puissantes</h2>
+                <p class="section-subtitle">Tout ce dont tu as besoin pour dominer Vinted</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <h3>Reposts automatiques intelligents</h3>
+                        <p>Reposts optimisés selon les heures de pointe et l'algorithme Vinted pour maximiser ta visibilité.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3>Relances IA pour les ravars</h3>
+                        <p>Messages automatiques personnalisés et intelligents pour convertir tes visiteurs en acheteurs.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <h3>Génération d'image IA automatique</h3>
+                        <p>Création automatique de listings avec photos optimisées par IA pour un rendu professionnel.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Dashboard avec analyses poussées</h3>
+                        <p>Statistiques détaillées, tendances de vente et insights pour optimiser ta stratégie.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-search-dollar"></i>
+                        </div>
+                        <h3>Détection ventes + republication auto</h3>
+                        <p>Détection automatique des ventes et republication intelligente pour maintenir ton stock visible.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <h3>Comptabilité automatique</h3>
+                        <p>Suivi automatique de tes revenus, frais et bénéfices avec identification des produits les plus rentables.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Section -->
+        <section class="why-section" id="pourquoi">
+            <div class="container">
+                <h2 class="section-title">Pourquoi Hermès Tool ?</h2>
+                <p class="section-subtitle">La différence qui fait la différence</p>
+                
+                <div class="why-grid">
+                    <div class="why-item">
+                        <div class="why-icon"></div>
+                        <p>Plus rapide que Clemz</p>
+                    </div>
+                    <div class="why-item">
+                        <div class="why-icon"></div>
+                        <p>Interface épurée et claire</p>
+                    </div>
+                    <div class="why-item">
+                        <div class="why-icon"></div>
+                        <p>Beaucoup plus de fonctionnalités</p>
+                    </div>
+                    <div class="why-item">
+                        <div class="why-icon"></div>
+                        <p>Support actif & réactif</p>
+                    </div>
+                    <div class="why-item">
+                        <div class="why-icon"></div>
+                        <p>Pensé pour l'avenir (IA, automation, multi-corps)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section class="pricing" id="tarifs">
+            <div class="container">
+                <h2 class="section-title">Tarifs</h2>
+                <p class="section-subtitle">Choisis le plan qui te correspond</p>
+                
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <h3>Néophyte</h3>
+                        <div class="price">24€<span class="price-period">/mois</span></div>
+                        <ul class="pricing-features">
+                            <li><i class="fas fa-check"></i> Reposts automatiques</li>
+                            <li><i class="fas fa-check"></i> Dashboard basique</li>
+                            <li><i class="fas fa-check"></i> Support email</li>
+                            <li><i class="fas fa-check"></i> 100 articles max</li>
+                        </ul>
+                        <button class="btn-primary" onclick="selectPlan('Néophyte')">Choisir ce plan</button>
+                    </div>
+                    
+                    <div class="pricing-card popular">
+                        <h3>Métrios</h3>
+                        <div class="price">49€<span class="price-period">/mois</span></div>
+                        <ul class="pricing-features">
+                            <li><i class="fas fa-check"></i> Toutes les fonctionnalités Néophyte</li>
+                            <li><i class="fas fa-check"></i> IA pour les relances</li>
+                            <li><i class="fas fa-check"></i> Génération d'images</li>
+                            <li><i class="fas fa-check"></i> Analyses avancées</li>
+                            <li><i class="fas fa-check"></i> 500 articles max</li>
+                        </ul>
+                        <button class="btn-primary" onclick="selectPlan('Métrios')">Choisir ce plan</button>
+                    </div>
+                    
+                    <div class="pricing-card">
+                        <h3>Archon</h3>
+                        <div class="price">97€<span class="price-period">/mois</span></div>
+                        <ul class="pricing-features">
+                            <li><i class="fas fa-check"></i> Toutes les fonctionnalités</li>
+                            <li><i class="fas fa-check"></i> Multi-comptes</li>
+                            <li><i class="fas fa-check"></i> Support prioritaire</li>
+                            <li><i class="fas fa-check"></i> Articles illimités</li>
+                            <li><i class="fas fa-check"></i> API access</li>
+                        </ul>
+                        <button class="btn-primary" onclick="selectPlan('Archon')">Choisir ce plan</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="testimonials" id="temoignages">
+            <div class="container">
+                <h2 class="section-title">Ce qu'ils disent</h2>
+                <p class="section-subtitle">Des résultats qui parlent d'eux-mêmes</p>
+                
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div class="testimonial-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Je gagne 2X plus depuis Hermès Tool</h3>
+                        <p>"Depuis que j'utilise Hermès Tool, mes ventes ont explosé ! L'automation me fait gagner un temps fou et les fonctionnalités IA sont bluffantes."</p>
+                    </div>
+                    
+                    <div class="testimonial-card">
+                        <div class="testimonial-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <h3>Un business full passif</h3>
+                        <p>"Je peux enfin me concentrer sur le sourcing pendant qu'Hermès Tool gère tout le reste. C'est devenu mon bras droit indispensable."</p>
+                    </div>
+                    
+                    <div class="testimonial-card">
+                        <div class="testimonial-icon">
+                            <i class="fas fa-piggy-bank"></i>
+                        </div>
+                        <h3>Je gagne de l'argent en dormant</h3>
+                        <p>"L'automatisation est tellement poussée que je génère des revenus même quand je dors. Hermès Tool a révolutionné ma façon de vendre."</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section style="padding: 40px 0; background: white;">
+            <div class="container">
+                <div style="background: linear-gradient(135deg, #ff8c42, #f57c00); color: white; border-radius: 20px; padding: 2rem; text-align: center; max-width: 800px; margin: 0 auto; box-shadow: 0 10px 30px rgba(255, 140, 66, 0.3);">
+                    <h2 style="color: white; margin-bottom: 1rem;">🚀 Prêt à automatiser ton Vinted ?</h2>
+                    <p style="color: rgba(255,255,255,0.9); margin-bottom: 1.5rem;">Rejoins des centaines de vendeurs qui font confiance à Hermès Tool pour maximiser leurs revenus</p>
+                    <button class="btn-primary" onclick="showSignup()" style="background: white; color: #ff8c42; padding: 1rem 2rem; font-size: 1.1rem;">
+                        <i class="fas fa-rocket" style="margin-right: 0.5rem;"></i>
+                        Commencer maintenant
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer style="background: #0a0a0c; color: #e5e5e5; padding: 60px 0 30px;">
+            <div class="container">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; margin-bottom: 3rem;">
+                    
+                    <!-- Logo section -->
+                    <div>
+                        <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                            <i class="fas fa-bolt" style="font-size: 2rem; color: #ff8c42; margin-right: 0.5rem;"></i>
+                            <span style="font-size: 1.5rem; font-weight: bold; color: white;">HERMÈS TOOL</span>
+                        </div>
+                        <p style="color: #999; line-height: 1.6; margin-bottom: 1.5rem;">L'outil ultime pour automatiser ton Vinted et maximiser tes revenus grâce à l'IA.</p>
+                        <div style="display: flex; gap: 1rem;">
+                            <a href="#" style="width: 40px; height: 40px; background: rgba(255, 140, 66, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #ff8c42; transition: all 0.3s; text-decoration: none;" onmouseover="this.style.background='#ff8c42'; this.style.color='white'" onmouseout="this.style.background='rgba(255, 140, 66, 0.1)'; this.style.color='#ff8c42'">
+                                <i class="fab fa-discord"></i>
+                            </a>
+                            <a href="#" style="width: 40px; height: 40px; background: rgba(255, 140, 66, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #ff8c42; transition: all 0.3s; text-decoration: none;" onmouseover="this.style.background='#ff8c42'; this.style.color='white'" onmouseout="this.style.background='rgba(255, 140, 66, 0.1)'; this.style.color='#ff8c42'">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" style="width: 40px; height: 40px; background: rgba(255, 140, 66, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #ff8c42; transition: all 0.3s; text-decoration: none;" onmouseover="this.style.background='#ff8c42'; this.style.color='white'" onmouseout="this.style.background='rgba(255, 140, 66, 0.1)'; this.style.color='#ff8c42'">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Produit -->
+                    <div>
+                        <h4 style="color: #ff8c42; margin-bottom: 1.5rem; font-size: 1.1rem; font-weight: 600;">Produit</h4>
+                        <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                            <a href="#fonctionnalites" onclick="scrollToSection('fonctionnalites')" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#ff8c42'" onmouseout="this.style.color='#ccc'">Fonctionnalités</a>
+                            <a href="#tarifs" onclick="scrollToSection('tarifs')" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#ff8c42'" onmouseout="this.style.color='#ccc'">Tarifs</a>
+                            <a href="#" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#ff8c42'" onmouseout="this.style.color='#ccc'">API</a>
+                            <a href="#" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#ff8c42'" onmouseout="this.style.color='#ccc'">Roadmap</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Support -->
+                    <div>
+                        <h4 style="color: #ff8c42; margin-bottom: 1.5rem; font-size: 1.1rem; font-weight: 600;">Support</h4>
+                        <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                            <a href="#" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#ff8c42'" onmouseout="this.style.color='#ccc'">Documentation</a>
+                            <a href="#" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#ff8c42'" onmouseout="this.style.color='#ccc'">FAQ</a>
+                            <a href="#" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#ff8c42'" onmouseout="this.style.color='#ccc'">Support client</a>
+                            <a href="#" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#ff8c42'" onmouseout="this.style.color='#ccc'">hello@hermestool.com</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Légal -->
+                    <div>
+                        <h4 style="color: #ff8c42; margin-bottom: 1.5rem; font-size: 1.1rem; font-weight: 600;">Légal</h4>
+                        <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                            <a href="#" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#ff8c42'" onmouseout="this.style.color='#ccc'">Conditions d'utilisation</a>
+                            <a href="#" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#ff8c42'" onmouseout="this.style.color='#ccc'">Politique de confidentialité</a>
+                            <a href="#" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#ff8c42'" onmouseout="this.style.color='#ccc'">Mentions légales</a>
+                            <a href="#" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#ff8c42'" onmouseout="this.style.color='#ccc'">Cookies</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Séparateur -->
+                <div style="height: 1px; background: linear-gradient(90deg, transparent, rgba(255, 140, 66, 0.3), transparent); margin: 2rem 0;"></div>
+                
+                <!-- Copyright -->
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                    <div style="color: #999; font-size: 0.9rem;">
+                        &copy; 2024 Hermès Tool. Tous droits réservés.
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; color: #999; font-size: 0.9rem;">
+                        <span>Fait avec</span>
+                        <i class="fas fa-heart" style="color: #ff8c42; animation: pulse 2s infinite;"></i>
+                        <span>en France</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Page de connexion -->
+    <div id="loginPage" class="page">
+        <div style="min-height: 100vh; background: linear-gradient(135deg, #0a0a0c 0%, #1a1a1e 100%); display: flex; align-items: center; justify-content: center; padding: 20px; position: relative; overflow: hidden;">
+            
+            <!-- Effet de grain/texture de fond -->
+            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><defs><pattern id=\"grain\" width=\"100\" height=\"100\" patternUnits=\"userSpaceOnUse\"><circle cx=\"25\" cy=\"25\" r=\"1\" fill=\"%23ffffff\" opacity=\"0.1\"/><circle cx=\"75\" cy=\"75\" r=\"1\" fill=\"%23ffffff\" opacity=\"0.1\"/><circle cx=\"50\" cy=\"10\" r=\"1\" fill=\"%23ffffff\" opacity=\"0.1\"/></pattern></defs><rect width=\"100\" height=\"100\" fill=\"url(%23grain)\"/></svg>'); opacity: 0.1;"></div>
+            
+            <!-- Forme géométrique décorative -->
+            <div style="position: absolute; top: 20%; right: 10%; width: 200px; height: 200px; background: linear-gradient(45deg, rgba(255, 140, 66, 0.1), rgba(245, 124, 0, 0.1)); border-radius: 50%; filter: blur(100px);"></div>
+            <div style="position: absolute; bottom: 20%; left: 10%; width: 300px; height: 300px; background: linear-gradient(45deg, rgba(255, 140, 66, 0.05), rgba(245, 124, 0, 0.05)); border-radius: 50%; filter: blur(120px);"></div>
+            
+            <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 24px; padding: 3rem; max-width: 450px; width: 100%; position: relative; z-index: 2; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);">
+                
+                <!-- Header du formulaire -->
+                <div style="text-align: center; margin-bottom: 2.5rem;">
+                    <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #ff8c42, #f57c00); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; box-shadow: 0 10px 30px rgba(255, 140, 66, 0.3);">
+                        <i class="fas fa-bolt" style="font-size: 2rem; color: white;"></i>
+                    </div>
+                    <h2 style="color: white; font-size: 2rem; font-weight: bold; margin-bottom: 0.5rem;">Bienvenue sur</h2>
+                    <div style="background: linear-gradient(45deg, #ff8c42, #f57c00, #ff9a57); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.5rem; font-weight: bold;">HERMÈS TOOL</div>
+                    <p style="color: rgba(255, 255, 255, 0.7); margin-top: 1rem; font-size: 1rem;">Connecte-toi pour automatiser ton Vinted</p>
+                </div>
+                
+                <!-- Formulaire -->
+                <form id="loginForm" onsubmit="handleLogin(event)" style="space-y: 1.5rem;">
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; color: rgba(255, 255, 255, 0.9); font-weight: 600; font-size: 0.9rem;">Email</label>
+                        <div style="position: relative;">
+                            <i class="fas fa-envelope" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #ff8c42; z-index: 1;"></i>
+                            <input type="email" id="loginEmail" placeholder="admin@hermestool.com" value="admin@hermestool.com" style="width: 100%; padding: 1rem 1rem 1rem 3rem; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 140, 66, 0.3); border-radius: 12px; color: white; font-size: 1rem; transition: all 0.3s; backdrop-filter: blur(10px); box-sizing: border-box;" onfocus="this.style.borderColor='#ff8c42'; this.style.background='rgba(255, 255, 255, 0.15)'" onblur="this.style.borderColor='rgba(255, 140, 66, 0.3)'; this.style.background='rgba(255, 255, 255, 0.1)'">
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; color: rgba(255, 255, 255, 0.9); font-weight: 600; font-size: 0.9rem;">Mot de passe</label>
+                        <div style="position: relative;">
+                            <i class="fas fa-lock" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #ff8c42; z-index: 1;"></i>
+                            <input type="password" id="loginPassword" placeholder="••••••••" value="admin123" style="width: 100%; padding: 1rem 1rem 1rem 3rem; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 140, 66, 0.3); border-radius: 12px; color: white; font-size: 1rem; transition: all 0.3s; backdrop-filter: blur(10px); box-sizing: border-box;" onfocus="this.style.borderColor='#ff8c42'; this.style.background='rgba(255, 255, 255, 0.15)'" onblur="this.style.borderColor='rgba(255, 140, 66, 0.3)'; this.style.background='rgba(255, 255, 255, 0.1)'">
+                        </div>
+                    </div>
+                    
+                    <!-- Boutons -->
+                    <button type="submit" class="btn-primary" style="width: 100%; margin-bottom: 1rem; font-size: 1.1rem; padding: 1.2rem; position: relative; overflow: hidden;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 15px 35px rgba(255, 140, 66, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(255, 140, 66, 0.3)'">
+                        <i class="fas fa-sign-in-alt" style="margin-right: 0.5rem;"></i>
+                        Se connecter
+                    </button>
+                </form>
+                
+                <button onclick="showHome()" style="width: 100%; background: transparent; border: 2px solid rgba(255, 255, 255, 0.3); color: rgba(255, 255, 255, 0.9); padding: 1rem 2rem; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 1rem; transition: all 0.3s; backdrop-filter: blur(10px);" onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'; this.style.borderColor='rgba(255, 255, 255, 0.5)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent'; this.style.borderColor='rgba(255, 255, 255, 0.3)'; this.style.transform='translateY(0)'">
+                    <i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i>
+                    Retour à l'accueil
+                </button>
+                
+                <!-- Infos de demo -->
+                <div style="background: rgba(76, 175, 80, 0.1); border: 1px solid rgba(76, 175, 80, 0.3); border-radius: 12px; padding: 1rem; margin-top: 2rem; text-align: center;">
+                    <div style="color: #4caf50; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;">
+                        <i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>
+                        Compte de démonstration
+                    </div>
+                    <div style="color: rgba(255, 255, 255, 0.8); font-size: 0.8rem; line-height: 1.4;">
+                        Utilise les identifiants pré-remplis pour tester toutes les fonctionnalités
+                    </div>
+                </div>
+                
+                <!-- Lien inscription -->
+                <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                    <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 1rem;">Pas encore de compte ?</p>
+                    <button onclick="showSignup()" style="background: transparent; border: 2px solid #4caf50; color: #4caf50; padding: 0.8rem 2rem; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 1rem; transition: all 0.3s;" onmouseover="this.style.background='#4caf50'; this.style.color='white'" onmouseout="this.style.background='transparent'; this.style.color='#4caf50'">
+                        <i class="fas fa-user-plus" style="margin-right: 0.5rem;"></i>
+                        Créer un compte
+                    </button>
+                </div>
+                
+                <!-- Features preview -->
+                <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                    <div style="color: rgba(255, 255, 255, 0.7); font-size: 0.8rem; text-align: center; margin-bottom: 1rem;">Accès instantané à :</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.8rem;">
+                        <div style="color: rgba(255, 255, 255, 0.8); display: flex; align-items: center;">
+                            <i class="fas fa-sync-alt" style="color: #ff8c42; margin-right: 0.5rem; font-size: 0.7rem;"></i>
+                            Reposts auto
+                        </div>
+                        <div style="color: rgba(255, 255, 255, 0.8); display: flex; align-items: center;">
+                            <i class="fas fa-robot" style="color: #ff8c42; margin-right: 0.5rem; font-size: 0.7rem;"></i>
+                            Messages IA
+                        </div>
+                        <div style="color: rgba(255, 255, 255, 0.8); display: flex; align-items: center;">
+                            <i class="fas fa-chart-line" style="color: #ff8c42; margin-right: 0.5rem; font-size: 0.7rem;"></i>
+                            Analytics
+                        </div>
+                        <div style="color: rgba(255, 255, 255, 0.8); display: flex; align-items: center;">
+                            <i class="fas fa-image" style="color: #ff8c42; margin-right: 0.5rem; font-size: 0.7rem;"></i>
+                            Génération IA
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page dashboard -->
+    <div id="dashboardPage" class="page">
+        <!-- Le contenu sera injecté par JavaScript -->
+    </div>
+
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        console.log('🚀 Hermès Tool - Version Netlify avec vraie intégration Stripe !');
+        
+        // Variables globales
+        let currentPage = 'home';
+        let selectedPlan = 'Métrios'; // Plan par défaut
+        
+        // SYSTÈME DE STOCKAGE DES UTILISATEURS (en mémoire pour la démo)
+        let usersDatabase = {
+            // Utilisateur admin par défaut
+            'admin@hermestool.com': {
+                email: 'admin@hermestool.com',
+                password: 'admin123',
+                firstName: 'Admin',
+                lastName: 'Hermès',
+                plan: 'Archon',
+                createdAt: '2024-01-01',
+                isActive: true,
+                vintedConnected: false,
+                stats: {
+                    totalSales: 847,
+                    monthlyRevenue: 2847,
+                    totalReposts: 1847
+                }
+            }
+        };
+        
+        // Utilisateur actuellement connecté
+        let currentUser = null;
+        
+        // Configuration Stripe (tes vraies clés)
+        let stripe = null;
+        const STRIPE_PUBLISHABLE_KEY = 'pk_test_51LpKw0CtSj5okMU0TjB37Dyhmw8KgGnVBg4euuYX0w9aaf2Z7zpwJMjzYNJrg9Pe2N6u5NFAs2GRXTwiSynEnDum00XefsKYzD';
+        
+        // Prix des plans (tes IDs Stripe réels)
+        const PLAN_PRICES = {
+            'Néophyte': {
+                priceId: 'price_1RqmVSCtSj5okMU0c4256A4P',
+                amount: 2400,
+                currency: 'eur'
+            },
+            'Métrios': {
+                priceId: 'price_1RqmVyCtSj5okMU0tQL3vHRu',
+                amount: 4900,
+                currency: 'eur'
+            },
+            'Archon': {
+                priceId: 'price_1RqmWJCtSj5okMU0IIz58109',
+                amount: 9700,
+                currency: 'eur'
+            }
+        };
+        
+        // Initialiser Stripe
+        function initializeStripe() {
+            try {
+                if (typeof Stripe !== 'undefined') {
+                    stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+                    console.log('✅ Stripe initialisé');
+                } else {
+                    console.log('❌ Stripe non disponible');
+                }
+            } catch (error) {
+                console.error('❌ Erreur initialisation Stripe:', error);
+            }
+        }
+        
+        // Fonction pour afficher les notifications
+        function showNotification(message, type = 'success') {
+            // Supprimer les notifications existantes
+            const existingNotifs = document.querySelectorAll('.notification');
+            existingNotifs.forEach(notif => notif.remove());
+            
+            const notif = document.createElement('div');
+            notif.className = 'notification';
+            notif.textContent = message;
+            
+            if (type === 'error') {
+                notif.style.background = 'linear-gradient(135deg, #f44336, #d32f2f)';
+            }
+            
+            document.body.appendChild(notif);
+            
+            setTimeout(() => {
+                if (notif.parentNode) {
+                    notif.remove();
+                }
+            }, 3000);
+        }
+        
+        // Fonction pour changer de page avec gestion d'erreurs
+        function changePage(pageName) {
+            try {
+                console.log(`📄 Changement vers: ${pageName}`);
+                
+                // Cacher toutes les pages
+                document.querySelectorAll('.page').forEach(page => {
+                    page.classList.remove('active');
+                });
+                
+                // Afficher la page demandée
+                const targetPage = document.getElementById(pageName + 'Page');
+                if (targetPage) {
+                    targetPage.classList.add('active');
+                    currentPage = pageName;
+                    console.log(`✅ Page ${pageName} affichée`);
+                } else {
+                    console.error(`❌ Page ${pageName}Page non trouvée !`);
+                    showNotification(`Erreur: Page ${pageName} non trouvée`, 'error');
+                }
+            } catch (error) {
+                console.error('❌ Erreur changement de page:', error);
+                showNotification('Erreur lors du changement de page', 'error');
+            }
+        }
+        
+        // Navigation
+        function showHome() {
+            changePage('home');
+        }
+        
+        function showLogin() {
+            changePage('login');
+        }
+        
+        function showSignup() {
+            // Créer la page d'inscription dynamiquement
+            createSignupPage();
+        }
+        
+        // Fonction pour créer la page d'inscription
+        function createSignupPage() {
+            // Supprimer toute page d'inscription existante
+            const existingSignup = document.getElementById('signupPage');
+            if (existingSignup) {
+                existingSignup.remove();
+            }
+            
+            // Créer la nouvelle page d'inscription
+            const signupPage = document.createElement('div');
+            signupPage.id = 'signupPage';
+            signupPage.className = 'page';
+            signupPage.innerHTML = getSignupPageHTML();
+            
+            // Ajouter au DOM
+            document.body.appendChild(signupPage);
+            
+            // Afficher la page
+            changePage('signup');
+            
+            console.log('✅ Page d\'inscription créée');
+        }
+        
+        // HTML de la page d'inscription
+        function getSignupPageHTML() {
+            return `
+                <div style="min-height: 100vh; background: linear-gradient(135deg, #0a0a0c 0%, #1a1a1e 100%); display: flex; align-items: center; justify-content: center; padding: 20px; position: relative; overflow: hidden;">
+                    
+                    <!-- Effet de grain -->
+                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.1; background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><defs><pattern id=\"grain\" width=\"100\" height=\"100\" patternUnits=\"userSpaceOnUse\"><circle cx=\"25\" cy=\"25\" r=\"1\" fill=\"%23ffffff\" opacity=\"0.1\"/><circle cx=\"75\" cy=\"75\" r=\"1\" fill=\"%23ffffff\" opacity=\"0.1\"/><circle cx=\"50\" cy=\"10\" r=\"1\" fill=\"%23ffffff\" opacity=\"0.1\"/></pattern></defs><rect width=\"100\" height=\"100\" fill=\"url(%23grain)\"/></svg>');"></div>
+                    
+                    <!-- Formes décoratives -->
+                    <div style="position: absolute; top: 10%; right: 5%; width: 250px; height: 250px; background: linear-gradient(45deg, rgba(255, 140, 66, 0.15), rgba(245, 124, 0, 0.1)); border-radius: 50%; filter: blur(100px); animation: pulse 4s ease-in-out infinite;"></div>
+                    <div style="position: absolute; bottom: 10%; left: 5%; width: 350px; height: 350px; background: linear-gradient(45deg, rgba(255, 140, 66, 0.1), rgba(245, 124, 0, 0.05)); border-radius: 50%; filter: blur(120px);"></div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(25px); border: 2px solid rgba(255, 140, 66, 0.3); border-radius: 20px; padding: 2rem; max-width: 500px; width: 100%; position: relative; z-index: 2; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);">
+                        
+                        <!-- Header -->
+                        <div style="text-align: center; margin-bottom: 2rem;">
+                            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #ff8c42, #f57c00); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; box-shadow: 0 10px 30px rgba(255, 140, 66, 0.3);">
+                                <i class="fas fa-user-plus" style="font-size: 1.8rem; color: white;"></i>
+                            </div>
+                            <h2 style="color: white; font-size: 2rem; font-weight: bold; margin-bottom: 0.5rem;">Rejoins-nous</h2>
+                            <div style="background: linear-gradient(45deg, #ff8c42, #f57c00, #ff9a57); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.5rem; font-weight: bold;">HERMÈS TOOL</div>
+                            <p style="color: rgba(255, 255, 255, 0.8); margin-top: 1rem;">Automatise ton Vinted dès aujourd'hui !</p>
+                        </div>
+                        
+                        <!-- Formulaire -->
+                        <form id="signupForm" onsubmit="handleSignup(event)">
+                            <!-- Nom/Prénom -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                                <div>
+                                    <label style="display: block; margin-bottom: 0.5rem; color: rgba(255, 255, 255, 0.9); font-weight: 600; font-size: 0.9rem;">Prénom</label>
+                                    <input type="text" id="signupFirstName" placeholder="Thomas" required style="width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 140, 66, 0.3); border-radius: 12px; color: white; font-size: 1rem; box-sizing: border-box;" onfocus="this.style.borderColor='#ff8c42'" onblur="this.style.borderColor='rgba(255, 140, 66, 0.3)'">
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 0.5rem; color: rgba(255, 255, 255, 0.9); font-weight: 600; font-size: 0.9rem;">Nom</label>
+                                    <input type="text" id="signupLastName" placeholder="Martin" required style="width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 140, 66, 0.3); border-radius: 12px; color: white; font-size: 1rem; box-sizing: border-box;" onfocus="this.style.borderColor='#ff8c42'" onblur="this.style.borderColor='rgba(255, 140, 66, 0.3)'">
+                                </div>
+                            </div>
+                            
+                            <!-- Email -->
+                            <div style="margin-bottom: 1.5rem;">
+                                <label style="display: block; margin-bottom: 0.5rem; color: rgba(255, 255, 255, 0.9); font-weight: 600; font-size: 0.9rem;">
+                                    <i class="fas fa-envelope" style="margin-right: 0.5rem; color: #ff8c42;"></i>Email
+                                </label>
+                                <input type="email" id="signupEmail" placeholder="thomas@example.com" required style="width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 140, 66, 0.3); border-radius: 12px; color: white; font-size: 1rem; box-sizing: border-box;" onfocus="this.style.borderColor='#ff8c42'" onblur="this.style.borderColor='rgba(255, 140, 66, 0.3)'">
+                            </div>
+                            
+                            <!-- Mots de passe -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                                <div>
+                                    <label style="display: block; margin-bottom: 0.5rem; color: rgba(255, 255, 255, 0.9); font-weight: 600; font-size: 0.9rem;">Mot de passe</label>
+                                    <input type="password" id="signupPassword" placeholder="••••••••" required minlength="6" style="width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 140, 66, 0.3); border-radius: 12px; color: white; font-size: 1rem; box-sizing: border-box;" onfocus="this.style.borderColor='#ff8c42'" onblur="this.style.borderColor='rgba(255, 140, 66, 0.3)'">
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 0.5rem; color: rgba(255, 255, 255, 0.9); font-weight: 600; font-size: 0.9rem;">Confirmation</label>
+                                    <input type="password" id="signupConfirmPassword" placeholder="••••••••" required style="width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 140, 66, 0.3); border-radius: 12px; color: white; font-size: 1rem; box-sizing: border-box;" onfocus="this.style.borderColor='#ff8c42'" onblur="this.style.borderColor='rgba(255, 140, 66, 0.3)'">
+                                </div>
+                            </div>
+                            
+                            <!-- Plan -->
+                            <div style="margin-bottom: 1.5rem;">
+                                <label style="display: block; margin-bottom: 0.5rem; color: rgba(255, 255, 255, 0.9); font-weight: 600; font-size: 0.9rem;">
+                                    <i class="fas fa-crown" style="margin-right: 0.5rem; color: #ff8c42;"></i>Plan
+                                </label>
+                                <select id="signupPlan" onchange="selectedPlan = this.value; updatePlanInfo()" style="width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 140, 66, 0.3); border-radius: 12px; color: white; font-size: 1rem; box-sizing: border-box; cursor: pointer;" onfocus="this.style.borderColor='#ff8c42'" onblur="this.style.borderColor='rgba(255, 140, 66, 0.3)'">
+                                    <option value="Néophyte" style="background: #1a1a1e;">🛡️ Néophyte - 24€/mois</option>
+                                    <option value="Métrios" style="background: #1a1a1e;" selected>⚔️ Métrios - 49€/mois (Populaire)</option>
+                                    <option value="Archon" style="background: #1a1a1e;">👑 Archon - 97€/mois (Premium)</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Info plan -->
+                            <div id="planInfo" style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(255, 140, 66, 0.1); border-radius: 12px; border: 1px solid rgba(255, 140, 66, 0.3);">
+                                <div style="color: #ff8c42; font-weight: bold; margin-bottom: 0.5rem;">⚔️ Plan Métrios - 49€/mois</div>
+                                <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">
+                                    ✅ Reposts illimités • 🤖 Messages IA • 📊 Analytics • 💎 Support prioritaire
+                                </div>
+                            </div>
+                            
+                            <!-- Conditions -->
+                            <div style="margin-bottom: 2rem;">
+                                <label style="display: flex; align-items: center; cursor: pointer; font-size: 0.9rem; color: rgba(255, 255, 255, 0.8);">
+                                    <input type="checkbox" id="acceptTerms" required style="margin-right: 0.5rem; accent-color: #ff8c42;">
+                                    J'accepte les <a href="#" style="color: #ff8c42; text-decoration: underline;">conditions</a> et la <a href="#" style="color: #ff8c42; text-decoration: underline;">politique de confidentialité</a>
+                                </label>
+                            </div>
+                            
+                            <!-- Boutons -->
+                            <button type="submit" style="width: 100%; margin-bottom: 1rem; font-size: 1.1rem; font-weight: bold; padding: 1.2rem; background: linear-gradient(135deg, #ff8c42, #f57c00); color: white; border: none; border-radius: 12px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                                <i class="fas fa-credit-card" style="margin-right: 0.5rem;"></i>
+                                💳 PROCÉDER AU PAIEMENT STRIPE
+                            </button>
+                            
+                            <button type="button" onclick="showLogin()" style="width: 100%; background: transparent; border: 2px solid rgba(255, 255, 255, 0.4); color: rgba(255, 255, 255, 0.9); padding: 1rem; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 1rem; transition: all 0.3s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'" onmouseout="this.style.background='transparent'">
+                                <i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i>
+                                Déjà membre ? Se connecter
+                            </button>
+                        </form>
+                        
+                        <!-- Avantages -->
+                        <div style="margin-top: 2rem; padding: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
+                            <div style="color: rgba(255, 255, 255, 0.9); font-size: 0.9rem; margin-bottom: 1rem;">
+                                🎯 Rejoins <span style="color: #ff8c42; font-weight: bold;">1,247+</span> utilisateurs satisfaits !
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.8rem;">
+                                <div style="color: rgba(255, 255, 255, 0.8);">🔄 Reposts 24/7</div>
+                                <div style="color: rgba(255, 255, 255, 0.8);">🤖 Messages IA</div>
+                                <div style="color: rgba(255, 255, 255, 0.8);">📊 Analytics pro</div>
+                                <div style="color: rgba(255, 255, 255, 0.8);">🛡️ Support dédié</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Fonction pour mettre à jour les infos du plan
+        function updatePlanInfo() {
+            const planInfoDiv = document.getElementById('planInfo');
+            if (!planInfoDiv) return;
+            
+            const planDetails = {
+                'Néophyte': {
+                    name: 'Néophyte',
+                    price: '24€/mois',
+                    icon: '🛡️',
+                    color: '#2196f3',
+                    features: '✅ Reposts basiques • 📊 Dashboard simple • 📧 Support email • 💾 100 articles max'
+                },
+                'Métrios': {
+                    name: 'Métrios',
+                    price: '49€/mois',
+                    icon: '⚔️',
+                    color: '#ff8c42',
+                    features: '✅ Reposts illimités • 🤖 Messages IA • 📊 Analytics • 💎 Support prioritaire'
+                },
+                'Archon': {
+                    name: 'Archon',
+                    price: '97€/mois',
+                    icon: '👑',
+                    color: '#9c27b0',
+                    features: '✅ Toutes fonctionnalités • 🔗 Multi-comptes • 🚀 API accès • ⚡ Support VIP 24/7'
+                }
+            };
+            
+            const plan = planDetails[selectedPlan];
+            
+            planInfoDiv.style.background = `rgba(${plan.color === '#ff8c42' ? '255, 140, 66' : plan.color === '#2196f3' ? '33, 150, 243' : '156, 39, 176'}, 0.1)`;
+            planInfoDiv.style.borderColor = `rgba(${plan.color === '#ff8c42' ? '255, 140, 66' : plan.color === '#2196f3' ? '33, 150, 243' : '156, 39, 176'}, 0.3)`;
+            
+            planInfoDiv.innerHTML = `
+                <div style="color: ${plan.color}; font-weight: bold; margin-bottom: 0.5rem;">${plan.icon} Plan ${plan.name} - ${plan.price}</div>
+                <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">${plan.features}</div>
+            `;
+        }
+        
+        // Fonction pour sélectionner un plan depuis la page d'accueil
+        function selectPlan(plan) {
+            selectedPlan = plan;
+            showSignup();
+            // Attendre que la page soit créée puis mettre à jour le select
+            setTimeout(() => {
+                const planSelect = document.getElementById('signupPlan');
+                if (planSelect) {
+                    planSelect.value = plan;
+                    updatePlanInfo();
+                }
+            }, 100);
+        }
+        
+        // Gestion de l'inscription avec validation - VERSION CORRIGÉE POUR STRIPE
+        function handleSignup(event) {
+            event.preventDefault();
+            
+            try {
+                // Récupérer les valeurs
+                const firstName = document.getElementById('signupFirstName').value.trim();
+                const lastName = document.getElementById('signupLastName').value.trim();
+                const email = document.getElementById('signupEmail').value.trim().toLowerCase();
+                const password = document.getElementById('signupPassword').value;
+                const confirmPassword = document.getElementById('signupConfirmPassword').value;
+                const plan = document.getElementById('signupPlan').value;
+                const acceptTerms = document.getElementById('acceptTerms').checked;
+                
+                console.log('📝 Données inscription:', { firstName, lastName, email, plan });
+                
+                // Validations
+                if (!firstName || firstName.length < 2) {
+                    showNotification('⚠️ Le prénom doit contenir au moins 2 caractères', 'error');
+                    return;
+                }
+                
+                if (!lastName || lastName.length < 2) {
+                    showNotification('⚠️ Le nom doit contenir au moins 2 caractères', 'error');
+                    return;
+                }
+                
+                if (!email || !isValidEmail(email)) {
+                    showNotification('⚠️ Veuillez entrer une adresse email valide', 'error');
+                    return;
+                }
+                
+                if (!password || password.length < 6) {
+                    showNotification('⚠️ Le mot de passe doit contenir au moins 6 caractères', 'error');
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    showNotification('⚠️ Les mots de passe ne correspondent pas', 'error');
+                    return;
+                }
+                
+                if (!acceptTerms) {
+                    showNotification('⚠️ Vous devez accepter les conditions d\'utilisation', 'error');
+                    return;
+                }
+                
+                if (emailExists(email)) {
+                    showNotification('⚠️ Cet email est déjà utilisé', 'error');
+                    return;
+                }
+                
+                // Procéder au vrai paiement Stripe via la fonction Netlify
+                proceedToStripePayment(firstName, lastName, email, password, plan);
+                
+            } catch (error) {
+                console.error('❌ Erreur inscription:', error);
+                showNotification('Erreur lors de l\'inscription', 'error');
+            }
+        }
+        
+        // VRAIE fonction de paiement Stripe avec fonction Netlify
+        async function proceedToStripePayment(firstName, lastName, email, password, plan) {
+            console.log('💳 Initiation du vrai paiement Stripe...');
+            
+            const submitBtn = document.querySelector('#signupForm button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Création session Stripe...';
+            submitBtn.disabled = true;
+            
+            if (!stripe) {
+                showNotification('❌ Erreur d\'initialisation Stripe', 'error');
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                return;
+            }
+            
+            try {
+                showNotification('💳 Création de la session de paiement...');
+                
+                // Appel à ta fonction Netlify
+                const response = await fetch('/.netlify/functions/create-checkout-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        priceId: PLAN_PRICES[plan].priceId,
+                        customerEmail: email,
+                        customerName: `${firstName} ${lastName}`,
+                        plan: plan,
+                        userData: {
+                            firstName,
+                            lastName,
+                            email,
+                            password,
+                            plan
+                        }
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const session = await response.json();
+                console.log('✅ Session Stripe créée:', session.id);
+                
+                showNotification('🚀 Redirection vers Stripe...');
+                
+                // Redirection vers Stripe Checkout
+                const result = await stripe.redirectToCheckout({
+                    sessionId: session.id
+                });
+                
+                if (result.error) {
+                    throw new Error(result.error.message);
+                }
+                
+            } catch (error) {
+                console.error('❌ Erreur paiement Stripe:', error);
+                showNotification(`Erreur paiement: ${error.message}`, 'error');
+                
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+        
+        // Gestion de la connexion
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            try {
+                const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+                const password = document.getElementById('loginPassword').value;
+                
+                console.log('🔑 Tentative de connexion:', email);
+                
+                if (authenticateUser(email, password)) {
+                    console.log('✅ Connexion réussie');
+                    showNotification(`Connexion réussie ! Bienvenue ${currentUser.firstName} !`);
+                    
+                    setTimeout(() => {
+                        showDashboard();
+                    }, 1500);
+                } else {
+                    showNotification('❌ Email ou mot de passe incorrect', 'error');
+                }
+            } catch (error) {
+                console.error('❌ Erreur connexion:', error);
+                showNotification('Erreur lors de la connexion', 'error');
+            }
+        }
+        
+        // Affichage du dashboard
+        function showDashboard() {
+            if (!currentUser) {
+                showNotification('⚠️ Vous devez être connecté', 'error');
+                showLogin();
+                return;
+            }
+            
+            const dashboardPage = document.getElementById('dashboardPage');
+            
+            dashboardPage.innerHTML = `
+                <div style="min-height: 100vh; background: linear-gradient(135deg, #0a0a0c 0%, #1a1a1e 100%); color: #e5e5e5;">
+                    <!-- Header -->
+                    <div style="background: rgba(26, 26, 30, 0.95); padding: 1rem 0; border-bottom: 2px solid #ff8c42;">
+                        <div class="container">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center;">
+                                    <i class="fas fa-bolt" style="color: #ff8c42; font-size: 1.5rem; margin-right: 10px;"></i>
+                                    <span style="color: #ff8c42; font-weight: bold; font-size: 1.3rem;">HERMÈS TOOL</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="color: white; font-weight: 500;">
+                                        👋 Salut <strong style="color: #ff8c42;">${currentUser.firstName}</strong> !
+                                        <span style="background: #4caf50; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem; margin-left: 0.5rem;">
+                                            ${currentUser.plan}
+                                        </span>
+                                    </div>
+                                    <button onclick="logout()" style="background: rgba(244, 67, 54, 0.8); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 50px; font-weight: bold; cursor: pointer;">
+                                        <i class="fas fa-sign-out-alt"></i> Déconnexion
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contenu principal -->
+                    <div class="container" style="padding: 40px 20px;">
+                        
+                        <!-- Message personnel -->
+                        <div style="background: linear-gradient(135deg, #4caf50, #45a049); color: white; padding: 4rem; margin-bottom: 3rem; border-radius: 20px; text-align: center; border: 8px solid #ffffff; box-shadow: 0 0 40px rgba(76, 175, 80, 0.8);">
+                            <h1 style="margin: 0; font-size: 3.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); font-weight: bold;">🎉 Salut ${currentUser.firstName} !</h1>
+                            <p style="margin: 2rem 0 0 0; font-size: 1.5rem; font-weight: bold;">✅ TON DASHBOARD PERSONNEL HERMÈS TOOL</p>
+                            <p style="margin: 1rem 0 0 0; font-size: 1.2rem;">Membre depuis le ${currentUser.createdAt} • Plan ${currentUser.plan}</p>
+                        </div>
+                        
+                        <!-- Stats -->
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+                            <div style="background: linear-gradient(135deg, #ff8c42, #f57c00); color: white; padding: 2.5rem; border-radius: 16px; text-align: center; box-shadow: 0 8px 25px rgba(255, 140, 66, 0.4);">
+                                <h3 style="font-size: 2.5rem; margin-bottom: 0.5rem; font-weight: bold;">${currentUser.stats.monthlyRevenue}€</h3>
+                                <p style="margin: 0; font-size: 1.2rem;">Tes revenus ce mois</p>
+                            </div>
+                            
+                            <div style="background: linear-gradient(135deg, #2196f3, #1976d2); color: white; padding: 2.5rem; border-radius: 16px; text-align: center; box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);">
+                                <h3 style="font-size: 2.5rem; margin-bottom: 0.5rem; font-weight: bold;">${currentUser.stats.totalSales}</h3>
+                                <p style="margin: 0; font-size: 1.2rem;">Tes ventes totales</p>
+                            </div>
+                            
+                            <div style="background: linear-gradient(135deg, #4caf50, #45a049); color: white; padding: 2.5rem; border-radius: 16px; text-align: center; box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);">
+                                <h3 style="font-size: 2.5rem; margin-bottom: 0.5rem; font-weight: bold;">${Math.floor(Math.random() * 20 + 5)}.${Math.floor(Math.random() * 9)}K</h3>
+                                <p style="margin: 0; font-size: 1.2rem;">Vues cette semaine</p>
+                            </div>
+                            
+                            <div style="background: linear-gradient(135deg, #9c27b0, #7b1fa2); color: white; padding: 2.5rem; border-radius: 16px; text-align: center; box-shadow: 0 8px 25px rgba(156, 39, 176, 0.4);">
+                                <h3 style="font-size: 2.5rem; margin-bottom: 0.5rem; font-weight: bold;">${currentUser.stats.totalReposts}</h3>
+                                <p style="margin: 0; font-size: 1.2rem;">Reposts automatiques</p>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div style="background: rgba(76, 175, 80, 0.1); border: 3px solid #4caf50; border-radius: 20px; padding: 3rem; text-align: center;">
+                            <h2 style="color: #4caf50; margin-bottom: 2rem; font-size: 2rem; font-weight: bold;">
+                                <i class="fas fa-tools" style="margin-right: 1rem;"></i>
+                                Tes outils ${currentUser.firstName}
+                            </h2>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0;">
+                                <button onclick="showRepostAlert()" class="btn-primary" style="padding: 1.2rem; font-size: 1rem;">
+                                    <i class="fas fa-redo"></i> Repost Global
+                                </button>
+                                
+                                <button onclick="showAnalyticsAlert()" class="btn-primary" style="padding: 1.2rem; font-size: 1rem; background: linear-gradient(135deg, #2196f3, #1976d2);">
+                                    <i class="fas fa-chart-bar"></i> Mes Analyses
+                                </button>
+                                
+                                <button onclick="showAIAlert()" class="btn-primary" style="padding: 1.2rem; font-size: 1rem; background: linear-gradient(135deg, #9c27b0, #7b1fa2);">
+                                    <i class="fas fa-magic"></i> Optimiser IA
+                                </button>
+                                
+                                <button onclick="showUsersList()" class="btn-primary" style="padding: 1.2rem; font-size: 1rem; background: linear-gradient(135deg, #ff9800, #f57c00);">
+                                    <i class="fas fa-users"></i> Utilisateurs
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            changePage('dashboard');
+            console.log('✅ Dashboard affiché');
+        }
+        
+        // Fonctions utilitaires
+        function saveUser(userData) {
+            usersDatabase[userData.email] = userData;
+        }
+        
+        function emailExists(email) {
+            return usersDatabase.hasOwnProperty(email);
+        }
+        
+        function authenticateUser(email, password) {
+            const user = usersDatabase[email];
+            if (user && user.password === password && user.isActive) {
+                currentUser = user;
+                return true;
+            }
+            return false;
+        }
+        
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+        
+        function logout() {
+            console.log('🚪 Déconnexion');
+            currentUser = null;
+            showNotification('👋 Déconnexion réussie');
+            setTimeout(() => showHome(), 1000);
+        }
+        
+        // Fonctions d'alerte pour le dashboard
+        function showRepostAlert() {
+            alert(`🔄 Hey ${currentUser.firstName} ! Tes ${Math.floor(Math.random() * 50 + 20)} articles vont être repostés.`);
+        }
+        
+        function showAnalyticsAlert() {
+            alert(`📊 Analytics pour ${currentUser.firstName}: Top catégories selon ton plan ${currentUser.plan}`);
+        }
+        
+        function showAIAlert() {
+            if (currentUser.plan === 'Néophyte') {
+                alert('🔒 Fonctionnalité IA disponible avec les plans Métrios et Archon !');
+            } else {
+                alert(`✨ IA activée pour ${currentUser.firstName} ! Optimisation ${currentUser.plan} en cours...`);
+            }
+        }
+        
+        function showUsersList() {
+            const userCount = Object.keys(usersDatabase).length;
+            alert(`📊 Base de données Hermès Tool\n\n👥 Utilisateurs inscrits: ${userCount}\n\nMode démo actif !`);
+        }
+        
+        // Fonctions de navigation smooth
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        
+        function playDemo() {
+            showNotification('🎥 Démo bientôt disponible !');
+        }
+        
+        // Initialisation au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                // Initialiser Stripe
+                initializeStripe();
+                
+                // Animation on scroll
+                const observerOptions = {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -50px 0px'
+                };
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }
+                    });
+                }, observerOptions);
+
+                // Observer les cards
+                setTimeout(() => {
+                    document.querySelectorAll('.feature-card, .testimonial-card, .pricing-card').forEach(card => {
+                        card.style.transition = 'all 0.8s ease-out';
+                        observer.observe(card);
+                    });
+                }, 100);
+
+                // Header scroll effect
+                window.addEventListener('scroll', () => {
+                    const header = document.querySelector('.header');
+                    if (header) {
+                        if (window.scrollY > 100) {
+                            header.style.background = 'linear-gradient(135deg, rgba(10,10,12,0.95) 0%, rgba(26,26,30,0.95) 100%)';
+                            header.style.backdropFilter = 'blur(10px)';
+                        } else {
+                            header.style.background = 'linear-gradient(135deg, #0a0a0c 0%, #1a1a1e 100%)';
+                            header.style.backdropFilter = 'none';
+                        }
+                    }
+                });
+                
+                console.log('✅ Hermès Tool initialisé avec Stripe intégré !');
+                
+            } catch (error) {
+                console.error('❌ Erreur d\'initialisation:', error);
+            }
+        });
+        
+        console.log('🎯 Hermès Tool - Prêt pour la production avec Stripe !');
+    </script>
+</body>
+</html>

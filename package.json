@@ -1,0 +1,11 @@
+{
+  "name": "hermestool-netlify",
+  "version": "1.0.0",
+  "description": "Hermès Tool - Automation Vinted avec paiements Stripe",
+  "dependencies": {
+    "stripe": "^14.9.0"
+  },
+  "engines": {
+    "node": "18"
+  }
+}
