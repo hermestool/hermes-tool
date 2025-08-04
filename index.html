@@ -1012,24 +1012,24 @@
         // Utilisateur actuellement connecté
         let currentUser = null;
         
-        // Configuration Stripe (tes vraies clés)
+        // Configuration Stripe PRODUCTION (clés LIVE)
         let stripe = null;
-        const STRIPE_PUBLISHABLE_KEY = 'pk_test_51LpKw0CtSj5okMU0TjB37Dyhmw8KgGnVBg4euuYX0w9aaf2Z7zpwJMjzYNJrg9Pe2N6u5NFAs2GRXTwiSynEnDum00XefsKYzD';
+        const STRIPE_PUBLISHABLE_KEY = 'pk_live_51LpKw0CtSj5okMU0lKPDxmy7bDqP3QyhjLZgA7EeprgS6XDPSDa3hmQihHCLDRQBmBzgZmIkqDCiQw5jBHEVqU92006n6i0DXc';
         
-        // Prix des plans (tes VRAIS Price IDs Stripe du CSV)
+        // Prix des plans PRODUCTION (Price IDs LIVE)
         const PLAN_PRICES = {
             'Néophyte': {
-                priceId: 'price_1Rr7tECtSj5okMU0H2QgNHTv',
+                priceId: 'price_1RqmVSCtSj5okMU0c4256A4P',
                 amount: 2400,
                 currency: 'eur'
             },
             'Métrios': {
-                priceId: 'price_1Rr7taCtSj5okMU0lVFBu6s5',
+                priceId: 'price_1RqmVyCtSj5okMU0tQL3vHRu',
                 amount: 4900,
                 currency: 'eur'
             },
             'Archon': {
-                priceId: 'price_1Rr7tnCtSj5okMU0NJleCRfn',
+                priceId: 'price_1RqmWJCtSj5okMU0IIz58109',
                 amount: 9700,
                 currency: 'eur'
             }
@@ -1676,14 +1676,14 @@
                     }
                 });
                 
-                console.log('✅ Hermès Tool initialisé avec Stripe et Price IDs VALIDES !');
+                console.log('✅ Hermès Tool PRODUCTION initialisé avec Stripe LIVE ! 💰');
                 
             } catch (error) {
                 console.error('❌ Erreur d\'initialisation:', error);
             }
         });
         
-        console.log('🎯 Hermès Tool - Prêt pour la production avec Stripe et Price IDs VALIDES !');
+        console.log('🎯 Hermès Tool - PRODUCTION LIVE avec Stripe RÉEL ! 💰');
     </script>
 </body>
 </html>
