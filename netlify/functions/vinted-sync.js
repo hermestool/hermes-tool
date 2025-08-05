@@ -1,377 +1,432 @@
 // netlify/functions/vinted-sync.js
-// API pour recevoir les données de l'extension H24
+// Fonction Netlify pour recevoir et traiter les données de l'extension Chrome
 
-console.log('🚀 API Vinted Sync - Fonction Netlify');
+console.log('🚀 Fonction Netlify vinted-sync initialisée');
 
-// Base de données en mémoire pour stocker les données utilisateurs
-// En production, tu utiliseras une vraie DB (MongoDB, PostgreSQL, etc.)
-let vintedDatabase = {};
+// ===== BASE DE DONNÉES SIMULÉE =====
+// En production, utiliser une vraie base de données (MongoDB, PostgreSQL, etc.)
+let usersDatabase = {
+    'admin@hermestool.com': {
+        email: 'admin@hermestool.com',
+        firstName: 'Admin',
+        lastName: 'Hermès',
+        plan: 'Archon',
+        isActive: true,
+        createdAt: '2024-01-01',
+        lastSync: null,
+        vintedData: null
+    },
+    'shinolegrandieu@gmail.com': {
+        email: 'shinolegrandieu@gmail.com',
+        firstName: 'Shino',
+        lastName: 'Le Grandieu',  
+        plan: 'Archon',
+        isActive: true,
+        createdAt: '2025-08-05',
+        lastSync: null,
+        vintedData: null
+    },
+    'collabwilly@gmail.com': {
+        email: 'collabwilly@gmail.com',
+        firstName: 'Willy',
+        lastName: 'Collab',
+        plan: 'Métrios',
+        isActive: true,
+        createdAt: '2025-08-05',
+        lastSync: null,
+        vintedData: null
+    }
+};
 
+// ===== FONCTION PRINCIPALE =====
 exports.handler = async (event, context) => {
-    console.log('📡 API appelée:', event.httpMethod, event.path);
+    console.log('📡 Requête reçue:', event.httpMethod, event.path);
     
     // Headers CORS
     const headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-        'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
         'Content-Type': 'application/json'
     };
-
-    // Gestion CORS
+    
+    // Gestion des requêtes OPTIONS (CORS preflight)
     if (event.httpMethod === 'OPTIONS') {
-        return { statusCode: 200, headers, body: '' };
+        return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify({ message: 'CORS OK' })
+        };
     }
-
+    
+    // Seules les requêtes POST sont acceptées
+    if (event.httpMethod !== 'POST') {
+        return {
+            statusCode: 405, 
+            headers,
+            body: JSON.stringify({ 
+                error: 'Method not allowed',
+                message: 'Seules les requêtes POST sont acceptées'
+            })
+        };
+    }
+    
     try {
-        const path = event.path;
+        // Parser le body
+        const requestData = JSON.parse(event.body);
+        console.log('📊 Données reçues:', {
+            userEmail: requestData.userEmail,
+            source: requestData.source,
+            timestamp: requestData.timestamp,
+            dataTypes: requestData.data ? Object.keys(requestData.data) : []
+        });
         
-        // Router selon le path
-        if (event.httpMethod === 'POST') {
-            if (path.includes('/vinted-sync')) {
-                return await handleVintedSync(event, headers);
-            } else if (path.includes('/get-user-data')) {
-                return await handleGetUserData(event, headers);
-            }
-        } else if (event.httpMethod === 'GET') {
-            if (path.includes('/test')) {
-                return handleApiTest(headers);
-            }
+        // Déterminer le type de requête
+        if (requestData.action === 'validate-user') {
+            return await handleUserValidation(requestData, headers);
+        } else if (requestData.userEmail && requestData.data) {
+            return await handleDataSync(requestData, headers);
+        } else if (requestData.userEmail && requestData.action === 'get-data') {
+            return await handleGetUserData(requestData, headers);
+        } else {
+            return {
+                statusCode: 400,
+                headers,
+                body: JSON.stringify({
+                    error: 'Invalid request',
+                    message: 'Format de requête invalide'
+                })
+            };
         }
         
-        return {
-            statusCode: 404,
-            headers,
-            body: JSON.stringify({ error: 'Endpoint non trouvé' })
-        };
-
     } catch (error) {
-        console.error('❌ Erreur API globale:', error);
+        console.error('❌ Erreur traitement requête:', error);
+        
         return {
             statusCode: 500,
             headers,
-            body: JSON.stringify({ 
-                error: 'Erreur serveur',
-                details: error.message 
+            body: JSON.stringify({
+                error: 'Internal server error',
+                message: error.message
             })
         };
     }
 };
 
-// ENDPOINT PRINCIPAL - Recevoir les données Vinted
-async function handleVintedSync(event, headers) {
+// ===== VALIDATION UTILISATEUR =====
+async function handleUserValidation(requestData, headers) {
     try {
-        console.log('📊 Traitement sync Vinted...');
+        const { email } = requestData;
+        console.log('🔍 Validation utilisateur:', email);
         
-        const { type, data, userEmail } = JSON.parse(event.body || '{}');
-        
-        // Validation des données
-        if (!userEmail || !data || !type) {
+        if (!email || !isValidEmail(email)) {
             return {
                 statusCode: 400,
                 headers,
-                body: JSON.stringify({ 
-                    error: 'Données manquantes',
-                    required: ['userEmail', 'data', 'type']
+                body: JSON.stringify({
+                    valid: false,
+                    error: 'Email invalide'
                 })
             };
         }
         
-        console.log(`📥 Données reçues pour ${userEmail}:`, {
-            type,
-            itemsCount: data.items?.length || 0,
-            salesCount: data.sales?.length || 0,
-            messagesCount: data.messages?.length || 0,
-            profileData: !!data.profile?.username
-        });
+        // Vérifier si l'utilisateur existe et est actif
+        const user = usersDatabase[email.toLowerCase()];
+        const isValid = user && user.isActive;
         
-        // Initialiser l'utilisateur s'il n'existe pas
-        if (!vintedDatabase[userEmail]) {
-            vintedDatabase[userEmail] = {
-                email: userEmail,
-                profile: {},
-                items: [],
-                sales: [],
-                messages: [],
-                statistics: {},
-                lastSync: null,
-                createdAt: new Date().toISOString()
+        console.log(isValid ? '✅ Utilisateur valide' : '❌ Utilisateur non trouvé');
+        
+        return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify({
+                valid: isValid,
+                user: isValid ? {
+                    email: user.email,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    plan: user.plan
+                } : null
+            })
+        };
+        
+    } catch (error) {
+        console.error('❌ Erreur validation utilisateur:', error);
+        
+        return {
+            statusCode: 500,
+            headers,
+            body: JSON.stringify({
+                valid: false,
+                error: 'Erreur serveur'
+            })
+        };
+    }
+}
+
+// ===== SYNCHRONISATION DONNÉES =====
+async function handleDataSync(requestData, headers) {
+    try {
+        const { userEmail, data, timestamp, source } = requestData;
+        console.log('🔄 Synchronisation données pour:', userEmail);
+        
+        // Validation des données
+        if (!userEmail || !data) {
+            return {
+                statusCode: 400,
+                headers,
+                body: JSON.stringify({
+                    success: false,
+                    error: 'Données manquantes'
+                })
             };
         }
         
-        const userData = vintedDatabase[userEmail];
-        
-        // Traiter selon le type de sync
-        switch (type) {
-            case 'full_sync':
-                await processFullSync(userData, data);
-                break;
-                
-            case 'profile_sync':
-                await processProfileSync(userData, data);
-                break;
-                
-            case 'items_sync':
-                await processItemsSync(userData, data);
-                break;
-                
-            case 'sales_sync':
-                await processSalesSync(userData, data);
-                break;
-                
-            default:
-                console.log('⚠️ Type de sync inconnu:', type);
+        // Vérifier que l'utilisateur existe
+        const user = usersDatabase[userEmail.toLowerCase()];
+        if (!user || !user.isActive) {
+            return {
+                statusCode: 404,
+                headers,
+                body: JSON.stringify({
+                    success: false,
+                    error: 'Utilisateur non trouvé'
+                })
+            };
         }
         
-        // Mettre à jour la dernière sync
-        userData.lastSync = new Date().toISOString();
-        userData.lastSyncType = type;
+        // Traiter et sauvegarder les données
+        const processedData = await processVintedData(data, userEmail);
+        
+        // Mettre à jour la base de données utilisateur
+        user.vintedData = processedData;
+        user.lastSync = timestamp || new Date().toISOString();
+        user.syncSource = source || 'extension';
+        
+        console.log('✅ Données synchronisées:', {
+            email: userEmail,
+            items: processedData.items?.length || 0,
+            sales: processedData.sales?.length || 0,
+            messages: processedData.messages?.length || 0
+        });
         
         // Calculer les statistiques
-        updateUserStatistics(userData);
-        
-        console.log('✅ Sync terminée pour:', userEmail);
+        const statistics = calculateUserStatistics(processedData);
         
         return {
             statusCode: 200,
             headers,
             body: JSON.stringify({
                 success: true,
-                message: `Sync ${type} réussie`,
-                timestamp: userData.lastSync,
-                stats: {
-                    totalItems: userData.items.length,
-                    totalSales: userData.sales.length,
-                    totalMessages: userData.messages.length,
-                    profileComplete: !!userData.profile.username
+                message: 'Données synchronisées avec succès',
+                syncedAt: user.lastSync,
+                statistics: statistics,
+                data: {
+                    itemsCount: processedData.items?.length || 0,
+                    salesCount: processedData.sales?.length || 0,
+                    messagesCount: processedData.messages?.length || 0
                 }
             })
         };
         
     } catch (error) {
-        console.error('❌ Erreur handleVintedSync:', error);
+        console.error('❌ Erreur synchronisation:', error);
+        
         return {
             statusCode: 500,
             headers,
-            body: JSON.stringify({ 
-                error: 'Erreur traitement sync',
-                details: error.message 
+            body: JSON.stringify({
+                success: false,
+                error: 'Erreur lors de la synchronisation',
+                details: error.message
             })
         };
     }
 }
 
-// ENDPOINT - Récupérer les données utilisateur
-async function handleGetUserData(event, headers) {
+// ===== RÉCUPÉRATION DONNÉES UTILISATEUR =====
+async function handleGetUserData(requestData, headers) {
     try {
-        const { userEmail } = JSON.parse(event.body || '{}');
+        const { userEmail } = requestData;
+        console.log('📊 Récupération données pour:', userEmail);
         
-        if (!userEmail) {
-            return {
-                statusCode: 400,
-                headers,
-                body: JSON.stringify({ error: 'Email utilisateur requis' })
-            };
-        }
-        
-        const userData = vintedDatabase[userEmail];
-        
-        if (!userData) {
+        const user = usersDatabase[userEmail.toLowerCase()];
+        if (!user || !user.isActive) {
             return {
                 statusCode: 404,
                 headers,
-                body: JSON.stringify({ 
-                    error: 'Utilisateur non trouvé',
-                    userEmail: userEmail
+                body: JSON.stringify({
+                    success: false,
+                    error: 'Utilisateur non trouvé'
                 })
             };
         }
         
-        // Retourner les données (sans les données sensibles)
+        // Retourner les données Vinted de l'utilisateur
         const responseData = {
-            email: userData.email,
-            profile: userData.profile,
-            items: userData.items.slice(-100), // Les 100 derniers
-            sales: userData.sales.slice(-50),   // Les 50 dernières
-            messages: userData.messages.slice(-30), // Les 30 derniers
-            statistics: userData.statistics,
-            lastSync: userData.lastSync,
-            isActive: true,
-            vintedConnected: true
+            success: true,
+            user: {
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                plan: user.plan,
+                lastSync: user.lastSync
+            },
+            data: user.vintedData || {
+                items: [],
+                sales: [],
+                messages: [],
+                statistics: {}
+            }
         };
         
         return {
             statusCode: 200,
             headers,
-            body: JSON.stringify({
-                success: true,
-                data: responseData,
-                timestamp: new Date().toISOString()
-            })
+            body: JSON.stringify(responseData)
         };
         
     } catch (error) {
-        console.error('❌ Erreur handleGetUserData:', error);
+        console.error('❌ Erreur récupération données:', error);
+        
         return {
             statusCode: 500,
             headers,
-            body: JSON.stringify({ 
-                error: 'Erreur récupération données',
-                details: error.message 
+            body: JSON.stringify({
+                success: false,
+                error: 'Erreur serveur'
             })
         };
     }
 }
 
-// ENDPOINT TEST
-function handleApiTest(headers) {
-    return {
-        statusCode: 200,
-        headers,
-        body: JSON.stringify({
-            success: true,
-            message: 'API Hermès Tool opérationnelle',
-            timestamp: new Date().toISOString(),
-            endpoints: [
-                'POST /vinted-sync - Recevoir données extension',
-                'POST /get-user-data - Récupérer données utilisateur',
-                'GET /test - Test de l\'API'
-            ],
-            version: '2.0.0'
-        })
+// ===== TRAITEMENT DES DONNÉES VINTED =====
+async function processVintedData(rawData, userEmail) {
+    console.log('🔧 Traitement données Vinted...');
+    
+    const processedData = {
+        user: rawData.user || {},
+        items: [],
+        sales: [],
+        messages: [],
+        statistics: rawData.statistics || {},
+        processedAt: new Date().toISOString(),
+        userEmail: userEmail
     };
-}
-
-// FONCTIONS DE TRAITEMENT DES DONNÉES
-
-async function processFullSync(userData, data) {
-    console.log('🔄 Full sync en cours...');
     
-    // Profil
-    if (data.profile) {
-        userData.profile = { ...userData.profile, ...data.profile };
+    // Traiter les articles
+    if (rawData.items && Array.isArray(rawData.items)) {
+        processedData.items = rawData.items.map(item => ({
+            ...item,
+            userEmail: userEmail,
+            processedAt: new Date().toISOString(),
+            // Nettoyage et validation des données
+            id: item.id || generateId(),
+            title: cleanText(item.title),
+            price: parsePrice(item.price),
+            views: parseInt(item.views) || 0,
+            likes: parseInt(item.likes) || 0
+        }));
     }
     
-    // Items - Fusionner sans doublons
-    if (data.items && Array.isArray(data.items)) {
-        data.items.forEach(newItem => {
-            if (!userData.items.find(existing => existing.hash === newItem.hash)) {
-                userData.items.push(newItem);
-            }
-        });
-        
-        // Limiter à 1000 items max
-        if (userData.items.length > 1000) {
-            userData.items = userData.items.slice(-1000);
-        }
+    // Traiter les ventes
+    if (rawData.sales && Array.isArray(rawData.sales)) {
+        processedData.sales = rawData.sales.map(sale => ({
+            ...sale,
+            userEmail: userEmail,
+            processedAt: new Date().toISOString(),
+            id: sale.id || generateId(),
+            price: parsePrice(sale.price),
+            saleDate: sale.saleDate || sale.collectedAt
+        }));
     }
     
-    // Ventes - Fusionner sans doublons
-    if (data.sales && Array.isArray(data.sales)) {
-        data.sales.forEach(newSale => {
-            if (!userData.sales.find(existing => existing.hash === newSale.hash)) {
-                userData.sales.push(newSale);
-            }
-        });
-        
-        // Limiter à 500 ventes max
-        if (userData.sales.length > 500) {
-            userData.sales = userData.sales.slice(-500);
-        }
+    // Traiter les messages
+    if (rawData.messages && Array.isArray(rawData.messages)) {
+        processedData.messages = rawData.messages.map(message => ({
+            ...message,
+            userEmail: userEmail,
+            processedAt: new Date().toISOString(),
+            id: message.id || generateId()
+        }));
     }
     
-    // Messages - Fusionner sans doublons
-    if (data.messages && Array.isArray(data.messages)) {
-        data.messages.forEach(newMessage => {
-            if (!userData.messages.find(existing => existing.hash === newMessage.hash)) {
-                userData.messages.push(newMessage);
-            }
-        });
-        
-        // Limiter à 200 messages max
-        if (userData.messages.length > 200) {
-            userData.messages = userData.messages.slice(-200);
-        }
-    }
-    
-    // Statistiques
-    if (data.statistics) {
-        userData.statistics = { ...userData.statistics, ...data.statistics };
-    }
-    
-    console.log('✅ Full sync terminée');
-}
-
-async function processProfileSync(userData, data) {
-    console.log('👤 Profile sync...');
-    if (data.profile) {
-        userData.profile = { ...userData.profile, ...data.profile };
-    }
-}
-
-async function processItemsSync(userData, data) {
-    console.log('📦 Items sync...');
-    if (data.items && Array.isArray(data.items)) {
-        let newItems = 0;
-        data.items.forEach(item => {
-            if (!userData.items.find(existing => existing.hash === item.hash)) {
-                userData.items.push(item);
-                newItems++;
-            }
-        });
-        console.log(`📦 ${newItems} nouveaux items ajoutés`);
-    }
-}
-
-async function processSalesSync(userData, data) {
-    console.log('💰 Sales sync...');
-    if (data.sales && Array.isArray(data.sales)) {
-        let newSales = 0;
-        data.sales.forEach(sale => {
-            if (!userData.sales.find(existing => existing.hash === sale.hash)) {
-                userData.sales.push(sale);
-                newSales++;
-            }
-        });
-        console.log(`💰 ${newSales} nouvelles ventes ajoutées`);
-    }
-}
-
-function updateUserStatistics(userData) {
-    const stats = userData.statistics || {};
-    
-    // Calculer les revenus
-    const totalRevenue = userData.sales.reduce((sum, sale) => {
-        const amount = parseFloat(sale.price?.replace(/[€\s]/g, '').replace(',', '.')) || 0;
-        return sum + amount;
-    }, 0);
-    
-    // Calculer les stats générales
-    stats.totalItems = userData.items.length;
-    stats.totalSales = userData.sales.length;
-    stats.totalMessages = userData.messages.length;
-    stats.totalRevenue = totalRevenue;
-    stats.averageSalePrice = userData.sales.length > 0 ? totalRevenue / userData.sales.length : 0;
-    stats.lastCalculated = new Date().toISOString();
-    
-    // Calculer les tendances (items par jour, etc.)
-    const now = new Date();
-    const last7Days = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-    
-    stats.itemsLast7Days = userData.items.filter(item => 
-        new Date(item.scrapedAt) > last7Days
-    ).length;
-    
-    stats.salesLast7Days = userData.sales.filter(sale => 
-        new Date(sale.scrapedAt || sale.saleDate) > last7Days
-    ).length;
-    
-    userData.statistics = stats;
-    
-    console.log('📊 Statistiques calculées:', {
-        totalItems: stats.totalItems,
-        totalSales: stats.totalSales,
-        totalRevenue: stats.totalRevenue,
-        averagePrice: stats.averageSalePrice.toFixed(2)
+    console.log('✅ Données traitées:', {
+        items: processedData.items.length,
+        sales: processedData.sales.length,
+        messages: processedData.messages.length
     });
+    
+    return processedData;
 }
+
+// ===== CALCUL DES STATISTIQUES =====
+function calculateUserStatistics(data) {
+    const stats = {
+        totalItems: data.items?.length || 0,
+        totalSales: data.sales?.length || 0,
+        totalMessages: data.messages?.length || 0,
+        totalViews: 0,
+        totalLikes: 0,
+        totalRevenue: 0,
+        averagePrice: 0,
+        calculatedAt: new Date().toISOString()
+    };
+    
+    // Calculer les vues et likes totaux
+    if (data.items) {
+        stats.totalViews = data.items.reduce((sum, item) => sum + (parseInt(item.views) || 0), 0);
+        stats.totalLikes = data.items.reduce((sum, item) => sum + (parseInt(item.likes) || 0), 0);
+    }
+    
+    // Calculer le chiffre d'affaires
+    if (data.sales) {
+        const validSales = data.sales.filter(sale => sale.price && !isNaN(parsePrice(sale.price)));
+        stats.totalRevenue = validSales.reduce((sum, sale) => sum + parsePrice(sale.price), 0);
+        stats.averagePrice = validSales.length > 0 ? stats.totalRevenue / validSales.length : 0;
+    }
+    
+    return stats;
+}
+
+// ===== FONCTIONS UTILITAIRES =====
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+function cleanText(text) {
+    if (!text) return '';
+    return text.toString().trim().replace(/\s+/g, ' ');
+}
+
+function parsePrice(priceStr) {
+    if (!priceStr) return 0;
+    
+    // Extraire les chiffres et gérer les décimales
+    const cleaned = priceStr.toString().replace(/[^\d,.-]/g, '');
+    const number = parseFloat(cleaned.replace(',', '.'));
+    
+    return isNaN(number) ? 0 : Math.round(number * 100) / 100; // Arrondir à 2 décimales
+}
+
+function generateId() {
+    return Date.now().toString(36) + Math.random().toString(36).substr(2);
+}
+
+// ===== LOGGING =====
+function logActivity(action, userEmail, details = {}) {
+    const logEntry = {
+        timestamp: new Date().toISOString(),
+        action: action,
+        userEmail: userEmail,
+        details: details
+    };
+    
+    console.log('📝 Log:', JSON.stringify(logEntry));
+    
+    // En production, sauvegarder dans un système de logs persistant
+    // (CloudWatch, LogFlare, etc.)
+}
+
+console.log('✅ Fonction vinted-sync prête');
