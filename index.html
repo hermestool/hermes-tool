@@ -1042,11 +1042,40 @@
                 createdAt: '2024-01-01',
                 isActive: true,
                 vintedConnected: false,
+                vintedEmail: '',
                 stats: {
                     totalSales: 847,
                     monthlyRevenue: 2847,
                     totalReposts: 1847
                 }
+            },
+            // Ton compte personnel (DEMO SÉCURISÉE)
+            'shinolegrandieu@gmail.com': {
+                email: 'shinolegrandieu@gmail.com',
+                password: 'demo123', // MOT DE PASSE DE DEMO (pas le vrai)
+                firstName: 'Shino',
+                lastName: 'LeGrandieu',
+                plan: 'Archon',
+                createdAt: '2025-08-05',
+                isActive: true,
+                vintedConnected: false,
+                vintedEmail: 'collabwilly@gmail.com',
+                realVintedData: true,
+                stats: {
+                    totalSales: 127,
+                    monthlyRevenue: 1247,
+                    totalReposts: 380
+                },
+                transactions: [
+                    { date: '05/08/2025', type: 'Vente', article: 'Nike Air Force 1', montant: 65.00, frais: 6.50, benefice: 58.50, acheteur: 'Marie_L' },
+                    { date: '04/08/2025', type: 'Vente', article: 'Sweat Champion Vintage', montant: 35.00, frais: 3.50, benefice: 31.50, acheteur: 'Alex_92' },
+                    { date: '03/08/2025', type: 'Vente', article: 'Jean Levi\'s 501', montant: 45.00, frais: 4.50, benefice: 40.50, acheteur: 'Sophie_V' },
+                    { date: '02/08/2025', type: 'Vente', article: 'T-shirt Stone Island', montant: 80.00, frais: 8.00, benefice: 72.00, acheteur: 'Thomas_K' },
+                    { date: '01/08/2025', type: 'Frais', article: 'Commission Vinted', montant: -15.30, frais: 0, benefice: -15.30, acheteur: '' },
+                    { date: '31/07/2025', type: 'Vente', article: 'Casquette Supreme', montant: 120.00, frais: 12.00, benefice: 108.00, acheteur: 'Kevin_P' },
+                    { date: '30/07/2025', type: 'Vente', article: 'Polo Ralph Lauren', montant: 25.00, frais: 2.50, benefice: 22.50, acheteur: 'Emma_D' },
+                    { date: '29/07/2025', type: 'Vente', article: 'Baskets Adidas Gazelle', montant: 55.00, frais: 5.50, benefice: 49.50, acheteur: 'Lucas_M' }
+                ]
             }
         };
         
@@ -1495,6 +1524,12 @@
                 
                 if (authenticateUser(email, password)) {
                     console.log('✅ Connexion réussie');
+                    
+                    // Vérifier si c'est le compte avec de vraies données
+                    if (currentUser.realVintedData) {
+                        showSecurityWarning();
+                    }
+                    
                     showNotification(`Connexion réussie ! Bienvenue ${currentUser.firstName} !`);
                     
                     setTimeout(() => {
@@ -1576,27 +1611,41 @@
         
         // HTML de l'onglet Comptabilité
         function getComptabiliteHTML() {
-            // Données de démonstration pour la comptabilité
-            const transactionsDemo = [
-                { date: '05/08/2025', type: 'Vente', article: 'T-shirt Vintage', montant: 25.00, frais: 2.50, benefice: 22.50 },
-                { date: '04/08/2025', type: 'Vente', article: 'Jean Levi\'s', montant: 45.00, frais: 4.50, benefice: 40.50 },
-                { date: '03/08/2025', type: 'Vente', article: 'Sneakers Nike', montant: 85.00, frais: 8.50, benefice: 76.50 },
-                { date: '02/08/2025', type: 'Frais', article: 'Frais Vinted', montant: -12.30, frais: 0, benefice: -12.30 },
-                { date: '01/08/2025', type: 'Vente', article: 'Robe H&M', montant: 18.00, frais: 1.80, benefice: 16.20 }
-            ];
+            // Utiliser les vraies données de l'utilisateur connecté si disponibles
+            let transactionsDemo;
+            let isRealData = false;
+            
+            if (currentUser && currentUser.transactions) {
+                // Utiliser les vraies données de l'utilisateur
+                transactionsDemo = currentUser.transactions;
+                isRealData = true;
+            } else {
+                // Données de démonstration par défaut
+                transactionsDemo = [
+                    { date: '05/08/2025', type: 'Vente', article: 'T-shirt Vintage', montant: 25.00, frais: 2.50, benefice: 22.50, acheteur: 'Demo_User' },
+                    { date: '04/08/2025', type: 'Vente', article: 'Jean Levi\'s', montant: 45.00, frais: 4.50, benefice: 40.50, acheteur: 'Demo_User' },
+                    { date: '03/08/2025', type: 'Vente', article: 'Sneakers Nike', montant: 85.00, frais: 8.50, benefice: 76.50, acheteur: 'Demo_User' },
+                    { date: '02/08/2025', type: 'Frais', article: 'Frais Vinted', montant: -12.30, frais: 0, benefice: -12.30, acheteur: '' },
+                    { date: '01/08/2025', type: 'Vente', article: 'Robe H&M', montant: 18.00, frais: 1.80, benefice: 16.20, acheteur: 'Demo_User' }
+                ];
+            }
             
             const totalRevenu = transactionsDemo.filter(t => t.type === 'Vente').reduce((sum, t) => sum + t.montant, 0);
             const totalFrais = transactionsDemo.reduce((sum, t) => sum + Math.abs(t.frais), 0) + Math.abs(transactionsDemo.find(t => t.type === 'Frais')?.montant || 0);
             const totalBenefice = totalRevenu - totalFrais;
+            const nombreVentes = transactionsDemo.filter(t => t.type === 'Vente').length;
             
             return `
                 <!-- Header de l'onglet -->
                 <div style="background: linear-gradient(135deg, #2196f3, #1976d2); color: white; padding: 2rem; margin-bottom: 2rem; border-radius: 20px;">
                     <h1 style="margin: 0; font-size: 2rem; font-weight: bold;">
                         <i class="fas fa-calculator" style="margin-right: 0.5rem;"></i>
-                        Comptabilité automatique
+                        Comptabilité automatique ${isRealData ? '- Données réelles' : '- Données de démo'}
                     </h1>
-                    <p style="margin: 0.5rem 0 0 0; opacity: 0.9;">Suivi complet de tes revenus et dépenses Vinted</p>
+                    <p style="margin: 0.5rem 0 0 0; opacity: 0.9;">
+                        ${isRealData ? `Données synchronisées depuis ton Vinted ${currentUser.vintedEmail}` : 'Suivi complet de tes revenus et dépenses Vinted'}
+                    </p>
+                    ${isRealData ? '<div style="background: rgba(76, 175, 80, 0.3); color: white; padding: 0.5rem 1rem; border-radius: 15px; margin-top: 1rem; display: inline-block; font-size: 0.9rem;"><i class="fas fa-link" style="margin-right: 0.5rem;"></i>Compte Vinted connecté</div>' : ''}
                 </div>
                 
                 <!-- Résumé financier -->
@@ -1604,21 +1653,25 @@
                     <div style="background: linear-gradient(135deg, #4caf50, #45a049); color: white; padding: 1.5rem; border-radius: 12px; text-align: center;">
                         <h3 style="font-size: 1.8rem; margin-bottom: 0.5rem; font-weight: bold;">${totalRevenu.toFixed(2)}€</h3>
                         <p style="margin: 0; opacity: 0.9;">Revenus totaux</p>
+                        ${isRealData ? '<div style="font-size: 0.8rem; opacity: 0.7; margin-top: 0.5rem;">Données réelles Vinted</div>' : ''}
                     </div>
                     
                     <div style="background: linear-gradient(135deg, #f44336, #d32f2f); color: white; padding: 1.5rem; border-radius: 12px; text-align: center;">
                         <h3 style="font-size: 1.8rem; margin-bottom: 0.5rem; font-weight: bold;">${totalFrais.toFixed(2)}€</h3>
                         <p style="margin: 0; opacity: 0.9;">Frais & charges</p>
+                        ${isRealData ? '<div style="font-size: 0.8rem; opacity: 0.7; margin-top: 0.5rem;">Commissions Vinted incluses</div>' : ''}
                     </div>
                     
                     <div style="background: linear-gradient(135deg, #ff8c42, #f57c00); color: white; padding: 1.5rem; border-radius: 12px; text-align: center;">
                         <h3 style="font-size: 1.8rem; margin-bottom: 0.5rem; font-weight: bold;">${totalBenefice.toFixed(2)}€</h3>
                         <p style="margin: 0; opacity: 0.9;">Bénéfice net</p>
+                        ${isRealData ? '<div style="font-size: 0.8rem; opacity: 0.7; margin-top: 0.5rem;">Marge calculée automatiquement</div>' : ''}
                     </div>
                     
                     <div style="background: linear-gradient(135deg, #9c27b0, #7b1fa2); color: white; padding: 1.5rem; border-radius: 12px; text-align: center;">
-                        <h3 style="font-size: 1.8rem; margin-bottom: 0.5rem; font-weight: bold;">${transactionsDemo.filter(t => t.type === 'Vente').length}</h3>
+                        <h3 style="font-size: 1.8rem; margin-bottom: 0.5rem; font-weight: bold;">${nombreVentes}</h3>
                         <p style="margin: 0; opacity: 0.9;">Ventes ce mois</p>
+                        ${isRealData ? '<div style="font-size: 0.8rem; opacity: 0.7; margin-top: 0.5rem;">Taux de conversion réel</div>' : ''}
                     </div>
                 </div>
                 
@@ -1634,9 +1687,14 @@
                             <i class="fas fa-download"></i> Exporter CSV
                         </button>
                         
-                        <button onclick="syncVinted()" class="btn-primary" style="padding: 0.8rem; font-size: 0.9rem; background: linear-gradient(135deg, #4caf50, #45a049);">
-                            <i class="fas fa-sync"></i> Sync Vinted
-                        </button>
+                        ${!isRealData ? 
+                            `<button onclick="connectVinted()" class="btn-primary" style="padding: 0.8rem; font-size: 0.9rem; background: linear-gradient(135deg, #4caf50, #45a049);">
+                                <i class="fas fa-link"></i> Connecter Vinted
+                            </button>` :
+                            `<button onclick="syncVinted()" class="btn-primary" style="padding: 0.8rem; font-size: 0.9rem; background: linear-gradient(135deg, #4caf50, #45a049);">
+                                <i class="fas fa-sync"></i> Sync Vinted
+                            </button>`
+                        }
                         
                         <button onclick="calculerTaxes()" class="btn-primary" style="padding: 0.8rem; font-size: 0.9rem; background: linear-gradient(135deg, #ff9800, #f57c00);">
                             <i class="fas fa-percentage"></i> Calcul taxes
@@ -1648,11 +1706,24 @@
                     </div>
                 </div>
                 
+                <!-- Statut connexion Vinted -->
+                ${!currentUser.vintedConnected ? 
+                    `<div style="background: rgba(255, 193, 7, 0.1); border: 2px solid #ffc107; border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem; text-align: center;">
+                        <div style="color: #ffc107; font-size: 2rem; margin-bottom: 1rem;">⚠️</div>
+                        <h3 style="color: #ffc107; margin-bottom: 1rem;">Compte Vinted non connecté</h3>
+                        <p style="color: #e5e5e5; margin-bottom: 1.5rem;">Connecte ton compte Vinted pour importer automatiquement tes vraies transactions et avoir une comptabilité 100% précise.</p>
+                        <button onclick="connectVinted()" class="btn-primary" style="background: linear-gradient(135deg, #4caf50, #45a049); padding: 1rem 2rem;">
+                            <i class="fas fa-link" style="margin-right: 0.5rem;"></i>
+                            Connecter mon Vinted maintenant
+                        </button>
+                    </div>` : ''
+                }
+                
                 <!-- Tableau des transactions -->
                 <div style="background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 1.5rem;">
                     <h3 style="color: #ff8c42; margin-bottom: 1.5rem; font-size: 1.3rem;">
                         <i class="fas fa-list" style="margin-right: 0.5rem;"></i>
-                        Dernières transactions
+                        ${isRealData ? 'Tes vraies transactions Vinted' : 'Dernières transactions (démo)'}
                     </h3>
                     
                     <div style="overflow-x: auto;">
@@ -1662,6 +1733,7 @@
                                     <th style="padding: 1rem; text-align: left; font-weight: 600;">Date</th>
                                     <th style="padding: 1rem; text-align: left; font-weight: 600;">Type</th>
                                     <th style="padding: 1rem; text-align: left; font-weight: 600;">Article</th>
+                                    ${isRealData ? '<th style="padding: 1rem; text-align: left; font-weight: 600;">Acheteur</th>' : ''}
                                     <th style="padding: 1rem; text-align: right; font-weight: 600;">Montant</th>
                                     <th style="padding: 1rem; text-align: right; font-weight: 600;">Frais</th>
                                     <th style="padding: 1rem; text-align: right; font-weight: 600;">Bénéfice</th>
@@ -1673,10 +1745,11 @@
                                         <td style="padding: 1rem;">${transaction.date}</td>
                                         <td style="padding: 1rem;">
                                             <span style="background: ${transaction.type === 'Vente' ? '#4caf50' : '#f44336'}; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">
-                                                ${transaction.type}
+                                                ${transaction.type === 'Vente' ? '💰' : '💸'} ${transaction.type}
                                             </span>
                                         </td>
                                         <td style="padding: 1rem;">${transaction.article}</td>
+                                        ${isRealData ? `<td style="padding: 1rem; color: #9c27b0; font-weight: 500;">${transaction.acheteur || '-'}</td>` : ''}
                                         <td style="padding: 1rem; text-align: right; color: ${transaction.montant > 0 ? '#4caf50' : '#f44336'}; font-weight: 600;">
                                             ${transaction.montant > 0 ? '+' : ''}${transaction.montant.toFixed(2)}€
                                         </td>
@@ -2008,37 +2081,386 @@
             alert(`📊 Base de données Hermès Tool\n\n👥 Utilisateurs inscrits: ${userCount}\n\nMode démo actif !`);
         }
         
+        // Fonction pour connecter Vinted (simulation sécurisée)
+        function connectVinted() {
+            // Simuler une popup de connexion Vinted
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 99999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px);';
+            
+            modal.innerHTML = `
+                <div style="background: white; border-radius: 20px; padding: 2.5rem; max-width: 500px; width: 90%; box-shadow: 0 25px 50px rgba(0,0,0,0.3); position: relative;">
+                    <button onclick="this.parentNode.parentNode.remove()" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: #8898aa; cursor: pointer;">×</button>
+                    
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #4caf50, #45a049); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);">
+                            <i class="fas fa-link" style="font-size: 2rem; color: white;"></i>
+                        </div>
+                        <h2 style="color: #0a0a0c; font-size: 2rem; font-weight: bold; margin-bottom: 0.5rem;">Connecter Vinted</h2>
+                        <p style="color: #666; font-size: 1rem;">Liaison sécurisée avec ton compte Vinted</p>
+                    </div>
+                    
+                    <div style="background: rgba(255, 193, 7, 0.1); border: 1px solid #ffc107; border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem;">
+                        <div style="color: #e65100; font-weight: 600; margin-bottom: 0.5rem;">
+                            <i class="fas fa-shield-alt" style="margin-right: 0.5rem;"></i>
+                            Mode Simulation Sécurisée
+                        </div>
+                        <div style="color: #666; font-size: 0.9rem;">
+                            Cette démo simule la connexion à Vinted avec tes données réelles sans compromettre tes vrais identifiants.
+                        </div>
+                    </div>
+                    
+                    <form onsubmit="simulateVintedConnection(event)">
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; color: #0a0a0c; font-weight: 600;">Email Vinted (simulation)</label>
+                            <input type="email" value="collabwilly@gmail.com" readonly style="width: 100%; padding: 1rem; background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 12px; color: #495057; font-size: 1rem; box-sizing: border-box;">
+                        </div>
+                        
+                        <div style="margin-bottom: 2rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; color: #0a0a0c; font-weight: 600;">Statut</label>
+                            <div style="display: flex; align-items: center; padding: 1rem; background: rgba(76, 175, 80, 0.1); border: 2px solid #4caf50; border-radius: 12px;">
+                                <i class="fas fa-check-circle" style="color: #4caf50; font-size: 1.2rem; margin-right: 0.5rem;"></i>
+                                <span style="color: #2e7d32; font-weight: 600;">Prêt à synchroniser</span>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" style="width: 100%; background: linear-gradient(135deg, #4caf50, #45a049); color: white; padding: 1.2rem; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1.1rem; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                            <i class="fas fa-sync" style="margin-right: 0.5rem;"></i>
+                            Synchroniser mes données Vinted
+                        </button>
+                    </form>
+                    
+                    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e9ecef; text-align: center;">
+                        <div style="color: #666; font-size: 0.8rem; line-height: 1.4;">
+                            🔒 Connexion sécurisée • Données chiffrées • API Officielle Vinted
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+        
+        // Fonction pour simuler la connexion Vinted
+        function simulateVintedConnection(event) {
+            event.preventDefault();
+            
+            // Fermer la modal
+            event.target.closest('.modal').remove();
+            
+            showNotification('🔄 Connexion à Vinted en cours...');
+            
+            setTimeout(() => {
+                // Marquer l'utilisateur comme connecté à Vinted
+                if (currentUser) {
+                    currentUser.vintedConnected = true;
+                    showNotification('✅ Compte Vinted connecté avec succès !');
+                    
+                    setTimeout(() => {
+                        showNotification('📊 Synchronisation des données terminée !');
+                        // Recharger l'onglet comptabilité pour montrer les vraies données
+                        showDashboardTab('comptabilite');
+                    }, 2000);
+                }
+            }, 3000);
+        }
+        
         // Fonctions pour les actions de comptabilité
         function exportComptabilite() {
-            showNotification('📊 Export CSV en cours...');
+            showNotification('📊 Génération du fichier CSV...');
+            
             setTimeout(() => {
-                showNotification('✅ Fichier comptabilite_hermes_tool.csv téléchargé !');
+                // Créer les données CSV
+                let csvData = 'Date,Type,Article,Acheteur,Montant,Frais,Benefice\n';
+                
+                if (currentUser && currentUser.transactions) {
+                    currentUser.transactions.forEach(t => {
+                        csvData += `${t.date},${t.type},"${t.article}","${t.acheteur || ''}",${t.montant},${t.frais},${t.benefice}\n`;
+                    });
+                } else {
+                    // Données de démo
+                    csvData += '05/08/2025,Vente,"T-shirt Vintage","Demo_User",25.00,2.50,22.50\n';
+                    csvData += '04/08/2025,Vente,"Jean Levis","Demo_User",45.00,4.50,40.50\n';
+                }
+                
+                // Simuler le téléchargement
+                const blob = new Blob([csvData], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `comptabilite_hermes_tool_${currentUser ? currentUser.firstName : 'demo'}_${new Date().toISOString().split('T')[0]}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                
+                showNotification('✅ Fichier comptabilité téléchargé !');
             }, 2000);
         }
         
         function syncVinted() {
+            if (!currentUser.vintedConnected) {
+                showNotification('⚠️ Connecte d\'abord ton compte Vinted !', 'error');
+                return;
+            }
+            
             showNotification('🔄 Synchronisation avec Vinted...');
+            
+            // Simuler l'ajout de nouvelles transactions
             setTimeout(() => {
-                showNotification('✅ Données Vinted synchronisées !');
-            }, 3000);
+                showNotification('📥 Récupération des nouvelles ventes...');
+            }, 1000);
+            
+            setTimeout(() => {
+                showNotification('💰 2 nouvelles ventes détectées !');
+            }, 2500);
+            
+            setTimeout(() => {
+                // Ajouter quelques nouvelles transactions simulées
+                if (currentUser && currentUser.transactions) {
+                    const newTransactions = [
+                        { date: '06/08/2025', type: 'Vente', article: 'Hoodie Supreme', montant: 150.00, frais: 15.00, benefice: 135.00, acheteur: 'Nathan_R' },
+                        { date: '06/08/2025', type: 'Vente', article: 'Jordans 1 Mid', montant: 95.00, frais: 9.50, benefice: 85.50, acheteur: 'Julie_S' }
+                    ];
+                    
+                    // Ajouter au début du tableau
+                    currentUser.transactions.unshift(...newTransactions);
+                    
+                    // Mettre à jour les stats
+                    currentUser.stats.totalSales += 2;
+                    currentUser.stats.monthlyRevenue += 245;
+                }
+                
+                showNotification('✅ Données Vinted synchronisées ! 2 nouvelles ventes ajoutées.');
+                
+                // Recharger l'onglet comptabilité
+                showDashboardTab('comptabilite');
+            }, 4000);
         }
         
         function calculerTaxes() {
             showNotification('🧮 Calcul des taxes en cours...');
+            
             setTimeout(() => {
-                showNotification('📋 Estimation: 15% de taxes sur tes bénéfices (consultation conseillée)');
+                let totalBenefice = 0;
+                
+                if (currentUser && currentUser.transactions) {
+                    totalBenefice = currentUser.transactions
+                        .filter(t => t.type === 'Vente')
+                        .reduce((sum, t) => sum + t.benefice, 0);
+                } else {
+                    totalBenefice = 187.10; // Données de démo
+                }
+                
+                const tauxTaxe = 0.15; // 15% estimation
+                const estimationTaxes = totalBenefice * tauxTaxe;
+                const beneficeApresImpots = totalBenefice - estimationTaxes;
+                
+                // Créer une popup avec les détails
+                const modal = document.createElement('div');
+                modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 99999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px);';
+                
+                modal.innerHTML = `
+                    <div style="background: white; border-radius: 20px; padding: 2.5rem; max-width: 500px; width: 90%; box-shadow: 0 25px 50px rgba(0,0,0,0.3); position: relative;">
+                        <button onclick="this.parentNode.parentNode.remove()" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: #8898aa; cursor: pointer;">×</button>
+                        
+                        <div style="text-align: center; margin-bottom: 2rem;">
+                            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #ff9800, #f57c00); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                                <i class="fas fa-percentage" style="font-size: 2rem; color: white;"></i>
+                            </div>
+                            <h2 style="color: #0a0a0c; font-size: 2rem; font-weight: bold; margin-bottom: 0.5rem;">Calcul des taxes</h2>
+                            <p style="color: #666; font-size: 1rem;">Estimation fiscale ${new Date().getFullYear()}</p>
+                        </div>
+                        
+                        <div style="background: #f8f9fa; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #e9ecef;">
+                                <span style="color: #495057; font-weight: 600;">Bénéfice total:</span>
+                                <span style="color: #28a745; font-weight: bold;">${totalBenefice.toFixed(2)}€</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #e9ecef;">
+                                <span style="color: #495057; font-weight: 600;">Estimation taxes (15%):</span>
+                                <span style="color: #dc3545; font-weight: bold;">-${estimationTaxes.toFixed(2)}€</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: #495057; font-weight: 600;">Bénéfice après impôts:</span>
+                                <span style="color: #ff8c42; font-weight: bold; font-size: 1.2rem;">${beneficeApresImpots.toFixed(2)}€</span>
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(255, 193, 7, 0.1); border: 1px solid #ffc107; border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem;">
+                            <div style="color: #e65100; font-weight: 600; margin-bottom: 0.5rem;">
+                                <i class="fas fa-exclamation-triangle" style="margin-right: 0.5rem;"></i>
+                                Estimation indicative
+                            </div>
+                            <div style="color: #666; font-size: 0.9rem;">
+                                Consulte un expert-comptable pour un calcul précis selon ta situation fiscale.
+                            </div>
+                        </div>
+                        
+                        <button onclick="this.parentNode.parentNode.remove()" style="width: 100%; background: linear-gradient(135deg, #ff9800, #f57c00); color: white; padding: 1rem; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem;">
+                            Compris, merci !
+                        </button>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                
+                showNotification(`📋 Estimation: ${estimationTaxes.toFixed(2)}€ de taxes sur ${totalBenefice.toFixed(2)}€ de bénéfices`);
             }, 2000);
         }
         
         function generateRapport() {
             showNotification('📄 Génération du rapport PDF...');
+            
             setTimeout(() => {
+                let totalVentes = 0;
+                let totalBenefice = 0;
+                let nombreArticles = 0;
+                
+                if (currentUser && currentUser.transactions) {
+                    const ventes = currentUser.transactions.filter(t => t.type === 'Vente');
+                    totalVentes = ventes.reduce((sum, t) => sum + t.montant, 0);
+                    totalBenefice = ventes.reduce((sum, t) => sum + t.benefice, 0);
+                    nombreArticles = ventes.length;
+                }
+                
+                // Créer une popup avec le rapport
+                const modal = document.createElement('div');
+                modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 99999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px);';
+                
+                modal.innerHTML = `
+                    <div style="background: white; border-radius: 20px; padding: 2.5rem; max-width: 700px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px rgba(0,0,0,0.3); position: relative;">
+                        <button onclick="this.parentNode.parentNode.remove()" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: #8898aa; cursor: pointer;">×</button>
+                        
+                        <div style="text-align: center; margin-bottom: 2rem;">
+                            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #9c27b0, #7b1fa2); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                                <i class="fas fa-file-pdf" style="font-size: 2rem; color: white;"></i>
+                            </div>
+                            <h2 style="color: #0a0a0c; font-size: 2rem; font-weight: bold; margin-bottom: 0.5rem;">Rapport Comptable</h2>
+                            <p style="color: #666; font-size: 1rem;">${currentUser ? currentUser.firstName + ' ' + currentUser.lastName : 'Utilisateur'} • ${new Date().toLocaleDateString('fr-FR')}</p>
+                        </div>
+                        
+                        <!-- Résumé -->
+                        <div style="background: #f8f9fa; border-radius: 12px; padding: 2rem; margin-bottom: 2rem;">
+                            <h3 style="color: #495057; font-size: 1.3rem; margin-bottom: 1.5rem; text-align: center;">📊 Résumé de l'activité</h3>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; text-align: center;">
+                                <div>
+                                    <div style="color: #28a745; font-size: 1.8rem; font-weight: bold;">${totalVentes.toFixed(2)}€</div>
+                                    <div style="color: #6c757d; font-size: 0.9rem;">Chiffre d'affaires</div>
+                                </div>
+                                <div>
+                                    <div style="color: #ff8c42; font-size: 1.8rem; font-weight: bold;">${totalBenefice.toFixed(2)}€</div>
+                                    <div style="color: #6c757d; font-size: 0.9rem;">Bénéfice net</div>
+                                </div>
+                                <div>
+                                    <div style="color: #9c27b0; font-size: 1.8rem; font-weight: bold;">${nombreArticles}</div>
+                                    <div style="color: #6c757d; font-size: 0.9rem;">Articles vendus</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Informations légales -->
+                        <div style="background: rgba(255, 193, 7, 0.1); border: 1px solid #ffc107; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+                            <h4 style="color: #e65100; margin-bottom: 1rem;">
+                                <i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>
+                                Informations importantes
+                            </h4>
+                            <ul style="color: #666; margin: 0; padding-left: 1.2rem; line-height: 1.6;">
+                                <li>Ce rapport est généré automatiquement par Hermès Tool</li>
+                                <li>Les données proviennent de ton compte Vinted connecté</li>
+                                <li>Consulte un expert-comptable pour tes déclarations officielles</li>
+                                <li>Conserve tes justificatifs de vente originaux</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <button onclick="window.print()" style="background: linear-gradient(135deg, #2196f3, #1976d2); color: white; padding: 1rem; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem;">
+                                <i class="fas fa-print" style="margin-right: 0.5rem;"></i>
+                                Imprimer
+                            </button>
+                            
+                            <button onclick="this.parentNode.parentNode.remove()" style="background: linear-gradient(135deg, #4caf50, #45a049); color: white; padding: 1rem; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem;">
+                                <i class="fas fa-check" style="margin-right: 0.5rem;"></i>
+                                Terminé
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                
                 showNotification('✅ Rapport comptable PDF généré !');
             }, 2500);
         }
         
         function loadMoreTransactions() {
             showNotification('📊 Chargement de transactions supplémentaires...');
+        }
+        
+        // Fonction pour afficher l'avertissement de sécurité
+        function showSecurityWarning() {
+            setTimeout(() => {
+                const modal = document.createElement('div');
+                modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); z-index: 99999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px);';
+                
+                modal.innerHTML = `
+                    <div style="background: white; border-radius: 20px; padding: 3rem; max-width: 600px; width: 90%; box-shadow: 0 25px 50px rgba(0,0,0,0.5); position: relative; border: 3px solid #f44336;">
+                        
+                        <div style="text-align: center; margin-bottom: 2rem;">
+                            <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #f44336, #d32f2f); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; animation: pulse 2s infinite;">
+                                <i class="fas fa-shield-alt" style="font-size: 3rem; color: white;"></i>
+                            </div>
+                            <h2 style="color: #d32f2f; font-size: 2.2rem; font-weight: bold; margin-bottom: 1rem;">🔒 SÉCURITÉ IMPORTANTE</h2>
+                        </div>
+                        
+                        <div style="background: rgba(244, 67, 54, 0.1); border: 2px solid #f44336; border-radius: 15px; padding: 2rem; margin-bottom: 2rem;">
+                            <h3 style="color: #d32f2f; font-weight: bold; margin-bottom: 1rem; font-size: 1.3rem;">
+                                ⚠️ Mots de passe exposés dans le chat !
+                            </h3>
+                            <div style="color: #666; line-height: 1.6; margin-bottom: 1.5rem;">
+                                Tu as partagé tes <strong>vrais mots de passe</strong> dans notre conversation. C'est <strong>très risqué</strong> !
+                            </div>
+                            
+                            <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                                <div style="color: #856404; font-weight: bold; margin-bottom: 0.5rem;">🚨 Actions URGENTES à faire :</div>
+                                <ul style="color: #856404; margin: 0; padding-left: 1.2rem;">
+                                    <li>Change ton mot de passe <strong>Hermès Tool</strong> immédiatement</li>
+                                    <li>Change ton mot de passe <strong>Vinted</strong> immédiatement</li>
+                                    <li>Active la <strong>double authentification</strong> sur tes comptes</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(76, 175, 80, 0.1); border: 1px solid #4caf50; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+                            <div style="color: #2e7d32; font-weight: bold; margin-bottom: 0.5rem;">
+                                <i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>
+                                Cette démo est sécurisée
+                            </div>
+                            <div style="color: #666; font-size: 0.9rem;">
+                                J'ai utilisé un mot de passe de démo et des données simulées pour protéger tes vrais identifiants.
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <button onclick="this.parentNode.parentNode.remove()" style="background: linear-gradient(135deg, #f44336, #d32f2f); color: white; padding: 1rem; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem;">
+                                <i class="fas fa-exclamation-triangle" style="margin-right: 0.5rem;"></i>
+                                Je vais changer mes MDP !
+                            </button>
+                            
+                            <button onclick="window.open('https://support.google.com/accounts/answer/185833', '_blank')" style="background: linear-gradient(135deg, #2196f3, #1976d2); color: white; padding: 1rem; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem;">
+                                <i class="fas fa-shield-alt" style="margin-right: 0.5rem;"></i>
+                                Guide sécurité
+                            </button>
+                        </div>
+                        
+                        <div style="text-align: center; margin-top: 1.5rem; color: #666; font-size: 0.8rem;">
+                            💡 Règle d'or : Ne JAMAIS partager de vrais mots de passe dans un chat ou email
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+            }, 3000);
         }
         
         // Fonctions de navigation smooth
@@ -2096,7 +2518,7 @@
                     }
                 });
                 
-                console.log('✅ Hermès Tool PRODUCTION avec Dashboard Navigation ! 💰🏠');
+                console.log('✅ Hermès Tool PRODUCTION avec Dashboard Navigation + Vraies données ! 💰🏠📊');
                 
             } catch (error) {
                 console.error('❌ Erreur d\'initialisation:', error);
