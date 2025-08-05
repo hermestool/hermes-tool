@@ -596,11 +596,7 @@
         
         /* Responsive design pour le dashboard */
         @media (max-width: 768px) {
-            .dashboard-container {
-                flex-direction: column;
-            }
-            
-            .dashboard-sidebar {
+            #dashboardSidebar {
                 width: 100% !important;
                 position: relative !important;
                 height: auto !important;
@@ -609,6 +605,12 @@
             .dashboard-content {
                 margin-left: 0 !important;
             }
+        }
+        
+        /* S'assurer que la sidebar reste visible */
+        #dashboardSidebar {
+            display: block !important;
+            visibility: visible !important;
         }
         
         /* Smooth scrolling */
@@ -1861,6 +1863,13 @@
             // Afficher l'onglet par défaut après un court délai pour s'assurer que le DOM est prêt
             setTimeout(() => {
                 showDashboardTab('overview');
+                
+                // S'assurer que la sidebar est bien visible
+                const sidebar = document.getElementById('dashboardSidebar');
+                if (sidebar) {
+                    sidebar.style.display = 'block';
+                    sidebar.style.visibility = 'visible';
+                }
             }, 100);
             
             console.log('✅ Dashboard affiché');
@@ -1938,6 +1947,13 @@
         function showDashboardTab(tabName) {
             currentDashboardTab = tabName;
             
+            // S'assurer que la sidebar reste visible
+            const sidebar = document.getElementById('dashboardSidebar');
+            if (sidebar) {
+                sidebar.style.display = 'block';
+                sidebar.style.visibility = 'visible';
+            }
+            
             // Afficher le contenu correspondant
             const contentDiv = document.getElementById('dashboardContent');
             if (!contentDiv) {
@@ -1961,12 +1977,37 @@
                 default:
                     contentDiv.innerHTML = getDashboardOverviewHTML();
             }
+            
+            // Mettre à jour l'apparence de la navigation
+            updateDashboardNavigation(tabName);
         }
         
-        // Mettre à jour l'apparence de la navigation (simplifiée)
-        function updateDashboardNavigation() {
-            // Cette fonction peut être utilisée pour des mises à jour futures
-            // Pour l'instant, la navigation est gérée dans le HTML généré
+        // Mettre à jour l'apparence de la navigation
+        function updateDashboardNavigation(activeTab) {
+            // Retirer la classe active de tous les éléments
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                item.style.background = 'transparent';
+                item.style.borderLeft = '4px solid transparent';
+            });
+            
+            // Ajouter la classe active au bon élément selon l'onglet
+            const tabMapping = {
+                'overview': 0,
+                'comptabilite': 1,
+                'ia-messages': 2,
+                'republication': 3
+            };
+            
+            const activeIndex = tabMapping[activeTab];
+            if (activeIndex !== undefined) {
+                const navItems = document.querySelectorAll('.nav-item');
+                if (navItems[activeIndex]) {
+                    navItems[activeIndex].classList.add('active');
+                    navItems[activeIndex].style.background = 'rgba(255, 140, 66, 0.1)';
+                    navItems[activeIndex].style.borderLeft = '4px solid #ff8c42';
+                }
+            }
         }
         
         // HTML de l'overview (dashboard principal)
@@ -2148,7 +2189,7 @@
             // Fermer toutes les modals (méthode simple)
             const modals = document.querySelectorAll('[style*="position: fixed"]');
             modals.forEach(modal => {
-                if (modal.style.position === 'fixed') {
+                if (modal.style.position === 'fixed' && modal.style.zIndex === '99999') {
                     modal.remove();
                 }
             });
@@ -2167,7 +2208,9 @@
                         console.log('📊 Simulation: Rechargement comptabilité');
                         showNotification('📊 Synchronisation des données terminée !');
                         // Recharger l'onglet comptabilité pour montrer les vraies données
-                        showDashboardTab('comptabilite');
+                        if (currentDashboardTab === 'comptabilite') {
+                            showDashboardTab('comptabilite');
+                        }
                     }, 2000);
                 } else {
                     console.error('❌ currentUser non défini');
