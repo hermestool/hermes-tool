@@ -2123,7 +2123,7 @@
                             </div>
                         </div>
                         
-                        <button type="submit" style="width: 100%; background: linear-gradient(135deg, #4caf50, #45a049); color: white; padding: 1.2rem; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1.1rem; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                        <button type="submit" style="width: 100%; background: linear-gradient(135deg, #4caf50, #45a049); color: white; padding: 1.2rem; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1.1rem; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'" onclick="simulateVintedConnection(event)">
                             <i class="fas fa-sync" style="margin-right: 0.5rem;"></i>
                             Synchroniser mes données Vinted
                         </button>
@@ -2140,26 +2140,38 @@
             document.body.appendChild(modal);
         }
         
-        // Fonction pour simuler la connexion Vinted
+        // Fonction pour simuler la connexion Vinted (VERSION SIMPLIFIÉE)
         function simulateVintedConnection(event) {
             event.preventDefault();
+            event.stopPropagation();
             
-            // Fermer la modal
-            event.target.closest('.modal').remove();
+            // Fermer toutes les modals (méthode simple)
+            const modals = document.querySelectorAll('[style*="position: fixed"]');
+            modals.forEach(modal => {
+                if (modal.style.position === 'fixed') {
+                    modal.remove();
+                }
+            });
             
+            console.log('🔄 Début simulation connexion Vinted...');
             showNotification('🔄 Connexion à Vinted en cours...');
             
             setTimeout(() => {
+                console.log('✅ Simulation: Vinted connecté');
                 // Marquer l'utilisateur comme connecté à Vinted
                 if (currentUser) {
                     currentUser.vintedConnected = true;
                     showNotification('✅ Compte Vinted connecté avec succès !');
                     
                     setTimeout(() => {
+                        console.log('📊 Simulation: Rechargement comptabilité');
                         showNotification('📊 Synchronisation des données terminée !');
                         // Recharger l'onglet comptabilité pour montrer les vraies données
                         showDashboardTab('comptabilite');
                     }, 2000);
+                } else {
+                    console.error('❌ currentUser non défini');
+                    showNotification('❌ Erreur: utilisateur non connecté', 'error');
                 }
             }, 3000);
         }
