@@ -1,13 +1,14 @@
 // netlify/functions/validate-user.js
-// Fonction Netlify pour valider les emails des utilisateurs depuis l'extension
+// Fonction Netlify pour valider les utilisateurs avec email + mot de passe
 
 console.log('🔍 Fonction validate-user initialisée');
 
 // ===== BASE DE DONNÉES UTILISATEURS =====
-// En synchronisation avec la base principale du site
+// En production, utiliser une vraie BDD avec mots de passe hashés (bcrypt)
 const validUsers = {
     'admin@hermestool.com': {
         email: 'admin@hermestool.com',
+        password: 'admin123', // En prod: hash bcrypt
         firstName: 'Admin',
         lastName: 'Hermès',
         plan: 'Archon',
@@ -17,6 +18,7 @@ const validUsers = {
     },
     'shinolegrandieu@gmail.com': {
         email: 'shinolegrandieu@gmail.com',
+        password: 'Micromania1@', // ⚠️ En prod: hash bcrypt
         firstName: 'Shino',
         lastName: 'Le Grandieu',
         plan: 'Archon',
@@ -27,6 +29,7 @@ const validUsers = {
     },
     'collabwilly@gmail.com': {
         email: 'collabwilly@gmail.com',
+        password: 'willy123', // En prod: hash bcrypt
         firstName: 'Willy',
         lastName: 'Collab',
         plan: 'Métrios',
@@ -36,6 +39,7 @@ const validUsers = {
     },
     'test@hermestool.com': {
         email: 'test@hermestool.com',
+        password: 'test123', // En prod: hash bcrypt
         firstName: 'Test',
         lastName: 'User',
         plan: 'Néophyte',
@@ -80,7 +84,7 @@ exports.handler = async (event, context) => {
     
     try {
         // Parser les données de la requête
-        const { email, source } = JSON.parse(event.body);
+        const { email, password, source } = JSON.parse(event.body);
         
         console.log('🔍 Validation demandée pour:', email, 'depuis:', source);
         
@@ -118,11 +122,45 @@ exports.handler = async (event, context) => {
                 body: JSON.stringify({
                     valid: false,
                     error: 'Utilisateur non trouvé',
-                    message: 'Cet email n\'est pas associé à un compte Hermès Tool actif'
+                    message: 'Cet email n\'est pas associé à un compte Hermès Tool'
                 })
             };
         }
         
+        // NOUVELLE LOGIQUE : Vérification du mot de passe si fourni
+        if (password !== undefined) {
+            // Si un mot de passe est fourni, on DOIT le vérifier
+            if (!password) {
+                return {
+                    statusCode: 200,
+                    headers,
+                    body: JSON.stringify({
+                        valid: false,
+                        error: 'Mot de passe requis',
+                        message: 'Veuillez entrer votre mot de passe'
+                    })
+                };
+            }
+            
+            // Vérifier le mot de passe
+            // En production : utiliser bcrypt.compare(password, user.hashedPassword)
+            if (user.password !== password) {
+                console.log('❌ Mot de passe incorrect pour:', email);
+                return {
+                    statusCode: 200,
+                    headers,
+                    body: JSON.stringify({
+                        valid: false,
+                        error: 'Mot de passe incorrect',
+                        message: 'Email ou mot de passe incorrect'
+                    })
+                };
+            }
+            
+            console.log('✅ Authentification réussie pour:', email);
+        }
+        
+        // Vérifications du compte
         if (!user.isActive) {
             console.log('❌ Compte inactif:', email);
             return {
@@ -131,7 +169,7 @@ exports.handler = async (event, context) => {
                 body: JSON.stringify({
                     valid: false,
                     error: 'Compte inactif',
-                    message: 'Ce compte est désactivé'
+                    message: 'Ce compte est désactivé. Contactez le support.'
                 })
             };
         }
@@ -144,7 +182,7 @@ exports.handler = async (event, context) => {
                 body: JSON.stringify({
                     valid: false,
                     error: 'Extension non autorisée',
-                    message: 'L\'extension n\'est pas activée pour ce compte'
+                    message: 'L\'extension n\'est pas activée pour ce compte. Contactez le support.'
                 })
             };
         }
@@ -153,21 +191,27 @@ exports.handler = async (event, context) => {
         console.log('✅ Utilisateur validé:', email, '- Plan:', user.plan);
         
         // Logger l'activité
-        logValidationActivity(email, source, true);
+        logValidationActivity(email, source, true, password ? 'with_password' : 'without_password');
+        
+        // Préparer la réponse (sans le mot de passe !)
+        const userResponse = {
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            plan: user.plan,
+            features: getPlanFeatures(user.plan),
+            createdAt: user.createdAt,
+            lastLogin: new Date().toISOString()
+        };
         
         return {
             statusCode: 200,
             headers,
             body: JSON.stringify({
                 valid: true,
-                user: {
-                    email: user.email,
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    plan: user.plan,
-                    features: getPlanFeatures(user.plan)
-                },
-                message: 'Utilisateur validé avec succès'
+                user: userResponse,
+                message: 'Authentification réussie',
+                token: generateSimpleToken(user.email) // Token simple pour l'extension
             })
         };
         
@@ -235,14 +279,21 @@ function getPlanFeatures(plan) {
     return features[plan] || features['Néophyte'];
 }
 
-function logValidationActivity(email, source, success, error = null) {
+function generateSimpleToken(email) {
+    // Token simple pour l'extension (en prod: utiliser JWT)
+    const timestamp = Date.now();
+    const random = Math.random().toString(36).substr(2, 9);
+    return Buffer.from(`${email}:${timestamp}:${random}`).toString('base64');
+}
+
+function logValidationActivity(email, source, success, details = null) {
     const logEntry = {
         timestamp: new Date().toISOString(),
         action: 'user_validation',
         email: email || 'unknown',
         source: source || 'unknown',
         success: success,
-        error: error,
+        details: details,
         ip: getClientIP(),
         userAgent: getUserAgent()
     };
@@ -255,11 +306,13 @@ function logValidationActivity(email, source, success, error = null) {
 
 function getClientIP() {
     // En production, récupérer depuis les headers Netlify
+    // return event.headers['x-nf-client-connection-ip'] || 'unknown';
     return 'unknown';
 }
 
 function getUserAgent() {
     // En production, récupérer depuis les headers
+    // return event.headers['user-agent'] || 'unknown';
     return 'chrome-extension';
 }
 
