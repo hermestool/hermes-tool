@@ -2228,23 +2228,83 @@
         }
         
         // Actualiser le statut de l'extension
-        function refreshExtensionStatus() {
-            showNotification('🔄 Vérification extension...');
+function refreshExtensionStatus() {
+    showNotification('🔄 Vérification extension...');
+    
+    // Méthode 1 : Vérifier si l'extension peut communiquer
+    if (window.chrome && chrome.runtime) {
+        // Essayer d'envoyer un message à l'extension
+        try {
+            // Méthode alternative : utiliser un custom event
+            const event = new CustomEvent('hermesCheckExtension', {
+                detail: { action: 'ping' }
+            });
+            document.dispatchEvent(event);
             
-            if (vintedDataManager) {
-                vintedDataManager.checkExtensionData().then(() => {
-                    // Recharger l'onglet comptabilité pour afficher le nouveau statut
-                    showDashboardTab('comptabilite');
-                });
-            } else {
-                // Réinitialiser le gestionnaire de données
-                vintedDataManager = new VintedDataManager();
-                
-                setTimeout(() => {
-                    showDashboardTab('comptabilite');
-                }, 2000);
-            }
+            // Attendre la réponse
+            window.addEventListener('hermesExtensionResponse', function(e) {
+                if (e.detail && e.detail.installed) {
+                    showNotification('✅ Extension détectée !');
+                    
+                    // Réinitialiser le gestionnaire avec les nouvelles données
+                    if (vintedDataManager) {
+                        vintedDataManager.checkExtensionData().then(() => {
+                            showDashboardTab('comptabilite');
+                        });
+                    }
+                }
+            }, { once: true });
+            
+            // Timeout si pas de réponse
+            setTimeout(() => {
+                // Méthode 2 : Vérifier via l'API
+                checkExtensionViaAPI();
+            }, 2000);
+            
+        } catch (error) {
+            console.error('Erreur communication extension:', error);
+            checkExtensionViaAPI();
         }
+    } else {
+        checkExtensionViaAPI();
+    }
+}
+
+// Nouvelle fonction pour vérifier via l'API
+function checkExtensionViaAPI() {
+    if (!currentUser) return;
+    
+    fetch(window.location.origin + '/.netlify/functions/vinted-sync', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            action: 'get-data',
+            userEmail: currentUser.email
+        })
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success && result.data) {
+            // Mettre à jour les données
+            if (vintedDataManager) {
+                vintedDataManager.extensionData = result.data;
+                vintedDataManager.hasExtensionData = true;
+                vintedDataManager.updateUserWithRealData();
+            }
+            
+            showNotification('✅ Données synchronisées !');
+            showDashboardTab('comptabilite');
+        } else {
+            showNotification('⚠️ Aucune donnée trouvée', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Erreur:', error);
+        showNotification('❌ Erreur de synchronisation', 'error');
+    });
+}
         
         function showDashboard() {
             if (!currentUser) {
