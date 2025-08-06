@@ -2243,19 +2243,19 @@ function refreshExtensionStatus() {
             });
             document.dispatchEvent(event);
             
-            // Attendre la réponse
+           // Attendre la réponse
 window.addEventListener('hermesExtensionResponse', function(e) {
     if (e.detail && e.detail.installed) {
-        showNotification('✅ Extension détectée !');
+        showNotification('✅ Extension détectée ! Rechargement...');
         
         // Sauvegarder l'état dans localStorage
         localStorage.setItem('hermesExtensionConnected', 'true');
         localStorage.setItem('hermesLastSync', new Date().toISOString());
         
-        // Forcer le rechargement de la page comptabilité
+        // FORCER UN RECHARGEMENT COMPLET DE LA PAGE
         setTimeout(() => {
-            showDashboardTab('comptabilite');
-        }, 500);
+            window.location.reload();
+        }, 1500);
     }
 }, { once: true });
             
@@ -2298,8 +2298,11 @@ function checkExtensionViaAPI() {
                 vintedDataManager.updateUserWithRealData();
             }
             
-            showNotification('✅ Données synchronisées !');
-            showDashboardTab('comptabilite');
+            showNotification('✅ Données synchronisées ! Rechargement...');
+localStorage.setItem('hermesExtensionConnected', 'true');
+setTimeout(() => {
+    window.location.reload();
+}, 1500)
         } else {
             showNotification('⚠️ Aucune donnée trouvée', 'error');
         }
