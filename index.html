@@ -3,547 +3,478 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hermès Tool - Automatise ton Vinted avec l'IA</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <title>Hermès Tool - Automatisation Vinted Premium</title>
+    <link rel="icon" type="image/png" href="favicon.png">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-
+        }
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0c;
+            color: #e5e5e5;
             line-height: 1.6;
-            color: #333;
-            background: #f8fafc;
-            min-height: 100vh;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+            overflow-x: hidden;
         }
         
         /* Header */
         .header {
-            background: linear-gradient(135deg, #0a0a0c 0%, #1a1a1e 100%);
-            padding: 1rem 0;
             position: fixed;
-            width: 100%;
             top: 0;
+            width: 100%;
+            background: rgba(10, 10, 12, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 140, 66, 0.2);
             z-index: 1000;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
+            padding: 20px 0;
         }
         
-        .header-content {
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         
         .logo {
-            display: flex;
-            align-items: center;
-            color: white;
-            font-size: 1.5rem;
+            font-size: 24px;
             font-weight: bold;
-            text-decoration: none;
-        }
-        
-        .logo i {
-            margin-right: 10px;
-            font-size: 2rem;
-            background: linear-gradient(45deg, #ff8c42, #f57c00);
+            background: linear-gradient(135deg, #ff8c42, #f57c00);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
-        .nav {
+        .nav-links {
             display: flex;
-            list-style: none;
-            gap: 2rem;
+            gap: 30px;
             align-items: center;
         }
         
-        .nav a {
-            color: white;
+        .nav-links a {
+            color: #e5e5e5;
             text-decoration: none;
-            font-weight: 500;
             transition: color 0.3s;
         }
         
-        .nav a:hover {
+        .nav-links a:hover {
             color: #ff8c42;
         }
         
-        .btn-primary {
+        .cta-button {
             background: linear-gradient(135deg, #ff8c42, #f57c00);
             color: white;
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 50px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: transform 0.3s, box-shadow 0.3s;
+            padding: 12px 24px;
+            border-radius: 8px;
             text-decoration: none;
-            display: inline-block;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
         }
         
-        .btn-primary:hover {
+        .cta-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(255, 140, 66, 0.3);
         }
         
-        .btn-secondary {
-            background: transparent;
-            color: #e5e5e5;
-            border: 2px solid #ff8c42;
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        .btn-secondary:hover {
-            background: #ff8c42;
-            transform: translateY(-2px);
-        }
-        
         /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, #0a0a0c 0%, #1a1a1e 100%);
-            color: #e5e5e5;
-            padding: 120px 0 80px;
+            padding: 140px 20px 80px;
             text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="50" cy="10" r="1" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-            opacity: 0.1;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 140, 66, 0.1) 0%, transparent 50%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .hero-content {
-            position: relative;
-            z-index: 2;
+            max-width: 900px;
+            margin: 0 auto;
         }
         
         .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(45deg, #ff8c42, #f57c00, #ff9a57);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #fff 0%, #ff8c42 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             line-height: 1.2;
         }
         
         .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-            max-width: 600px;
+            font-size: 1.25rem;
+            color: #ccc;
+            margin-bottom: 40px;
+            max-width: 700px;
             margin-left: auto;
             margin-right: auto;
         }
         
         .hero-buttons {
             display: flex;
-            gap: 1rem;
+            gap: 20px;
             justify-content: center;
             flex-wrap: wrap;
-            margin-bottom: 3rem;
         }
         
-        .play-button {
-            width: 100px;
-            height: 100px;
+        .primary-button {
             background: linear-gradient(135deg, #ff8c42, #f57c00);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 10px 30px rgba(255, 140, 66, 0.3);
-        }
-        
-        .play-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 15px 40px rgba(255, 140, 66, 0.4);
-        }
-        
-        .play-button i {
-            font-size: 2rem;
             color: white;
-            margin-left: 5px;
+            padding: 16px 40px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
         }
         
-        /* Features Section */
+        .primary-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(255, 140, 66, 0.3);
+        }
+        
+        .secondary-button {
+            background: transparent;
+            color: #ff8c42;
+            padding: 16px 40px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            border: 2px solid #ff8c42;
+            display: inline-block;
+            cursor: pointer;
+        }
+        
+        .secondary-button:hover {
+            background: rgba(255, 140, 66, 0.1);
+        }
+        
+        /* Features */
         .features {
-            padding: 80px 0;
-            background: white;
+            padding: 80px 20px;
+            background: rgba(26, 26, 30, 0.5);
         }
         
-        .section-title {
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .features h2 {
             text-align: center;
             font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: #0a0a0c;
-        }
-        
-        .section-subtitle {
-            text-align: center;
-            font-size: 1.2rem;
-            color: #666;
-            margin-bottom: 3rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+            margin-bottom: 60px;
+            background: linear-gradient(135deg, #ff8c42, #f57c00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
         }
         
         .feature-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            background: rgba(255, 140, 66, 0.05);
+            border: 2px solid rgba(255, 140, 66, 0.2);
+            border-radius: 16px;
+            padding: 40px 30px;
+            text-align: center;
             transition: all 0.3s;
-            border: 1px solid #f0f0f0;
-            opacity: 0;
-            transform: translateY(30px);
         }
         
         .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            transform: translateY(-5px);
+            border-color: #ff8c42;
+            background: rgba(255, 140, 66, 0.1);
         }
         
         .feature-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #ff8c42, #f57c00);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1rem;
-        }
-        
-        .feature-icon i {
-            font-size: 1.5rem;
-            color: white;
+            font-size: 3rem;
+            margin-bottom: 20px;
         }
         
         .feature-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: #0a0a0c;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #ff8c42;
         }
         
         .feature-card p {
-            color: #666;
-            line-height: 1.6;
+            color: #ccc;
+            line-height: 1.8;
         }
         
-        /* Why Section */
-        .why-section {
-            padding: 80px 0;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-        }
-        
-        .why-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 3rem;
-        }
-        
-        .why-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-        }
-        
-        .why-icon {
-            width: 12px;
-            height: 12px;
-            background: linear-gradient(135deg, #ff8c42, #f57c00);
-            border-radius: 50%;
-            margin-top: 8px;
-            flex-shrink: 0;
-        }
-        
-        .why-item p {
-            font-size: 1.1rem;
-            color: #0a0a0c;
-            font-weight: 500;
-        }
-        
-        /* Pricing Section */
+        /* Pricing */
         .pricing {
-            padding: 80px 0;
-            background: white;
+            padding: 80px 20px;
+            background: rgba(10, 10, 12, 0.8);
+        }
+        
+        .pricing-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .pricing h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            background: linear-gradient(135deg, #ff8c42, #f57c00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         .pricing-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
+            gap: 30px;
         }
         
         .pricing-card {
-            background: white;
-            border: 2px solid #f0f0f0;
-            border-radius: 20px;
-            padding: 2rem;
+            background: rgba(26, 26, 30, 0.8);
+            border: 2px solid rgba(255, 140, 66, 0.2);
+            border-radius: 16px;
+            padding: 40px 30px;
             text-align: center;
             position: relative;
             transition: all 0.3s;
-            opacity: 0;
-            transform: translateY(30px);
         }
         
-        .pricing-card.popular {
+        .pricing-card.featured {
             border-color: #ff8c42;
             transform: scale(1.05);
-            box-shadow: 0 20px 40px rgba(255, 140, 66, 0.2);
-        }
-        
-        .pricing-card.popular::before {
-            content: 'Populaire';
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #ff8c42, #f57c00);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: bold;
         }
         
         .pricing-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border-color: #ff8c42;
         }
         
-        .pricing-card.popular:hover {
+        .pricing-card.featured:hover {
             transform: scale(1.05) translateY(-5px);
         }
         
-        .pricing-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: #0a0a0c;
-        }
-        
-        .price {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #0a0a0c;
-            margin-bottom: 0.5rem;
-        }
-        
-        .price-period {
-            font-size: 1rem;
-            color: #666;
-            font-weight: normal;
-        }
-        
-        .pricing-features {
-            list-style: none;
-            margin: 2rem 0;
-            text-align: left;
-        }
-        
-        .pricing-features li {
-            padding: 0.5rem 0;
-            color: #666;
-            display: flex;
-            align-items: center;
-        }
-        
-        .pricing-features li i {
+        .plan-name {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
             color: #ff8c42;
-            margin-right: 0.5rem;
-            width: 16px;
         }
         
-        /* Testimonials */
-        .testimonials {
-            padding: 80px 0;
-            background: linear-gradient(135deg, #0a0a0c 0%, #1a1a1e 100%);
-            color: #e5e5e5;
+        .plan-price {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
         }
         
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
+        .plan-price span {
+            font-size: 1rem;
+            color: #888;
         }
         
-        .testimonial-card {
-            background: rgba(255,255,255,0.1);
-            padding: 2rem;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease-out;
+        .plan-features {
+            list-style: none;
+            margin: 30px 0;
         }
         
-        .testimonial-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #ff8c42, #f57c00);
-            border-radius: 50%;
+        .plan-features li {
+            padding: 10px 0;
+            color: #ccc;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 1rem;
+            gap: 10px;
         }
         
-        .testimonial-icon i {
-            font-size: 1.5rem;
-            color: white;
-        }
-        
-        .testimonial-card h3 {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-        }
-        
-        .testimonial-card p {
-            opacity: 0.9;
-            line-height: 1.6;
-        }
-        
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 1rem;
-            background: linear-gradient(135deg, #4caf50, #45a049);
-            color: white;
-            border-radius: 8px;
-            z-index: 9999;
+        .plan-features li::before {
+            content: "✓";
+            color: #4caf50;
             font-weight: bold;
         }
         
-        .page {
+        /* Footer */
+        .footer {
+            padding: 40px 20px;
+            background: rgba(10, 10, 12, 0.95);
+            border-top: 1px solid rgba(255, 140, 66, 0.2);
+            text-align: center;
+        }
+        
+        .footer p {
+            color: #888;
+        }
+        
+        /* Modal */
+        .modal {
             display: none;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-            min-height: 100vh;
-            width: 100%;
-            position: relative;
-        }
-        
-        .page.active {
-            display: block !important;
-            opacity: 1 !important;
-            min-height: 100vh !important;
-            width: 100% !important;
-        }
-        
-        /* Modal styles */
-        .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0,0,0,0.8);
-            z-index: 99999;
-            display: flex;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(5px);
         }
         
         .modal-content {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
+            background: #1a1a1e;
+            border-radius: 16px;
+            padding: 40px;
             max-width: 500px;
             width: 90%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border: 2px solid rgba(255, 140, 66, 0.3);
             position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
         }
         
-        .modal-close {
+        .close-modal {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: #888;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close-modal:hover {
+            color: #ff8c42;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e5e5e5;
+            font-weight: bold;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(255, 140, 66, 0.3);
+            border-radius: 8px;
+            background: rgba(26, 26, 30, 0.8);
+            color: #e5e5e5;
+            font-size: 16px;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff8c42;
+        }
+        
+        .form-button {
+            width: 100%;
+            background: linear-gradient(135deg, #ff8c42, #f57c00);
+            color: white;
+            padding: 14px;
+            border-radius: 8px;
             border: none;
-            font-size: 1.5rem;
-            color: #8898aa;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .form-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 140, 66, 0.3);
+        }
+        
+        .form-toggle {
+            text-align: center;
+            margin-top: 20px;
+            color: #888;
+        }
+        
+        .form-toggle a {
+            color: #ff8c42;
+            text-decoration: none;
             cursor: pointer;
         }
         
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* User Dashboard */
+        .user-dashboard {
+            display: none;
+            padding: 140px 20px 80px;
+            min-height: 100vh;
         }
         
-        @keyframes pulse {
-            0%, 100% { 
-                transform: scale(1);
-                opacity: 0.8;
-            }
-            50% { 
-                transform: scale(1.05);
-                opacity: 1;
-            }
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
         }
         
-        .fade-in {
-            animation: fadeInUp 0.8s ease-out;
+        .welcome-message {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .welcome-message h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ff8c42, #f57c00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .user-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .stat-card {
+            background: rgba(26, 26, 30, 0.8);
+            border: 2px solid rgba(255, 140, 66, 0.2);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #ff8c42;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: #888;
+            text-transform: uppercase;
+            font-size: 0.9rem;
         }
         
         /* Responsive */
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
+            .nav-links {
+                display: none;
             }
             
-            .hero p {
-                font-size: 1.1rem;
+            .hero h1 {
+                font-size: 2rem;
             }
             
             .hero-buttons {
@@ -551,2363 +482,498 @@
                 align-items: center;
             }
             
-            .header-content {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .nav {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            .pricing-card.popular {
+            .pricing-card.featured {
                 transform: none;
             }
-            
-            .pricing-card.popular:hover {
-                transform: translateY(-5px);
-            }
-        }
-        
-        
-        /* Styles pour la navigation du dashboard */
-        .nav-item {
-            transition: all 0.3s ease;
-        }
-        
-        .nav-item:hover {
-            background: rgba(255, 140, 66, 0.1) !important;
-            border-left: 4px solid #ff8c42 !important;
-        }
-        
-        .nav-item:hover span {
-            color: #ff8c42 !important;
-        }
-        
-        .nav-item.active {
-            background: rgba(255, 140, 66, 0.1) !important;
-            border-left: 4px solid #ff8c42 !important;
-        }
-        
-        .nav-item.active span {
-            color: #ff8c42 !important;
-        }
-        
-        /* Responsive design pour le dashboard */
-        @media (max-width: 768px) {
-            #dashboardSidebar {
-                width: 100% !important;
-                position: relative !important;
-                height: auto !important;
-            }
-            
-            .dashboard-content {
-                margin-left: 0 !important;
-            }
-        }
-        
-        /* S'assurer que la sidebar reste visible */
-        #dashboardSidebar {
-            display: block !important;
-            visibility: visible !important;
-        }
-        
-        /* Smooth scrolling */
-        html {
-            scroll-behavior: smooth;
         }
     </style>
 </head>
 <body>
-    <!-- Page d'accueil -->
-    <div id="homePage" class="page active">
-        <!-- Header -->
-        <header class="header">
-            <div class="container">
-                <div class="header-content">
-                    <a href="#" class="logo" onclick="showHome()">
-                        <i class="fas fa-bolt"></i>
-                        HERMÈS TOOL
-                    </a>
-                    <nav class="nav">
-                        <a href="#fonctionnalites" onclick="scrollToSection('fonctionnalites')">Fonctionnalités</a>
-                        <a href="#tarifs" onclick="scrollToSection('tarifs')">Tarifs</a>
-                        <a href="#pourquoi" onclick="scrollToSection('pourquoi')">Pourquoi nous</a>
-                        <a href="#temoignages" onclick="scrollToSection('temoignages')">Témoignages</a>
-                        <button class="btn-primary" onclick="showLogin()">Se connecter</button>
-                    </nav>
-                </div>
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">
+                ⚡ Hermès Tool
             </div>
-        </header>
-
-        <!-- Hero Section -->
-        <section class="hero">
-            <div class="container">
-                <div class="hero-content fade-in">
-                    <h1>L'outil ultime pour automatiser ton Vinted</h1>
-                    <p>Vends plus, bosse moins. Hermès tool gère tout pour toi : reposts automatiques, dashboard détaillé, messages IA, génération d'image, recherche produits gagnants selon ta niche, compta intégrée...</p>
-                    <div class="hero-buttons">
-                        <button class="btn-primary" onclick="showSignup()">Essayer gratuitement</button>
-                        <a href="#fonctionnalites" class="btn-secondary" onclick="scrollToSection('fonctionnalites')">Voir les fonctionnalités</a>
-                    </div>
-                    <div class="play-button" onclick="playDemo()">
-                        <i class="fas fa-play"></i>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Features Section -->
-        <section class="features" id="fonctionnalites">
-            <div class="container">
-                <h2 class="section-title">Fonctionnalités puissantes</h2>
-                <p class="section-subtitle">Tout ce dont tu as besoin pour dominer Vinted</p>
-                
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-sync-alt"></i>
-                        </div>
-                        <h3>Reposts automatiques intelligents</h3>
-                        <p>Reposts optimisés selon les heures de pointe et l'algorithme Vinted pour maximiser ta visibilité.</p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                        <h3>Relances IA pour les ravars</h3>
-                        <p>Messages automatiques personnalisés et intelligents pour convertir tes visiteurs en acheteurs.</p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-image"></i>
-                        </div>
-                        <h3>Génération d'image IA automatique</h3>
-                        <p>Création automatique de listings avec photos optimisées par IA pour un rendu professionnel.</p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <h3>Dashboard avec analyses poussées</h3>
-                        <p>Statistiques détaillées, tendances de vente et insights pour optimiser ta stratégie.</p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-search-dollar"></i>
-                        </div>
-                        <h3>Détection ventes + republication auto</h3>
-                        <p>Détection automatique des ventes et republication intelligente pour maintenir ton stock visible.</p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-calculator"></i>
-                        </div>
-                        <h3>Comptabilité automatique</h3>
-                        <p>Suivi automatique de tes revenus, frais et bénéfices avec identification des produits les plus rentables.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Why Section -->
-        <section class="why-section" id="pourquoi">
-            <div class="container">
-                <h2 class="section-title">Pourquoi Hermès Tool ?</h2>
-                <p class="section-subtitle">La différence qui fait la différence</p>
-                
-                <div class="why-grid">
-                    <div class="why-item">
-                        <div class="why-icon"></div>
-                        <p>Plus rapide que Clemz</p>
-                    </div>
-                    <div class="why-item">
-                        <div class="why-icon"></div>
-                        <p>Interface épurée et claire</p>
-                    </div>
-                    <div class="why-item">
-                        <div class="why-icon"></div>
-                        <p>Beaucoup plus de fonctionnalités</p>
-                    </div>
-                    <div class="why-item">
-                        <div class="why-icon"></div>
-                        <p>Support actif & réactif</p>
-                    </div>
-                    <div class="why-item">
-                        <div class="why-icon"></div>
-                        <p>Pensé pour l'avenir (IA, automation, multi-corps)</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Pricing Section -->
-        <section class="pricing" id="tarifs">
-            <div class="container">
-                <h2 class="section-title">Tarifs</h2>
-                <p class="section-subtitle">Choisis le plan qui te correspond</p>
-                
-                <div class="pricing-grid">
-                    <div class="pricing-card">
-                        <h3>Néophyte</h3>
-                        <div class="price">24€<span class="price-period">/mois</span></div>
-                        <ul class="pricing-features">
-                            <li><i class="fas fa-check"></i> Reposts automatiques</li>
-                            <li><i class="fas fa-check"></i> Dashboard basique</li>
-                            <li><i class="fas fa-check"></i> Support email</li>
-                            <li><i class="fas fa-check"></i> 100 articles max</li>
-                        </ul>
-                        <button class="btn-primary" onclick="selectPlan('Néophyte')">Choisir ce plan</button>
-                    </div>
-                    
-                    <div class="pricing-card popular">
-                        <h3>Métrios</h3>
-                        <div class="price">49€<span class="price-period">/mois</span></div>
-                        <ul class="pricing-features">
-                            <li><i class="fas fa-check"></i> Toutes les fonctionnalités Néophyte</li>
-                            <li><i class="fas fa-check"></i> IA pour les relances</li>
-                            <li><i class="fas fa-check"></i> Génération d'images</li>
-                            <li><i class="fas fa-check"></i> Analyses avancées</li>
-                            <li><i class="fas fa-check"></i> 500 articles max</li>
-                        </ul>
-                        <button class="btn-primary" onclick="selectPlan('Métrios')">Choisir ce plan</button>
-                    </div>
-                    
-                    <div class="pricing-card">
-                        <h3>Archon</h3>
-                        <div class="price">97€<span class="price-period">/mois</span></div>
-                        <ul class="pricing-features">
-                            <li><i class="fas fa-check"></i> Toutes les fonctionnalités</li>
-                            <li><i class="fas fa-check"></i> Multi-comptes</li>
-                            <li><i class="fas fa-check"></i> Support prioritaire</li>
-                            <li><i class="fas fa-check"></i> Articles illimités</li>
-                            <li><i class="fas fa-check"></i> API access</li>
-                        </ul>
-                        <button class="btn-primary" onclick="selectPlan('Archon')">Choisir ce plan</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Testimonials -->
-        <section class="testimonials" id="temoignages">
-            <div class="container">
-                <h2 class="section-title">Ce qu'ils disent</h2>
-                <p class="section-subtitle">Des résultats qui parlent d'eux-mêmes</p>
-                
-                <div class="testimonials-grid">
-                    <div class="testimonial-card">
-                        <div class="testimonial-icon">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <h3>Je gagne 2X plus depuis Hermès Tool</h3>
-                        <p>"Depuis que j'utilise Hermès Tool, mes ventes ont explosé ! L'automation me fait gagner un temps fou et les fonctionnalités IA sont bluffantes."</p>
-                    </div>
-                    
-                    <div class="testimonial-card">
-                        <div class="testimonial-icon">
-                            <i class="fas fa-briefcase"></i>
-                        </div>
-                        <h3>Un business full passif</h3>
-                        <p>"Je peux enfin me concentrer sur le sourcing pendant qu'Hermès Tool gère tout le reste. C'est devenu mon bras droit indispensable."</p>
-                    </div>
-                    
-                    <div class="testimonial-card">
-                        <div class="testimonial-icon">
-                            <i class="fas fa-piggy-bank"></i>
-                        </div>
-                        <h3>Je gagne de l'argent en dormant</h3>
-                        <p>"L'automatisation est tellement poussée que je génère des revenus même quand je dors. Hermès Tool a révolutionné ma façon de vendre."</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- CTA Section -->
-        <section style="padding: 40px 0; background: white;">
-            <div class="container">
-                <div style="background: linear-gradient(135deg, #ff8c42, #f57c00); color: white; border-radius: 20px; padding: 2rem; text-align: center; max-width: 800px; margin: 0 auto; box-shadow: 0 10px 30px rgba(255, 140, 66, 0.3);">
-                    <h2 style="color: white; margin-bottom: 1rem;">🚀 Prêt à automatiser ton Vinted ?</h2>
-                    <p style="color: rgba(255,255,255,0.9); margin-bottom: 1.5rem;">Rejoins des centaines de vendeurs qui font confiance à Hermès Tool pour maximiser leurs revenus</p>
-                    <button class="btn-primary" onclick="showSignup()" style="background: white; color: #ff8c42; padding: 1rem 2rem; font-size: 1.1rem;">
-                        <i class="fas fa-rocket" style="margin-right: 0.5rem;"></i>
-                        Commencer maintenant
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer style="background: #0a0a0c; color: #e5e5e5; padding: 60px 0 30px;">
-            <div class="container">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; margin-bottom: 3rem;">
-                    
-                    <!-- Logo section -->
-                    <div>
-                        <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
-                            <i class="fas fa-bolt" style="font-size: 2rem; color: #ff8c42; margin-right: 0.5rem;"></i>
-                            <span style="font-size: 1.5rem; font-weight: bold; color: white;">HERMÈS TOOL</span>
-                        </div>
-                        <p style="color: #999; line-height: 1.6; margin-bottom: 1.5rem;">L'outil ultime pour automatiser ton Vinted et maximiser tes revenus grâce à l'IA.</p>
-                        <div style="display: flex; gap: 1rem;">
-                            <a href="#" style="width: 40px; height: 40px; background: rgba(255, 140, 66, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #ff8c42; transition: all 0.3s; text-decoration: none;" onmouseover="this.style.background='#ff8c42'; this.style.color='white'" onmouseout="this.style.background='rgba(255, 140, 66, 0.1)'; this.style.color='#ff8c42'">
-                                <i class="fab fa-discord"></i>
-                            </a>
-                            <a href="#" style="width: 40px; height: 40px; background: rgba(255, 140, 66, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #ff8c42; transition: all 0.3s; text-decoration: none;" onmouseover="this.style.background='#ff8c42'; this.style.color='white'" onmouseout="this.style.background='rgba(255, 140, 66, 0.1)'; this.style.color='#ff8c42'">
-                                <i class="fab fa-twitter"></i>
-                            </a>
-                            <a href="#" style="width: 40px; height: 40px; background: rgba(255, 140, 66, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #ff8c42; transition: all 0.3s; text-decoration: none;" onmouseover="this.style.background='#ff8c42'; this.style.color='white'" onmouseout="this.style.background='rgba(255, 140, 66, 0.1)'; this.style.color='#ff8c42'">
-                                <i class="fab fa-instagram"></i>
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <!-- Produit -->
-                    <div>
-                        <h4 style="color: #ff8c42; margin-bottom: 1.5rem; font-size: 1.1rem; font-weight: 600;">Produit</h4>
-                        <div style="display: flex; flex-direction: column; gap: 0.8rem;">
-                            <a href="#fonctionnalites" onclick="scrollToSection('fonctionnalites')" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#ff8c42'" onmouseout="this.style.color='#ccc'">Fonctionnalités</a>
-                            <a href="#tarifs" onclick="scrollToSection('tarifs')" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#ff8c42'" onmouseout="this.style.color='#ccc'">Tarifs</a>
-                            <a href="#" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#ff8c42'" onmouseout="this.style.color='#ccc'">API</a>
-                            <a href="#" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#ff8c42'" onmouseout="this.style.color='#ccc'">Roadmap</a>
-                        </div>
-                    </div>
-                    
-                    <!-- Support -->
-                    <div>
-                        <h4 style="color: #ff8c42; margin-bottom: 1.5rem; font-size: 1.1rem; font-weight: 600;">Support</h4>
-                        <div style="display: flex; flex-direction: column; gap: 0.8rem;">
-                            <a href="#" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#ff8c42'" onmouseout="this.style.color='#ccc'">Documentation</a>
-                            <a href="#" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#ff8c42'" onmouseout="this.style.color='#ccc'">FAQ</a>
-                            <a href="#" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#ff8c42'" onmouseout="this.style.color='#ccc'">Support client</a>
-                            <a href="#" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#ff8c42'" onmouseout="this.style.color='#ccc'">hello@hermestool.com</a>
-                        </div>
-                    </div>
-                    
-                    <!-- Légal -->
-                    <div>
-                        <h4 style="color: #ff8c42; margin-bottom: 1.5rem; font-size: 1.1rem; font-weight: 600;">Légal</h4>
-                        <div style="display: flex; flex-direction: column; gap: 0.8rem;">
-                            <a href="#" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#ff8c42'" onmouseout="this.style.color='#ccc'">Conditions d'utilisation</a>
-                            <a href="#" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#ff8c42'" onmouseout="this.style.color='#ccc'">Politique de confidentialité</a>
-                            <a href="#" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#ff8c42'" onmouseout="this.style.color='#ccc'">Mentions légales</a>
-                            <a href="#" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#ff8c42'" onmouseout="this.style.color='#ccc'">Cookies</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Séparateur -->
-                <div style="height: 1px; background: linear-gradient(90deg, transparent, rgba(255, 140, 66, 0.3), transparent); margin: 2rem 0;"></div>
-                
-                <!-- Copyright -->
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-                    <div style="color: #999; font-size: 0.9rem;">
-                        &copy; 2024 Hermès Tool. Tous droits réservés.
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 0.5rem; color: #999; font-size: 0.9rem;">
-                        <span>Fait avec</span>
-                        <i class="fas fa-heart" style="color: #ff8c42; animation: pulse 2s infinite;"></i>
-                        <span>en France</span>
-                    </div>
-                </div>
-            </div>
-        </footer>
-    </div>
-
-    <!-- Page de connexion -->
-    <div id="loginPage" class="page">
-        <div style="min-height: 100vh; background: linear-gradient(135deg, #0a0a0c 0%, #1a1a1e 100%); display: flex; align-items: center; justify-content: center; padding: 20px; position: relative; overflow: hidden;">
-            
-            <!-- Effet de grain/texture de fond -->
-            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><defs><pattern id=\"grain\" width=\"100\" height=\"100\" patternUnits=\"userSpaceOnUse\"><circle cx=\"25\" cy=\"25\" r=\"1\" fill=\"%23ffffff\" opacity=\"0.1\"/><circle cx=\"75\" cy=\"75\" r=\"1\" fill=\"%23ffffff\" opacity=\"0.1\"/><circle cx=\"50\" cy=\"10\" r=\"1\" fill=\"%23ffffff\" opacity=\"0.1\"/></pattern></defs><rect width=\"100\" height=\"100\" fill=\"url(%23grain)\"/></svg>'); opacity: 0.1;"></div>
-            
-            <!-- Forme géométrique décorative -->
-            <div style="position: absolute; top: 20%; right: 10%; width: 200px; height: 200px; background: linear-gradient(45deg, rgba(255, 140, 66, 0.1), rgba(245, 124, 0, 0.1)); border-radius: 50%; filter: blur(100px);"></div>
-            <div style="position: absolute; bottom: 20%; left: 10%; width: 300px; height: 300px; background: linear-gradient(45deg, rgba(255, 140, 66, 0.05), rgba(245, 124, 0, 0.05)); border-radius: 50%; filter: blur(120px);"></div>
-            
-            <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 24px; padding: 3rem; max-width: 450px; width: 100%; position: relative; z-index: 2; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);">
-                
-                <!-- Header du formulaire -->
-                <div style="text-align: center; margin-bottom: 2.5rem;">
-                    <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #ff8c42, #f57c00); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; box-shadow: 0 10px 30px rgba(255, 140, 66, 0.3);">
-                        <i class="fas fa-bolt" style="font-size: 2rem; color: white;"></i>
-                    </div>
-                    <h2 style="color: white; font-size: 2rem; font-weight: bold; margin-bottom: 0.5rem;">Bienvenue sur</h2>
-                    <div style="background: linear-gradient(45deg, #ff8c42, #f57c00, #ff9a57); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.5rem; font-weight: bold;">HERMÈS TOOL</div>
-                    <p style="color: rgba(255, 255, 255, 0.7); margin-top: 1rem; font-size: 1rem;">Connecte-toi pour automatiser ton Vinted</p>
-                </div>
-                
-                <!-- Formulaire -->
-                <form id="loginForm" onsubmit="handleLogin(event)" style="space-y: 1.5rem;">
-                    <div style="margin-bottom: 1.5rem;">
-                        <label style="display: block; margin-bottom: 0.5rem; color: rgba(255, 255, 255, 0.9); font-weight: 600; font-size: 0.9rem;">Email</label>
-                        <div style="position: relative;">
-                            <i class="fas fa-envelope" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #ff8c42; z-index: 1;"></i>
-                            <input type="email" id="loginEmail" placeholder="admin@hermestool.com" value="admin@hermestool.com" style="width: 100%; padding: 1rem 1rem 1rem 3rem; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 140, 66, 0.3); border-radius: 12px; color: white; font-size: 1rem; transition: all 0.3s; backdrop-filter: blur(10px); box-sizing: border-box;" onfocus="this.style.borderColor='#ff8c42'; this.style.background='rgba(255, 255, 255, 0.15)'" onblur="this.style.borderColor='rgba(255, 140, 66, 0.3)'; this.style.background='rgba(255, 255, 255, 0.1)'">
-                        </div>
-                    </div>
-                    
-                    <div style="margin-bottom: 2rem;">
-                        <label style="display: block; margin-bottom: 0.5rem; color: rgba(255, 255, 255, 0.9); font-weight: 600; font-size: 0.9rem;">Mot de passe</label>
-                        <div style="position: relative;">
-                            <i class="fas fa-lock" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #ff8c42; z-index: 1;"></i>
-                            <input type="password" id="loginPassword" placeholder="••••••••" value="admin123" style="width: 100%; padding: 1rem 1rem 1rem 3rem; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 140, 66, 0.3); border-radius: 12px; color: white; font-size: 1rem; transition: all 0.3s; backdrop-filter: blur(10px); box-sizing: border-box;" onfocus="this.style.borderColor='#ff8c42'; this.style.background='rgba(255, 255, 255, 0.15)'" onblur="this.style.borderColor='rgba(255, 140, 66, 0.3)'; this.style.background='rgba(255, 255, 255, 0.1)'">
-                        </div>
-                    </div>
-                    
-                    <!-- Boutons -->
-                    <button type="submit" class="btn-primary" style="width: 100%; margin-bottom: 1rem; font-size: 1.1rem; padding: 1.2rem; position: relative; overflow: hidden;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 15px 35px rgba(255, 140, 66, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(255, 140, 66, 0.3)'">
-                        <i class="fas fa-sign-in-alt" style="margin-right: 0.5rem;"></i>
+            <nav class="nav-links">
+                <a href="#features">Fonctionnalités</a>
+                <a href="#pricing">Tarifs</a>
+                <a href="#faq">FAQ</a>
+                <div class="header-auth">
+                    <button onclick="openAuthModal('login')" class="cta-button header-login">
                         Se connecter
                     </button>
-                </form>
-                
-                <button onclick="showHome()" style="width: 100%; background: transparent; border: 2px solid rgba(255, 255, 255, 0.3); color: rgba(255, 255, 255, 0.9); padding: 1rem 2rem; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 1rem; transition: all 0.3s; backdrop-filter: blur(10px);" onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'; this.style.borderColor='rgba(255, 255, 255, 0.5)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='transparent'; this.style.borderColor='rgba(255, 255, 255, 0.3)'; this.style.transform='translateY(0)'">
-                    <i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i>
-                    Retour à l'accueil
-                </button>
-                
-                <!-- Infos de demo -->
-                <div style="background: rgba(76, 175, 80, 0.1); border: 1px solid rgba(76, 175, 80, 0.3); border-radius: 12px; padding: 1rem; margin-top: 2rem; text-align: center;">
-                    <div style="color: #4caf50; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;">
-                        <i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>
-                        Compte de démonstration
-                    </div>
-                    <div style="color: rgba(255, 255, 255, 0.8); font-size: 0.8rem; line-height: 1.4;">
-                        Utilise les identifiants pré-remplis pour tester toutes les fonctionnalités
+                    <div class="header-user" style="display: none;">
+                        <span class="user-email" data-user-email style="margin-right: 15px; color: #ff8c42;"></span>
+                        <button onclick="handleLogout()" class="cta-button" style="background: linear-gradient(135deg, #f44336, #d32f2f);">
+                            Déconnexion
+                        </button>
                     </div>
                 </div>
-                
-                <!-- Lien inscription -->
-                <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
-                    <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 1rem;">Pas encore de compte ?</p>
-                    <button onclick="showSignup()" style="background: transparent; border: 2px solid #4caf50; color: #4caf50; padding: 0.8rem 2rem; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 1rem; transition: all 0.3s;" onmouseover="this.style.background='#4caf50'; this.style.color='white'" onmouseout="this.style.background='transparent'; this.style.color='#4caf50'">
-                        <i class="fas fa-user-plus" style="margin-right: 0.5rem;"></i>
-                        Créer un compte
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero-section" class="hero">
+        <div class="hero-content">
+            <h1>Automatise ton Vinted comme un Pro</h1>
+            <p>L'outil ultime pour gérer tes ventes Vinted automatiquement. Repost, messages, analytics - tout est automatisé.</p>
+            <div class="hero-buttons">
+                <button onclick="openAuthModal('signup')" class="primary-button">
+                    Commencer Gratuitement
+                </button>
+                <a href="#features" class="secondary-button">
+                    Découvrir les fonctionnalités
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="features-container">
+            <h2>Tout ce dont tu as besoin pour dominer Vinted</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>Repost Automatique</h3>
+                    <p>Tes articles remontent automatiquement en tête des résultats toutes les heures.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <h3>Messages Automatiques</h3>
+                    <p>Réponds instantanément aux acheteurs avec des messages personnalisés par IA.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Analytics Avancés</h3>
+                    <p>Suis tes performances, vues, likes et ventes avec des graphiques détaillés.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Multi-Comptes</h3>
+                    <p>Gère plusieurs comptes Vinted depuis un seul dashboard (Plan Archon).</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Extension Chrome</h3>
+                    <p>Collecte automatique des données directement depuis Vinted.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>H24 Automatisation</h3>
+                    <p>Fonctionne 24/7 même quand tu dors. Maximise tes ventes sans effort.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing">
+        <div class="pricing-container">
+            <h2>Choisis ton plan</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3 class="plan-name">Néophyte</h3>
+                    <div class="plan-price">0€<span>/mois</span></div>
+                    <ul class="plan-features">
+                        <li>100 articles max</li>
+                        <li>Repost automatique</li>
+                        <li>Analytics de base</li>
+                        <li>Support email</li>
+                    </ul>
+                    <button onclick="selectPlan('Néophyte')" class="form-button">
+                        Commencer
                     </button>
                 </div>
-                
-                <!-- Features preview -->
-                <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
-                    <div style="color: rgba(255, 255, 255, 0.7); font-size: 0.8rem; text-align: center; margin-bottom: 1rem;">Accès instantané à :</div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.8rem;">
-                        <div style="color: rgba(255, 255, 255, 0.8); display: flex; align-items: center;">
-                            <i class="fas fa-sync-alt" style="color: #ff8c42; margin-right: 0.5rem; font-size: 0.7rem;"></i>
-                            Reposts auto
-                        </div>
-                        <div style="color: rgba(255, 255, 255, 0.8); display: flex; align-items: center;">
-                            <i class="fas fa-robot" style="color: #ff8c42; margin-right: 0.5rem; font-size: 0.7rem;"></i>
-                            Messages IA
-                        </div>
-                        <div style="color: rgba(255, 255, 255, 0.8); display: flex; align-items: center;">
-                            <i class="fas fa-chart-line" style="color: #ff8c42; margin-right: 0.5rem; font-size: 0.7rem;"></i>
-                            Analytics
-                        </div>
-                        <div style="color: rgba(255, 255, 255, 0.8); display: flex; align-items: center;">
-                            <i class="fas fa-image" style="color: #ff8c42; margin-right: 0.5rem; font-size: 0.7rem;"></i>
-                            Génération IA
-                        </div>
+                <div class="pricing-card featured">
+                    <h3 class="plan-name">Métrios</h3>
+                    <div class="plan-price">19€<span>/mois</span></div>
+                    <ul class="plan-features">
+                        <li>500 articles max</li>
+                        <li>Messages IA</li>
+                        <li>Analytics avancés</li>
+                        <li>Support prioritaire</li>
+                        <li>Génération d'images</li>
+                    </ul>
+                    <button onclick="selectPlan('Métrios')" class="form-button">
+                        Populaire
+                    </button>
+                </div>
+                <div class="pricing-card">
+                    <h3 class="plan-name">Archon</h3>
+                    <div class="plan-price">49€<span>/mois</span></div>
+                    <ul class="plan-features">
+                        <li>Articles illimités</li>
+                        <li>Multi-comptes</li>
+                        <li>API Access</li>
+                        <li>Automatisation custom</li>
+                        <li>Support VIP</li>
+                    </ul>
+                    <button onclick="selectPlan('Archon')" class="form-button">
+                        Premium
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- User Dashboard (Hidden by default) -->
+    <section class="user-dashboard" id="user-dashboard" style="display: none;">
+        <div class="dashboard-container">
+            <div class="welcome-message">
+                <h2>Bienvenue <span data-user-name>Utilisateur</span> 👋</h2>
+                <p>Email: <span data-user-email style="color: #ff8c42;">-</span> | Plan: <span data-user-plan style="color: #4caf50;">-</span></p>
+            </div>
+            
+            <div class="user-stats">
+                <div class="stat-card">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Articles</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Ventes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Messages</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Vues totales</div>
+                </div>
+            </div>
+            
+            <div style="text-align: center;">
+                <button onclick="handleLogout()" class="primary-button" style="background: linear-gradient(135deg, #f44336, #d32f2f);">
+                    🚪 Se déconnecter
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 Hermès Tool. Tous droits réservés. | Créé avec ❤️ pour les vendeurs Vinted</p>
+    </footer>
+
+    <!-- Auth Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeAuthModal()">&times;</span>
+            
+            <!-- Login Form -->
+            <div id="loginForm" style="display: none;">
+                <h2 style="text-align: center; margin-bottom: 30px; color: #ff8c42;">Connexion</h2>
+                <form id="login-form" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="login-email" required>
                     </div>
+                    <div class="form-group">
+                        <label>Mot de passe</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <button type="submit" class="form-button">Se connecter</button>
+                </form>
+                <div class="form-toggle">
+                    Pas encore de compte ? <a onclick="switchToSignup()">S'inscrire</a>
+                </div>
+            </div>
+            
+            <!-- Signup Form -->
+            <div id="signupForm" style="display: none;">
+                <h2 style="text-align: center; margin-bottom: 30px; color: #ff8c42;">Inscription</h2>
+                <form id="signup-form" onsubmit="handleSignup(event)">
+                    <div class="form-group">
+                        <label>Prénom</label>
+                        <input type="text" id="signup-firstname" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nom</label>
+                        <input type="text" id="signup-lastname" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="signup-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mot de passe</label>
+                        <input type="password" id="signup-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Plan choisi</label>
+                        <input type="text" id="signup-plan" value="Néophyte" readonly style="opacity: 0.8;">
+                    </div>
+                    <button type="submit" class="form-button">Créer mon compte</button>
+                </form>
+                <div class="form-toggle">
+                    Déjà un compte ? <a onclick="switchToLogin()">Se connecter</a>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Page dashboard -->
-    <div id="dashboardPage" class="page">
-        <!-- Le contenu sera injecté par JavaScript -->
-    </div>
-
-    <script src="https://js.stripe.com/v3/"></script>
     <script>
-        console.log('🚀 Hermès Tool - Version Netlify avec vraie intégration Stripe !');
-        
         // Variables globales
-        let currentPage = 'home';
-        let selectedPlan = 'Métrios'; // Plan par défaut
+        let currentUser = null;
+        let userEmail = null;
+        let isLoggedIn = false;
+        let selectedPlan = 'Néophyte';
+
+        // ===== GESTION DE LA SESSION PERSISTANTE (comme Clemz) =====
         
-        // SYSTÈME DE STOCKAGE DES UTILISATEURS (en mémoire pour la démo)
-        let usersDatabase = {
-            // Utilisateur admin par défaut
-            'admin@hermestool.com': {
-                email: 'admin@hermestool.com',
-                password: 'admin123',
-                firstName: 'Admin',
-                lastName: 'Hermès',
-                plan: 'Archon',
-                createdAt: '2024-01-01',
-                isActive: true,
-                vintedConnected: false,
-                vintedEmail: '',
-                stats: {
-                    totalSales: 847,
-                    monthlyRevenue: 2847,
-                    totalReposts: 1847
-                }
-            },
-            // TON COMPTE RÉEL - Plan Archon Activé
-            'shinolegrandieu@gmail.com': {
-                email: 'shinolegrandieu@gmail.com',
-                password: 'Micromania1@', // ⚠️ CHANGE CE MDP APRÈS CONNEXION !
-                firstName: 'Shino',
-                lastName: 'Le Grandieu',
-                plan: 'Archon', // 🚀 PLAN PREMIUM ACTIVÉ
-                createdAt: '2025-08-05',
-                isActive: true,
-                vintedConnected: false, // Sera true après liaison Vinted
-                vintedEmail: 'collabwilly@gmail.com',
-                realAccount: true, // ✅ COMPTE RÉEL (pas démo)
-                extensionConnected: false, // ✅ Pour l'extension H24
-                apiKey: 'hermes_' + Math.random().toString(36).substr(2, 15), // Clé API générée
-                stats: {
-                    totalSales: 0, // Reset pour vraies données
-                    monthlyRevenue: 0,
-                    totalReposts: 0
-                },
-                transactions: [], // Vide, sera rempli par l'extension
-                // Fonctionnalités Archon débloquées
-                features: {
-                    unlimited_reposts: true,
-                    ai_messages: true,
-                    multi_accounts: true,
-                    priority_support: true,
-                    api_access: true,
-                    advanced_analytics: true,
-                    custom_automation: true
-                }
-            }
-        };
-        
-        // NOUVEAU : Système de connexion avec extension et vraies données
-        class VintedDataManager {
-            constructor() {
-                this.hasExtensionData = false;
-                this.extensionData = null;
-                this.apiUrl = window.location.origin + '/.netlify/functions/vinted-sync';
-                this.init();
-            }
+        // Vérifier la session au chargement
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('🔍 Vérification session...');
+            checkUserSession();
+        });
+
+        // Restaurer la session si elle existe
+        function checkUserSession() {
+            const savedSession = localStorage.getItem('hermesUserSession');
             
-            init() {
-                // Vérifier si on a des données d'extension
-                this.checkExtensionData();
-            }
-            
-            async checkExtensionData() {
-                if (!currentUser) return;
-                
+            if (savedSession) {
                 try {
-                    console.log('🔍 Vérification données extension pour:', currentUser.email);
+                    const session = JSON.parse(savedSession);
                     
-                    const response = await fetch(this.apiUrl.replace('/vinted-sync', '/get-user-data'), {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            userEmail: currentUser.email
-                        })
-                    });
-                    
-                    if (response.ok) {
-                        const result = await response.json();
-                        if (result.success && result.data) {
-                            this.extensionData = result.data;
-                            this.hasExtensionData = true;
-                            
-                            // Mettre à jour les données utilisateur avec les vraies données
-                            this.updateUserWithRealData();
-                            
-                            console.log('✅ Données extension récupérées:', {
-                                items: this.extensionData.items?.length || 0,
-                                sales: this.extensionData.sales?.length || 0,
-                                profile: !!this.extensionData.profile?.username
-                            });
-                            
-                            showNotification('✅ Données Vinted réelles synchronisées !');
-                        }
+                    // Vérifier que la session n'est pas expirée
+                    if (session.expiresAt && new Date().getTime() < session.expiresAt) {
+                        // Session valide ! On restaure
+                        currentUser = session.user;
+                        userEmail = session.user.email;
+                        isLoggedIn = true;
+                        
+                        console.log('✅ Session restaurée pour:', userEmail);
+                        
+                        // Mettre à jour l'interface
+                        showUserDashboard();
+                        
+                    } else {
+                        // Session expirée
+                        localStorage.removeItem('hermesUserSession');
+                        console.log('⏰ Session expirée');
                     }
                 } catch (error) {
-                    console.log('⚠️ Pas de données extension disponibles:', error.message);
-                }
-            }
-            
-            updateUserWithRealData() {
-                if (!this.extensionData || !currentUser) return;
-                
-                // Marquer comme ayant des données réelles
-                currentUser.hasRealVintedData = true;
-                currentUser.vintedConnected = true;
-                currentUser.lastVintedSync = this.extensionData.lastSync;
-                
-                // Mettre à jour le profil
-                if (this.extensionData.profile?.username) {
-                    currentUser.vintedUsername = this.extensionData.profile.username;
-                    currentUser.vintedRating = this.extensionData.profile.rating;
-                }
-                
-                // Mettre à jour les statistiques avec les vraies données
-                if (this.extensionData.statistics) {
-                    currentUser.stats.totalSales = this.extensionData.statistics.totalSales || currentUser.stats.totalSales;
-                    currentUser.stats.monthlyRevenue = Math.round(this.extensionData.statistics.totalRevenue || currentUser.stats.monthlyRevenue);
-                    currentUser.stats.totalReposts = this.extensionData.statistics.totalItems || currentUser.stats.totalReposts;
-                }
-                
-                // Convertir les données d'extension en format compatible
-                currentUser.realTransactions = this.convertExtensionDataToTransactions();
-                
-                console.log('✅ Utilisateur mis à jour avec données réelles');
-            }
-            
-            convertExtensionDataToTransactions() {
-                if (!this.extensionData?.sales) return [];
-                
-                return this.extensionData.sales.map(sale => {
-                    const amount = this.parsePrice(sale.price);
-                    const fees = amount * 0.12; // 12% de frais Vinted
-                    const benefit = amount - fees;
-                    
-                    return {
-                        date: this.formatDate(sale.saleDate || sale.scrapedAt),
-                        type: 'Vente',
-                        article: sale.itemName || 'Article Vinted',
-                        montant: amount,
-                        frais: fees,
-                        benefice: benefit,
-                        acheteur: sale.buyer || 'Acheteur Vinted',
-                        source: 'extension'
-                    };
-                });
-            }
-            
-            parsePrice(priceStr) {
-                if (!priceStr) return 0;
-                const match = priceStr.toString().match(/[\d,\.]+/);
-                if (match) {
-                    return parseFloat(match[0].replace(',', '.'));
-                }
-                return 0;
-            }
-            
-            formatDate(dateStr) {
-                if (!dateStr) return new Date().toLocaleDateString('fr-FR');
-                const date = new Date(dateStr);
-                return date.toLocaleDateString('fr-FR');
-            }
-            
-            async requestExtensionSync() {
-                try {
-                    showNotification('🔄 Demande de synchronisation...');
-                    
-                    // Essayer de communiquer avec l'extension via le DOM
-                    const event = new CustomEvent('hermesRequestSync', {
-                        detail: { userEmail: currentUser?.email }
-                    });
-                    document.dispatchEvent(event);
-                    
-                    // Attendre un peu puis vérifier les nouvelles données
-                    setTimeout(() => {
-                        this.checkExtensionData();
-                    }, 3000);
-                    
-                } catch (error) {
-                    console.error('❌ Erreur sync extension:', error);
-                    showNotification('❌ Erreur synchronisation extension', 'error');
+                    console.error('Erreur session:', error);
+                    localStorage.removeItem('hermesUserSession');
                 }
             }
         }
-        
-        // Instance globale du gestionnaire de données
-        let vintedDataManager = null;
-        
-        // Configuration Stripe PRODUCTION (clés LIVE)
-        let stripe = null;
-        const STRIPE_PUBLISHABLE_KEY = 'pk_live_51LpKw0CtSj5okMU0lKPDxmy7bDqP3QyhjLZgA7EeprgS6XDPSDa3hmQihHCLDRQBmBzgZmIkqDCiQw5jBHEVqU92006n6i0DXc';
-        
-        // Prix des plans PRODUCTION (Price IDs LIVE)
-        const PLAN_PRICES = {
-            'Néophyte': {
-                priceId: 'price_1RqmVSCtSj5okMU0c4256A4P',
-                amount: 2400,
-                currency: 'eur'
-            },
-            'Métrios': {
-                priceId: 'price_1RqmVyCtSj5okMU0tQL3vHRu',
-                amount: 4900,
-                currency: 'eur'
-            },
-            'Archon': {
-                priceId: 'price_1RqmWJCtSj5okMU0IIz58109',
-                amount: 9700,
-                currency: 'eur'
-            }
-        };
-        
-        // Initialiser Stripe
-        function initializeStripe() {
-            try {
-                if (typeof Stripe !== 'undefined') {
-                    stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
-                    console.log('✅ Stripe initialisé');
-                } else {
-                    console.log('❌ Stripe non disponible');
-                }
-            } catch (error) {
-                console.error('❌ Erreur initialisation Stripe:', error);
-            }
-        }
-        
-        // Fonction pour afficher les notifications
-        function showNotification(message, type = 'success') {
-            // Supprimer les notifications existantes
-            const existingNotifs = document.querySelectorAll('.notification');
-            existingNotifs.forEach(notif => notif.remove());
-            
-            const notif = document.createElement('div');
-            notif.className = 'notification';
-            notif.textContent = message;
-            
-            if (type === 'error') {
-                notif.style.background = 'linear-gradient(135deg, #f44336, #d32f2f)';
-            }
-            
-            document.body.appendChild(notif);
-            
-            setTimeout(() => {
-                if (notif.parentNode) {
-                    notif.remove();
-                }
-            }, 3000);
-        }
-        
-        // Fonction pour changer de page avec gestion d'erreurs
-        function changePage(pageName) {
-            try {
-                console.log(`📄 Changement vers: ${pageName}`);
-                
-                // Cacher toutes les pages
-                document.querySelectorAll('.page').forEach(page => {
-                    page.classList.remove('active');
-                });
-                
-                // Afficher la page demandée
-                const targetPage = document.getElementById(pageName + 'Page');
-                if (targetPage) {
-                    targetPage.classList.add('active');
-                    currentPage = pageName;
-                    console.log(`✅ Page ${pageName} affichée`);
-                } else {
-                    console.error(`❌ Page ${pageName}Page non trouvée !`);
-                    showNotification(`Erreur: Page ${pageName} non trouvée`, 'error');
-                }
-            } catch (error) {
-                console.error('❌ Erreur changement de page:', error);
-                showNotification('Erreur lors du changement de page', 'error');
-            }
-        }
-        
-        // Navigation
-        function showHome() {
-            changePage('home');
-        }
-        
-        function showLogin() {
-            changePage('login');
-        }
-        
-        function showSignup() {
-            // Créer la page d'inscription dynamiquement
-            createSignupPage();
-        }
-        
-        // Fonction pour créer la page d'inscription
-        function createSignupPage() {
-            // Supprimer toute page d'inscription existante
-            const existingSignup = document.getElementById('signupPage');
-            if (existingSignup) {
-                existingSignup.remove();
-            }
-            
-            // Créer la nouvelle page d'inscription
-            const signupPage = document.createElement('div');
-            signupPage.id = 'signupPage';
-            signupPage.className = 'page';
-            signupPage.innerHTML = getSignupPageHTML();
-            
-            // Ajouter au DOM
-            document.body.appendChild(signupPage);
-            
-            // Afficher la page
-            changePage('signup');
-            
-            console.log('✅ Page d\'inscription créée');
-        }
-        
-        // HTML de la page d'inscription
-        function getSignupPageHTML() {
-            return `
-                <div style="min-height: 100vh; background: linear-gradient(135deg, #0a0a0c 0%, #1a1a1e 100%); display: flex; align-items: center; justify-content: center; padding: 20px; position: relative; overflow: hidden;">
-                    
-                    <!-- Effet de grain -->
-                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.1; background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><defs><pattern id=\"grain\" width=\"100\" height=\"100\" patternUnits=\"userSpaceOnUse\"><circle cx=\"25\" cy=\"25\" r=\"1\" fill=\"%23ffffff\" opacity=\"0.1\"/><circle cx=\"75\" cy=\"75\" r=\"1\" fill=\"%23ffffff\" opacity=\"0.1\"/><circle cx=\"50\" cy=\"10\" r=\"1\" fill=\"%23ffffff\" opacity=\"0.1\"/></pattern></defs><rect width=\"100\" height=\"100\" fill=\"url(%23grain)\"/></svg>');"></div>
-                    
-                    <!-- Formes décoratives -->
-                    <div style="position: absolute; top: 10%; right: 5%; width: 250px; height: 250px; background: linear-gradient(45deg, rgba(255, 140, 66, 0.15), rgba(245, 124, 0, 0.1)); border-radius: 50%; filter: blur(100px); animation: pulse 4s ease-in-out infinite;"></div>
-                    <div style="position: absolute; bottom: 10%; left: 5%; width: 350px; height: 350px; background: linear-gradient(45deg, rgba(255, 140, 66, 0.1), rgba(245, 124, 0, 0.05)); border-radius: 50%; filter: blur(120px);"></div>
-                    
-                    <div style="background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(25px); border: 2px solid rgba(255, 140, 66, 0.3); border-radius: 20px; padding: 2rem; max-width: 500px; width: 100%; position: relative; z-index: 2; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);">
-                        
-                        <!-- Header -->
-                        <div style="text-align: center; margin-bottom: 2rem;">
-                            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #ff8c42, #f57c00); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; box-shadow: 0 10px 30px rgba(255, 140, 66, 0.3);">
-                                <i class="fas fa-user-plus" style="font-size: 1.8rem; color: white;"></i>
-                            </div>
-                            <h2 style="color: white; font-size: 2rem; font-weight: bold; margin-bottom: 0.5rem;">Rejoins-nous</h2>
-                            <div style="background: linear-gradient(45deg, #ff8c42, #f57c00, #ff9a57); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.5rem; font-weight: bold;">HERMÈS TOOL</div>
-                            <p style="color: rgba(255, 255, 255, 0.8); margin-top: 1rem;">Automatise ton Vinted dès aujourd'hui !</p>
-                        </div>
-                        
-                        <!-- Formulaire -->
-                        <form id="signupForm" onsubmit="handleSignup(event)">
-                            <!-- Nom/Prénom -->
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
-                                <div>
-                                    <label style="display: block; margin-bottom: 0.5rem; color: rgba(255, 255, 255, 0.9); font-weight: 600; font-size: 0.9rem;">Prénom</label>
-                                    <input type="text" id="signupFirstName" placeholder="Thomas" required style="width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 140, 66, 0.3); border-radius: 12px; color: white; font-size: 1rem; box-sizing: border-box;" onfocus="this.style.borderColor='#ff8c42'" onblur="this.style.borderColor='rgba(255, 140, 66, 0.3)'">
-                                </div>
-                                <div>
-                                    <label style="display: block; margin-bottom: 0.5rem; color: rgba(255, 255, 255, 0.9); font-weight: 600; font-size: 0.9rem;">Nom</label>
-                                    <input type="text" id="signupLastName" placeholder="Martin" required style="width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 140, 66, 0.3); border-radius: 12px; color: white; font-size: 1rem; box-sizing: border-box;" onfocus="this.style.borderColor='#ff8c42'" onblur="this.style.borderColor='rgba(255, 140, 66, 0.3)'">
-                                </div>
-                            </div>
-                            
-                            <!-- Email -->
-                            <div style="margin-bottom: 1.5rem;">
-                                <label style="display: block; margin-bottom: 0.5rem; color: rgba(255, 255, 255, 0.9); font-weight: 600; font-size: 0.9rem;">
-                                    <i class="fas fa-envelope" style="margin-right: 0.5rem; color: #ff8c42;"></i>Email
-                                </label>
-                                <input type="email" id="signupEmail" placeholder="thomas@example.com" required style="width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 140, 66, 0.3); border-radius: 12px; color: white; font-size: 1rem; box-sizing: border-box;" onfocus="this.style.borderColor='#ff8c42'" onblur="this.style.borderColor='rgba(255, 140, 66, 0.3)'">
-                            </div>
-                            
-                            <!-- Mots de passe -->
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
-                                <div>
-                                    <label style="display: block; margin-bottom: 0.5rem; color: rgba(255, 255, 255, 0.9); font-weight: 600; font-size: 0.9rem;">Mot de passe</label>
-                                    <input type="password" id="signupPassword" placeholder="••••••••" required minlength="6" style="width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 140, 66, 0.3); border-radius: 12px; color: white; font-size: 1rem; box-sizing: border-box;" onfocus="this.style.borderColor='#ff8c42'" onblur="this.style.borderColor='rgba(255, 140, 66, 0.3)'">
-                                </div>
-                                <div>
-                                    <label style="display: block; margin-bottom: 0.5rem; color: rgba(255, 255, 255, 0.9); font-weight: 600; font-size: 0.9rem;">Confirmation</label>
-                                    <input type="password" id="signupConfirmPassword" placeholder="••••••••" required style="width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 140, 66, 0.3); border-radius: 12px; color: white; font-size: 1rem; box-sizing: border-box;" onfocus="this.style.borderColor='#ff8c42'" onblur="this.style.borderColor='rgba(255, 140, 66, 0.3)'">
-                                </div>
-                            </div>
-                            
-                            <!-- Plan -->
-                            <div style="margin-bottom: 1.5rem;">
-                                <label style="display: block; margin-bottom: 0.5rem; color: rgba(255, 255, 255, 0.9); font-weight: 600; font-size: 0.9rem;">
-                                    <i class="fas fa-crown" style="margin-right: 0.5rem; color: #ff8c42;"></i>Plan
-                                </label>
-                                <select id="signupPlan" onchange="selectedPlan = this.value; updatePlanInfo()" style="width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 140, 66, 0.3); border-radius: 12px; color: white; font-size: 1rem; box-sizing: border-box; cursor: pointer;" onfocus="this.style.borderColor='#ff8c42'" onblur="this.style.borderColor='rgba(255, 140, 66, 0.3)'">
-                                    <option value="Néophyte" style="background: #1a1a1e;">🛡️ Néophyte - 24€/mois</option>
-                                    <option value="Métrios" style="background: #1a1a1e;" selected>⚔️ Métrios - 49€/mois (Populaire)</option>
-                                    <option value="Archon" style="background: #1a1a1e;">👑 Archon - 97€/mois (Premium)</option>
-                                </select>
-                            </div>
-                            
-                            <!-- Info plan -->
-                            <div id="planInfo" style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(255, 140, 66, 0.1); border-radius: 12px; border: 1px solid rgba(255, 140, 66, 0.3);">
-                                <div style="color: #ff8c42; font-weight: bold; margin-bottom: 0.5rem;">⚔️ Plan Métrios - 49€/mois</div>
-                                <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">
-                                    ✅ Reposts illimités • 🤖 Messages IA • 📊 Analytics • 💎 Support prioritaire
-                                </div>
-                            </div>
-                            
-                            <!-- Conditions -->
-                            <div style="margin-bottom: 2rem;">
-                                <label style="display: flex; align-items: center; cursor: pointer; font-size: 0.9rem; color: rgba(255, 255, 255, 0.8);">
-                                    <input type="checkbox" id="acceptTerms" required style="margin-right: 0.5rem; accent-color: #ff8c42;">
-                                    J'accepte les <a href="#" style="color: #ff8c42; text-decoration: underline;">conditions</a> et la <a href="#" style="color: #ff8c42; text-decoration: underline;">politique de confidentialité</a>
-                                </label>
-                            </div>
-                            
-                            <!-- Boutons -->
-                            <button type="submit" style="width: 100%; margin-bottom: 1rem; font-size: 1.1rem; font-weight: bold; padding: 1.2rem; background: linear-gradient(135deg, #ff8c42, #f57c00); color: white; border: none; border-radius: 12px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                                <i class="fas fa-credit-card" style="margin-right: 0.5rem;"></i>
-                                💳 PROCÉDER AU PAIEMENT STRIPE
-                            </button>
-                            
-                            <button type="button" onclick="showLogin()" style="width: 100%; background: transparent; border: 2px solid rgba(255, 255, 255, 0.4); color: rgba(255, 255, 255, 0.9); padding: 1rem; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 1rem; transition: all 0.3s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'" onmouseout="this.style.background='transparent'">
-                                <i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i>
-                                Déjà membre ? Se connecter
-                            </button>
-                        </form>
-                        
-                        <!-- Avantages -->
-                        <div style="margin-top: 2rem; padding: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
-                            <div style="color: rgba(255, 255, 255, 0.9); font-size: 0.9rem; margin-bottom: 1rem;">
-                                🎯 Rejoins <span style="color: #ff8c42; font-weight: bold;">1,247+</span> utilisateurs satisfaits !
-                            </div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.8rem;">
-                                <div style="color: rgba(255, 255, 255, 0.8);">🔄 Reposts 24/7</div>
-                                <div style="color: rgba(255, 255, 255, 0.8);">🤖 Messages IA</div>
-                                <div style="color: rgba(255, 255, 255, 0.8);">📊 Analytics pro</div>
-                                <div style="color: rgba(255, 255, 255, 0.8);">🛡️ Support dédié</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-        
-        // Fonction pour mettre à jour les infos du plan
-        function updatePlanInfo() {
-            const planInfoDiv = document.getElementById('planInfo');
-            if (!planInfoDiv) return;
-            
-            const planDetails = {
-                'Néophyte': {
-                    name: 'Néophyte',
-                    price: '24€/mois',
-                    icon: '🛡️',
-                    color: '#2196f3',
-                    features: '✅ Reposts basiques • 📊 Dashboard simple • 📧 Support email • 💾 100 articles max'
-                },
-                'Métrios': {
-                    name: 'Métrios',
-                    price: '49€/mois',
-                    icon: '⚔️',
-                    color: '#ff8c42',
-                    features: '✅ Reposts illimités • 🤖 Messages IA • 📊 Analytics • 💎 Support prioritaire'
-                },
-                'Archon': {
-                    name: 'Archon',
-                    price: '97€/mois',
-                    icon: '👑',
-                    color: '#9c27b0',
-                    features: '✅ Toutes fonctionnalités • 🔗 Multi-comptes • 🚀 API accès • ⚡ Support VIP 24/7'
-                }
+
+        // Sauvegarder la session (30 jours comme Clemz)
+        function saveUserSession(userData) {
+            const session = {
+                user: userData,
+                loginTime: new Date().getTime(),
+                expiresAt: new Date().getTime() + (30 * 24 * 60 * 60 * 1000) // 30 jours
             };
             
-            const plan = planDetails[selectedPlan];
-            
-            planInfoDiv.style.background = `rgba(${plan.color === '#ff8c42' ? '255, 140, 66' : plan.color === '#2196f3' ? '33, 150, 243' : '156, 39, 176'}, 0.1)`;
-            planInfoDiv.style.borderColor = `rgba(${plan.color === '#ff8c42' ? '255, 140, 66' : plan.color === '#2196f3' ? '33, 150, 243' : '156, 39, 176'}, 0.3)`;
-            
-            planInfoDiv.innerHTML = `
-                <div style="color: ${plan.color}; font-weight: bold; margin-bottom: 0.5rem;">${plan.icon} Plan ${plan.name} - ${plan.price}</div>
-                <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">${plan.features}</div>
-            `;
+            localStorage.setItem('hermesUserSession', JSON.stringify(session));
+            console.log('💾 Session sauvegardée pour 30 jours');
         }
+
+        // ===== GESTION DE L'AUTHENTIFICATION =====
         
-        // Fonction pour sélectionner un plan depuis la page d'accueil
+        function openAuthModal(type) {
+            document.getElementById('authModal').style.display = 'flex';
+            if (type === 'login') {
+                switchToLogin();
+            } else {
+                switchToSignup();
+            }
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').style.display = 'none';
+        }
+
+        function switchToLogin() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('signupForm').style.display = 'none';
+        }
+
+        function switchToSignup() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('signupForm').style.display = 'block';
+        }
+
         function selectPlan(plan) {
             selectedPlan = plan;
-            showSignup();
-            // Attendre que la page soit créée puis mettre à jour le select
-            setTimeout(() => {
-                const planSelect = document.getElementById('signupPlan');
-                if (planSelect) {
-                    planSelect.value = plan;
-                    updatePlanInfo();
-                }
-            }, 100);
+            document.getElementById('signup-plan').value = plan;
+            openAuthModal('signup');
         }
-        
-        // Gestion de l'inscription avec validation - VERSION CORRIGÉE POUR STRIPE
-        function handleSignup(event) {
+
+        // Connexion
+        async function handleLogin(event) {
             event.preventDefault();
             
-            try {
-                // Récupérer les valeurs
-                const firstName = document.getElementById('signupFirstName').value.trim();
-                const lastName = document.getElementById('signupLastName').value.trim();
-                const email = document.getElementById('signupEmail').value.trim().toLowerCase();
-                const password = document.getElementById('signupPassword').value;
-                const confirmPassword = document.getElementById('signupConfirmPassword').value;
-                const plan = document.getElementById('signupPlan').value;
-                const acceptTerms = document.getElementById('acceptTerms').checked;
-                
-                console.log('📝 Données inscription:', { firstName, lastName, email, plan });
-                
-                // Validations
-                if (!firstName || firstName.length < 2) {
-                    showNotification('⚠️ Le prénom doit contenir au moins 2 caractères', 'error');
-                    return;
-                }
-                
-                if (!lastName || lastName.length < 2) {
-                    showNotification('⚠️ Le nom doit contenir au moins 2 caractères', 'error');
-                    return;
-                }
-                
-                if (!email || !isValidEmail(email)) {
-                    showNotification('⚠️ Veuillez entrer une adresse email valide', 'error');
-                    return;
-                }
-                
-                if (!password || password.length < 6) {
-                    showNotification('⚠️ Le mot de passe doit contenir au moins 6 caractères', 'error');
-                    return;
-                }
-                
-                if (password !== confirmPassword) {
-                    showNotification('⚠️ Les mots de passe ne correspondent pas', 'error');
-                    return;
-                }
-                
-                if (!acceptTerms) {
-                    showNotification('⚠️ Vous devez accepter les conditions d\'utilisation', 'error');
-                    return;
-                }
-                
-                if (emailExists(email)) {
-                    showNotification('⚠️ Cet email est déjà utilisé', 'error');
-                    return;
-                }
-                
-                // Procéder au vrai paiement Stripe via la fonction Netlify
-                proceedToStripePayment(firstName, lastName, email, password, plan);
-                
-            } catch (error) {
-                console.error('❌ Erreur inscription:', error);
-                showNotification('Erreur lors de l\'inscription', 'error');
-            }
-        }
-        
-        // VRAIE fonction de paiement Stripe avec fonction Netlify
-        async function proceedToStripePayment(firstName, lastName, email, password, plan) {
-            console.log('💳 Initiation du vrai paiement Stripe...');
-            
-            const submitBtn = document.querySelector('#signupForm button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Création session Stripe...';
-            submitBtn.disabled = true;
-            
-            if (!stripe) {
-                showNotification('❌ Erreur d\'initialisation Stripe', 'error');
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-                return;
-            }
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
             
             try {
-                showNotification('💳 Création de la session de paiement...');
-                
-                // Appel à ta fonction Netlify avec gestion d'erreur améliorée
-                console.log('🌐 URL de base:', window.location.origin);
-                console.log('📡 Appel API vers:', '/.netlify/functions/create-checkout-session');
-                
-                const response = await fetch('/.netlify/functions/create-checkout-session', {
+                const response = await fetch('/.netlify/functions/auth-extension', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        priceId: PLAN_PRICES[plan].priceId,
-                        customerEmail: email,
-                        customerName: `${firstName} ${lastName}`,
-                        plan: plan,
-                        userData: {
-                            firstName,
-                            lastName,
-                            email,
-                            password,
-                            plan
-                        }
+                        action: 'login',
+                        email: email,
+                        password: password
                     })
                 });
                 
-                console.log('📊 Response status:', response.status);
-                console.log('📊 Response headers:', response.headers);
+                const result = await response.json();
                 
-                if (!response.ok) {
-                    console.error('❌ Erreur HTTP:', response.status, response.statusText);
-                    const errorText = await response.text();
-                    console.error('❌ Contenu erreur:', errorText);
-                    throw new Error(`HTTP error! status: ${response.status} - ${errorText || response.statusText}`);
+                if (result.success && result.user) {
+                    // Connexion réussie
+                    currentUser = result.user;
+                    userEmail = result.user.email;
+                    isLoggedIn = true;
+                    
+                    // SAUVEGARDER LA SESSION POUR 30 JOURS
+                    saveUserSession(result.user);
+                    
+                    // Fermer la modal
+                    closeAuthModal();
+                    
+                    // Afficher le dashboard
+                    showUserDashboard();
+                    
+                    // Réinitialiser le formulaire
+                    document.getElementById('login-form').reset();
+                    
+                    // Notifier l'extension Chrome si elle est installée
+                    notifyExtension('USER_LOGGED_IN', result.user);
+                    
+                } else {
+                    alert('❌ ' + (result.error || 'Erreur de connexion'));
                 }
-                
-                const session = await response.json();
-                console.log('✅ Session Stripe créée:', session.id);
-                
-                showNotification('🚀 Redirection vers Stripe...');
-                
-                // Redirection vers Stripe Checkout
-                const result = await stripe.redirectToCheckout({
-                    sessionId: session.id
-                });
-                
-                if (result.error) {
-                    throw new Error(result.error.message);
-                }
-                
             } catch (error) {
-                console.error('❌ Erreur paiement Stripe:', error);
-                showNotification(`Erreur paiement: ${error.message}`, 'error');
-                
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
+                console.error('Erreur:', error);
+                alert('❌ Erreur de connexion');
             }
         }
-        
-        // Gestion de la connexion
-        function handleLogin(event) {
+
+        // Inscription
+        async function handleSignup(event) {
             event.preventDefault();
             
-            try {
-                const email = document.getElementById('loginEmail').value.trim().toLowerCase();
-                const password = document.getElementById('loginPassword').value;
-                
-                console.log('🔑 Tentative de connexion:', email);
-                
-                if (authenticateUser(email, password)) {
-                    console.log('✅ Connexion réussie');
-                    
-                    // Vérifier si c'est le compte avec de vraies données
-                    if (currentUser.realVintedData) {
-                        showSecurityWarning();
-                    }
-                    
-                    showNotification(`Connexion réussie ! Bienvenue ${currentUser.firstName} !`);
-                    
-                    setTimeout(() => {
-                        showDashboard();
-                    }, 1500);
-                } else {
-                    showNotification('❌ Email ou mot de passe incorrect', 'error');
-                }
-            } catch (error) {
-                console.error('❌ Erreur connexion:', error);
-                showNotification('Erreur lors de la connexion', 'error');
-            }
+            const firstname = document.getElementById('signup-firstname').value;
+            const lastname = document.getElementById('signup-lastname').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const plan = document.getElementById('signup-plan').value;
+            
+            // Pour l'instant on simule l'inscription
+            alert('🚧 Inscription en cours de développement. Utilise ces comptes de test:\n\n' +
+                  'Email: test@hermestool.com\n' +
+                  'Mot de passe: test123');
+            
+            switchToLogin();
         }
-        
-        // Variables pour la navigation du dashboard
-        let currentDashboardTab = 'overview';
-        
-        // ===== FONCTIONS POUR LE CONTENU DES ONGLETS =====
-        
-        // HTML de l'overview (dashboard principal)
-        function getDashboardOverviewHTML() {
-            return `
-                <!-- Header de la page -->
-                <div style="background: linear-gradient(135deg, #4caf50, #45a049); color: white; padding: 3rem; margin-bottom: 2rem; border-radius: 20px; text-align: center;">
-                    <h1 style="margin: 0; font-size: 2.5rem; font-weight: bold;">🎉 Salut ${currentUser.firstName} !</h1>
-                    <p style="margin: 1rem 0 0 0; font-size: 1.2rem; opacity: 0.9;">Dashboard principal Hermès Tool • Plan ${currentUser.plan}</p>
-                </div>
-                
-                <!-- Stats principales -->
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-                    <div style="background: linear-gradient(135deg, #ff8c42, #f57c00); color: white; padding: 2rem; border-radius: 16px; text-align: center;">
-                        <h3 style="font-size: 2rem; margin-bottom: 0.5rem; font-weight: bold;">${currentUser.stats.monthlyRevenue}€</h3>
-                        <p style="margin: 0; opacity: 0.9;">Revenus ce mois</p>
-                    </div>
-                    
-                    <div style="background: linear-gradient(135deg, #2196f3, #1976d2); color: white; padding: 2rem; border-radius: 16px; text-align: center;">
-                        <h3 style="font-size: 2rem; margin-bottom: 0.5rem; font-weight: bold;">${currentUser.stats.totalSales}</h3>
-                        <p style="margin: 0; opacity: 0.9;">Ventes totales</p>
-                    </div>
-                    
-                    <div style="background: linear-gradient(135deg, #4caf50, #45a049); color: white; padding: 2rem; border-radius: 16px; text-align: center;">
-                        <h3 style="font-size: 2rem; margin-bottom: 0.5rem; font-weight: bold;">${Math.floor(Math.random() * 20 + 5)}.${Math.floor(Math.random() * 9)}K</h3>
-                        <p style="margin: 0; opacity: 0.9;">Vues cette semaine</p>
-                    </div>
-                    
-                    <div style="background: linear-gradient(135deg, #9c27b0, #7b1fa2); color: white; padding: 2rem; border-radius: 16px; text-align: center;">
-                        <h3 style="font-size: 2rem; margin-bottom: 0.5rem; font-weight: bold;">${currentUser.stats.totalReposts}</h3>
-                        <p style="margin: 0; opacity: 0.9;">Reposts auto</p>
-                    </div>
-                </div>
 
-                <!-- Actions rapides -->
-                <div style="background: rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 2rem;">
-                    <h2 style="color: #ff8c42; margin-bottom: 1.5rem; font-size: 1.8rem;">
-                        <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>
-                        Actions rapides
-                    </h2>
-                    
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                        <button onclick="showDashboardTab('comptabilite')" class="btn-primary" style="padding: 1rem; font-size: 1rem;">
-                            <i class="fas fa-calculator"></i> Voir comptabilité
-                        </button>
-                        
-                        <button onclick="showDashboardTab('ia-messages')" class="btn-primary" style="padding: 1rem; font-size: 1rem; background: linear-gradient(135deg, #9c27b0, #7b1fa2);">
-                            <i class="fas fa-robot"></i> IA Messages
-                        </button>
-                        
-                        <button onclick="showDashboardTab('republication')" class="btn-primary" style="padding: 1rem; font-size: 1rem; background: linear-gradient(135deg, #4caf50, #45a049);">
-                            <i class="fas fa-sync-alt"></i> Auto-repost
-                        </button>
-                        
-                        <button onclick="showAnalyticsAlert()" class="btn-primary" style="padding: 1rem; font-size: 1rem; background: linear-gradient(135deg, #2196f3, #1976d2);">
-                            <i class="fas fa-chart-bar"></i> Analytics
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-        
-        // HTML de l'onglet Comptabilité (VERSION AVEC VRAIES DONNÉES)
-        function getComptabiliteHTML() {
-            // Déterminer quelle source de données utiliser
-            let transactionsDemo;
-            let isRealData = false;
-            let dataSource = '';
+        // Déconnexion
+        function handleLogout() {
+            // Supprimer la session sauvegardée
+            localStorage.removeItem('hermesUserSession');
             
-            // PRIORITY 1: Données d'extension (les plus récentes et complètes)
-            if (vintedDataManager && vintedDataManager.hasExtensionData && currentUser.realTransactions) {
-                transactionsDemo = currentUser.realTransactions;
-                isRealData = true;
-                dataSource = 'Extension Chrome H24';
-                console.log('📊 Utilisation données extension:', transactionsDemo.length, 'transactions');
-            }
-            // PRIORITY 2: Données utilisateur existantes (simulation réaliste)
-            else if (currentUser && currentUser.transactions) {
-                transactionsDemo = currentUser.transactions;
-                isRealData = true;
-                dataSource = 'Données utilisateur';
-                console.log('📊 Utilisation données utilisateur existantes');
-            }
-            // PRIORITY 3: Données de démonstration par défaut
-            else {
-                transactionsDemo = [
-                    { date: '05/08/2025', type: 'Vente', article: 'T-shirt Vintage', montant: 25.00, frais: 2.50, benefice: 22.50, acheteur: 'Demo_User' },
-                    { date: '04/08/2025', type: 'Vente', article: 'Jean Levi\'s', montant: 45.00, frais: 4.50, benefice: 40.50, acheteur: 'Demo_User' },
-                    { date: '03/08/2025', type: 'Vente', article: 'Sneakers Nike', montant: 85.00, frais: 8.50, benefice: 76.50, acheteur: 'Demo_User' },
-                    { date: '02/08/2025', type: 'Frais', article: 'Frais Vinted', montant: -12.30, frais: 0, benefice: -12.30, acheteur: '' },
-                    { date: '01/08/2025', type: 'Vente', article: 'Robe H&M', montant: 18.00, frais: 1.80, benefice: 16.20, acheteur: 'Demo_User' }
-                ];
-                isRealData = false;
-                dataSource = 'Données de démonstration';
-                console.log('📊 Utilisation données de démonstration');
-            }
-            
-            const totalRevenu = transactionsDemo.filter(t => t.type === 'Vente').reduce((sum, t) => sum + t.montant, 0);
-            const totalFrais = transactionsDemo.reduce((sum, t) => sum + Math.abs(t.frais), 0) + Math.abs(transactionsDemo.find(t => t.type === 'Frais')?.montant || 0);
-            const totalBenefice = totalRevenu - totalFrais;
-            const nombreVentes = transactionsDemo.filter(t => t.type === 'Vente').length;
-            
-            return `
-                <!-- Header de l'onglet -->
-                <div style="background: linear-gradient(135deg, #2196f3, #1976d2); color: white; padding: 2rem; margin-bottom: 2rem; border-radius: 20px;">
-                    <h1 style="margin: 0; font-size: 2rem; font-weight: bold;">
-                        <i class="fas fa-calculator" style="margin-right: 0.5rem;"></i>
-                        Comptabilité automatique
-                    </h1>
-                    <p style="margin: 0.5rem 0 0 0; opacity: 0.9;">
-                        Source: ${dataSource} ${isRealData ? '(Données réelles)' : ''}
-                    </p>
-                    ${isRealData && vintedDataManager?.hasExtensionData ? 
-                        `<div style="background: rgba(76, 175, 80, 0.3); color: white; padding: 0.5rem 1rem; border-radius: 15px; margin-top: 1rem; display: inline-block; font-size: 0.9rem;">
-                            <i class="fas fa-link" style="margin-right: 0.5rem;"></i>
-                            Extension connectée • Sync H24 active
-                         </div>` : ''
-                    }
-                </div>
-                
-                <!-- Extension Status (nouveau) -->
-                ${getExtensionStatusCard()}
-                
-                <!-- Résumé financier -->
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-                    <div style="background: linear-gradient(135deg, #4caf50, #45a049); color: white; padding: 1.5rem; border-radius: 12px; text-align: center;">
-                        <h3 style="font-size: 1.8rem; margin-bottom: 0.5rem; font-weight: bold;">${totalRevenu.toFixed(2)}€</h3>
-                        <p style="margin: 0; opacity: 0.9;">Revenus totaux</p>
-                        ${isRealData ? '<div style="font-size: 0.8rem; opacity: 0.7; margin-top: 0.5rem;">✅ Données réelles</div>' : '<div style="font-size: 0.8rem; opacity: 0.7; margin-top: 0.5rem;">⚠️ Simulation</div>'}
-                    </div>
-                    
-                    <div style="background: linear-gradient(135deg, #f44336, #d32f2f); color: white; padding: 1.5rem; border-radius: 12px; text-align: center;">
-                        <h3 style="font-size: 1.8rem; margin-bottom: 0.5rem; font-weight: bold;">${totalFrais.toFixed(2)}€</h3>
-                        <p style="margin: 0; opacity: 0.9;">Frais & charges</p>
-                        ${isRealData ? '<div style="font-size: 0.8rem; opacity: 0.7; margin-top: 0.5rem;">Commissions Vinted incluses</div>' : ''}
-                    </div>
-                    
-                    <div style="background: linear-gradient(135deg, #ff8c42, #f57c00); color: white; padding: 1.5rem; border-radius: 12px; text-align: center;">
-                        <h3 style="font-size: 1.8rem; margin-bottom: 0.5rem; font-weight: bold;">${totalBenefice.toFixed(2)}€</h3>
-                        <p style="margin: 0; opacity: 0.9;">Bénéfice net</p>
-                        ${isRealData ? '<div style="font-size: 0.8rem; opacity: 0.7; margin-top: 0.5rem;">Marge calculée automatiquement</div>' : ''}
-                    </div>
-                    
-                    <div style="background: linear-gradient(135deg, #9c27b0, #7b1fa2); color: white; padding: 1.5rem; border-radius: 12px; text-align: center;">
-                        <h3 style="font-size: 1.8rem; margin-bottom: 0.5rem; font-weight: bold;">${nombreVentes}</h3>
-                        <p style="margin: 0; opacity: 0.9;">Ventes ce mois</p>
-                        ${isRealData ? '<div style="font-size: 0.8rem; opacity: 0.7; margin-top: 0.5rem;">Taux de conversion réel</div>' : ''}
-                    </div>
-                </div>
-                
-                <!-- Actions comptabilité -->
-                <div style="background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem;">
-                    <h3 style="color: #ff8c42; margin-bottom: 1rem; font-size: 1.3rem;">
-                        <i class="fas fa-tools" style="margin-right: 0.5rem;"></i>
-                        Actions rapides
-                    </h3>
-                    
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
-                        <button onclick="exportComptabilite()" class="btn-primary" style="padding: 0.8rem; font-size: 0.9rem;">
-                            <i class="fas fa-download"></i> Exporter CSV
-                        </button>
-                        
-                        ${!isRealData ? 
-                            `<button onclick="connectExtension()" class="btn-primary" style="padding: 0.8rem; font-size: 0.9rem; background: linear-gradient(135deg, #4caf50, #45a049);">
-                                <i class="fas fa-puzzle-piece"></i> Connecter Extension
-                            </button>` :
-                            `<button onclick="syncExtension()" class="btn-primary" style="padding: 0.8rem; font-size: 0.9rem; background: linear-gradient(135deg, #4caf50, #45a049);">
-                                <i class="fas fa-sync"></i> Sync Extension
-                            </button>`
-                        }
-                        
-                        <button onclick="calculerTaxes()" class="btn-primary" style="padding: 0.8rem; font-size: 0.9rem; background: linear-gradient(135deg, #ff9800, #f57c00);">
-                            <i class="fas fa-percentage"></i> Calcul taxes
-                        </button>
-                        
-                        <button onclick="generateRapport()" class="btn-primary" style="padding: 0.8rem; font-size: 0.9rem; background: linear-gradient(135deg, #9c27b0, #7b1fa2);">
-                            <i class="fas fa-file-pdf"></i> Rapport PDF
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Tableau des transactions -->
-                <div style="background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 1.5rem;">
-                    <h3 style="color: #ff8c42; margin-bottom: 1.5rem; font-size: 1.3rem;">
-                        <i class="fas fa-list" style="margin-right: 0.5rem;"></i>
-                        ${isRealData ? 'Tes vraies transactions Vinted' : 'Transactions de démonstration'}
-                        <span style="font-size: 0.8rem; color: #888; margin-left: 1rem;">(${dataSource})</span>
-                    </h3>
-                    
-                    <div style="overflow-x: auto;">
-                        <table style="width: 100%; border-collapse: collapse; color: #e5e5e5;">
-                            <thead>
-                                <tr style="background: rgba(255, 140, 66, 0.1); border-bottom: 2px solid #ff8c42;">
-                                    <th style="padding: 1rem; text-align: left; font-weight: 600;">Date</th>
-                                    <th style="padding: 1rem; text-align: left; font-weight: 600;">Type</th>
-                                    <th style="padding: 1rem; text-align: left; font-weight: 600;">Article</th>
-                                    ${isRealData ? '<th style="padding: 1rem; text-align: left; font-weight: 600;">Acheteur</th>' : ''}
-                                    <th style="padding: 1rem; text-align: right; font-weight: 600;">Montant</th>
-                                    <th style="padding: 1rem; text-align: right; font-weight: 600;">Frais</th>
-                                    <th style="padding: 1rem; text-align: right; font-weight: 600;">Bénéfice</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${transactionsDemo.map(transaction => `
-                                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); transition: background 0.3s;" onmouseover="this.style.background='rgba(255, 140, 66, 0.05)'" onmouseout="this.style.background='transparent'">
-                                        <td style="padding: 1rem;">${transaction.date}</td>
-                                        <td style="padding: 1rem;">
-                                            <span style="background: ${transaction.type === 'Vente' ? '#4caf50' : '#f44336'}; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">
-                                                ${transaction.type === 'Vente' ? '💰' : '💸'} ${transaction.type}
-                                            </span>
-                                        </td>
-                                        <td style="padding: 1rem;">${transaction.article}</td>
-                                        ${isRealData ? `<td style="padding: 1rem; color: #9c27b0; font-weight: 500;">${transaction.acheteur || '-'}</td>` : ''}
-                                        <td style="padding: 1rem; text-align: right; color: ${transaction.montant > 0 ? '#4caf50' : '#f44336'}; font-weight: 600;">
-                                            ${transaction.montant > 0 ? '+' : ''}${transaction.montant.toFixed(2)}€
-                                        </td>
-                                        <td style="padding: 1rem; text-align: right; color: #f44336;">
-                                            ${transaction.frais > 0 ? '-' : ''}${Math.abs(transaction.frais).toFixed(2)}€
-                                        </td>
-                                        <td style="padding: 1rem; text-align: right; color: ${transaction.benefice > 0 ? '#4caf50' : '#f44336'}; font-weight: 600;">
-                                            ${transaction.benefice > 0 ? '+' : ''}${transaction.benefice.toFixed(2)}€
-                                        </td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <div style="text-align: center; margin-top: 1.5rem;">
-                        <button onclick="loadMoreTransactions()" style="background: transparent; border: 2px solid #ff8c42; color: #ff8c42; padding: 0.8rem 2rem; border-radius: 25px; cursor: pointer; transition: all 0.3s;">
-                            Charger plus de transactions
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-        
-        // HTML de l'onglet IA Messages
-        function getIAMessagesHTML() {
-            return `
-                <!-- Header de l'onglet -->
-                <div style="background: linear-gradient(135deg, #9c27b0, #7b1fa2); color: white; padding: 2rem; margin-bottom: 2rem; border-radius: 20px;">
-                    <h1 style="margin: 0; font-size: 2rem; font-weight: bold;">
-                        <i class="fas fa-robot" style="margin-right: 0.5rem;"></i>
-                        IA Messages automatiques
-                    </h1>
-                    <p style="margin: 0.5rem 0 0 0; opacity: 0.9;">Relances intelligentes pour maximiser tes ventes</p>
-                </div>
-                
-                <div style="background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 2rem; text-align: center;">
-                    <div style="font-size: 4rem; margin-bottom: 1rem;">🤖</div>
-                    <h3 style="color: #9c27b0; margin-bottom: 1rem;">Fonctionnalité en développement</h3>
-                    <p style="color: #e5e5e5; margin-bottom: 2rem;">L'IA pour les messages automatiques arrive bientôt !</p>
-                    
-                    <div style="background: rgba(156, 39, 176, 0.1); border: 1px solid #9c27b0; border-radius: 12px; padding: 1.5rem; text-align: left; margin-bottom: 2rem;">
-                        <h4 style="color: #9c27b0; margin-bottom: 1rem;">Fonctionnalités prévues :</h4>
-                        <ul style="color: #e5e5e5; line-height: 1.8;">
-                            <li>📱 Messages de relance automatiques</li>
-                            <li>🎯 Personnalisation selon le profil acheteur</li>
-                            <li>⏰ Timing optimal basé sur l'IA</li>
-                            <li>📊 A/B testing des messages</li>
-                            <li>🏆 Templates de messages performants</li>
-                        </ul>
-                    </div>
-                    
-                    <button onclick="showNotification('🔔 Tu seras notifié dès que cette fonctionnalité sera disponible !')" class="btn-primary" style="padding: 1rem 2rem; background: linear-gradient(135deg, #9c27b0, #7b1fa2);">
-                        <i class="fas fa-bell"></i> Me notifier quand c'est prêt
-                    </button>
-                </div>
-            `;
-        }
-        
-        // HTML de l'onglet Republication Auto
-        function getRepublicationHTML() {
-            return `
-                <!-- Header de l'onglet -->
-                <div style="background: linear-gradient(135deg, #4caf50, #45a049); color: white; padding: 2rem; margin-bottom: 2rem; border-radius: 20px;">
-                    <h1 style="margin: 0; font-size: 2rem; font-weight: bold;">
-                        <i class="fas fa-sync-alt" style="margin-right: 0.5rem;"></i>
-                        Republication automatique
-                    </h1>
-                    <p style="margin: 0.5rem 0 0 0; opacity: 0.9;">Garde tes articles en top des recherches H24</p>
-                </div>
-                
-                <div style="background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 2rem; text-align: center;">
-                    <div style="font-size: 4rem; margin-bottom: 1rem;">🔄</div>
-                    <h3 style="color: #4caf50; margin-bottom: 1rem;">Fonctionnalité en développement</h3>
-                    <p style="color: #e5e5e5; margin-bottom: 2rem;">Le système de republication automatique arrive bientôt !</p>
-                    
-                    <div style="background: rgba(76, 175, 80, 0.1); border: 1px solid #4caf50; border-radius: 12px; padding: 1.5rem; text-align: left; margin-bottom: 2rem;">
-                        <h4 style="color: #4caf50; margin-bottom: 1rem;">Fonctionnalités prévues :</h4>
-                        <ul style="color: #e5e5e5; line-height: 1.8;">
-                            <li>🕒 Republication selon les heures de pointe</li>
-                            <li>🎯 Ciblage algorithme Vinted optimisé</li>
-                            <li>📈 Boost automatique de visibilité</li>
-                            <li>⚙️ Paramètres personnalisables</li>
-                            <li>📊 Statistiques détaillées des reposts</li>
-                        </ul>
-                    </div>
-                    
-                    <button onclick="showNotification('🔔 Tu seras notifié dès que cette fonctionnalité sera disponible !')" class="btn-primary" style="padding: 1rem 2rem; background: linear-gradient(135deg, #4caf50, #45a049);">
-                        <i class="fas fa-bell"></i> Me notifier quand c'est prêt
-                    </button>
-                </div>
-            `;
-        }
-        
-        // ===== FONCTIONS PRINCIPALES DU DASHBOARD =====
-        
-        // NOUVELLES FONCTIONS pour l'extension
-        
-        // Générer la card de statut de l'extension
-        function getExtensionStatusCard() {
-            const hasExtension = vintedDataManager && vintedDataManager.hasExtensionData;
-            const lastSync = currentUser?.lastVintedSync;
-            
-            if (hasExtension) {
-                return `
-                    <div style="background: rgba(76, 175, 80, 0.1); border: 2px solid #4caf50; border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem;">
-                        <h3 style="color: #4caf50; margin-bottom: 1rem; font-size: 1.3rem;">
-                            <i class="fas fa-puzzle-piece" style="margin-right: 0.5rem;"></i>
-                            Extension Chrome H24 - Connectée
-                        </h3>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
-                            <div style="text-align: center;">
-                                <div style="color: #4caf50; font-size: 1.5rem; font-weight: bold;">${vintedDataManager?.extensionData?.items?.length || 0}</div>
-                                <div style="color: #e5e5e5; font-size: 0.9rem;">Articles collectés</div>
-                            </div>
-                            <div style="text-align: center;">
-                                <div style="color: #4caf50; font-size: 1.5rem; font-weight: bold;">${vintedDataManager?.extensionData?.sales?.length || 0}</div>
-                                <div style="color: #e5e5e5; font-size: 0.9rem;">Ventes détectées</div>
-                            </div>
-                            <div style="text-align: center;">
-                                <div style="color: #4caf50; font-size: 1.5rem; font-weight: bold;">H24</div>
-                                <div style="color: #e5e5e5; font-size: 0.9rem;">Collecte active</div>
-                            </div>
-                        </div>
-                        <div style="color: #e5e5e5; font-size: 0.9rem; text-align: center;">
-                            <strong>Dernière sync:</strong> ${lastSync ? new Date(lastSync).toLocaleString() : 'En cours...'}
-                        </div>
-                    </div>
-                `;
-            } else {
-                return `
-                    <div style="background: rgba(255, 193, 7, 0.1); border: 2px solid #ffc107; border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem; text-align: center;">
-                        <div style="color: #ffc107; font-size: 2.5rem; margin-bottom: 1rem;">🧩</div>
-                        <h3 style="color: #ffc107; margin-bottom: 1rem;">Extension Chrome Non Détectée</h3>
-                        <p style="color: #e5e5e5; margin-bottom: 1.5rem;">
-                            Installe l'extension Chrome Hermès Tool pour collecter automatiquement tes vraies données Vinted H24
-                        </p>
-                        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                            <button onclick="installExtensionGuide()" class="btn-primary" style="background: linear-gradient(135deg, #4caf50, #45a049);">
-                                <i class="fas fa-download" style="margin-right: 0.5rem;"></i>
-                                Guide d'installation
-                            </button>
-                            <button onclick="refreshExtensionStatus()" class="btn-primary" style="background: linear-gradient(135deg, #2196f3, #1976d2);">
-                                <i class="fas fa-refresh" style="margin-right: 0.5rem;"></i>
-                                Actualiser
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-        
-        // Fonction pour connecter l'extension
-        function connectExtension() {
-            if (vintedDataManager) {
-                vintedDataManager.requestExtensionSync();
-            } else {
-                installExtensionGuide();
-            }
-        }
-        
-        // Fonction pour synchroniser avec l'extension
-        function syncExtension() {
-            if (vintedDataManager && vintedDataManager.hasExtensionData) {
-                showNotification('🔄 Synchronisation avec l\'extension...');
-                vintedDataManager.requestExtensionSync();
-                
-                setTimeout(() => {
-                    // Recharger l'onglet comptabilité
-                    showDashboardTab('comptabilite');
-                    showNotification('✅ Synchronisation terminée !');
-                }, 3000);
-            } else {
-                showNotification('⚠️ Extension non connectée', 'error');
-                installExtensionGuide();
-            }
-        }
-        
-        // Guide d'installation de l'extension
-        function installExtensionGuide() {
-            const modal = document.createElement('div');
-            modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 99999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px);';
-            
-            modal.innerHTML = `
-                <div style="background: white; border-radius: 20px; padding: 2.5rem; max-width: 700px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px rgba(0,0,0,0.3); position: relative;">
-                    <button onclick="this.parentNode.parentNode.remove()" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: #8898aa; cursor: pointer;">×</button>
-                    
-                    <div style="text-align: center; margin-bottom: 2rem;">
-                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #4caf50, #45a049); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
-                            <i class="fas fa-puzzle-piece" style="font-size: 2rem; color: white;"></i>
-                        </div>
-                        <h2 style="color: #0a0a0c; font-size: 2rem; font-weight: bold; margin-bottom: 0.5rem;">Extension Chrome Hermès Tool</h2>
-                        <p style="color: #666; font-size: 1rem;">Collecte automatique H24 de tes données Vinted</p>
-                    </div>
-                    
-                    <div style="background: #f8f9fa; border-radius: 12px; padding: 2rem; margin-bottom: 2rem;">
-                        <h3 style="color: #495057; margin-bottom: 1.5rem; font-size: 1.3rem;">📋 Instructions d'installation :</h3>
-                        
-                        <div style="margin-bottom: 1.5rem;">
-                            <div style="background: #4caf50; color: white; padding: 0.5rem; border-radius: 8px; display: inline-block; font-weight: bold; margin-bottom: 0.5rem;">Étape 1</div>
-                            <p style="color: #495057; margin: 0;">Télécharge les fichiers de l'extension depuis GitHub ou récupère-les auprès du support</p>
-                        </div>
-                        
-                        <div style="margin-bottom: 1.5rem;">
-                            <div style="background: #2196f3; color: white; padding: 0.5rem; border-radius: 8px; display: inline-block; font-weight: bold; margin-bottom: 0.5rem;">Étape 2</div>
-                            <p style="color: #495057; margin: 0;">Ouvre Chrome → Menu (⋮) → Plus d'outils → Extensions</p>
-                        </div>
-                        
-                        <div style="margin-bottom: 1.5rem;">
-                            <div style="background: #ff9800; color: white; padding: 0.5rem; border-radius: 8px; display: inline-block; font-weight: bold; margin-bottom: 0.5rem;">Étape 3</div>
-                            <p style="color: #495057; margin: 0;">Active le "Mode développeur" en haut à droite</p>
-                        </div>
-                        
-                        <div style="margin-bottom: 1.5rem;">
-                            <div style="background: #9c27b0; color: white; padding: 0.5rem; border-radius: 8px; display: inline-block; font-weight: bold; margin-bottom: 0.5rem;">Étape 4</div>
-                            <p style="color: #495057; margin: 0;">Clique "Charger l'extension non empaquetée" et sélectionne le dossier de l'extension</p>
-                        </div>
-                        
-                        <div>
-                            <div style="background: #4caf50; color: white; padding: 0.5rem; border-radius: 8px; display: inline-block; font-weight: bold; margin-bottom: 0.5rem;">Étape 5</div>
-                            <p style="color: #495057; margin: 0;">Va sur Vinted.fr → L'extension commencera automatiquement la collecte H24</p>
-                        </div>
-                    </div>
-                    
-                    <div style="background: rgba(33, 150, 243, 0.1); border: 1px solid #2196f3; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
-                        <h4 style="color: #1976d2; margin-bottom: 1rem;">
-                            <i class="fas fa-lightbulb" style="margin-right: 0.5rem;"></i>
-                            Fonctionnalités H24
-                        </h4>
-                        <ul style="color: #666; margin: 0; padding-left: 1.2rem; line-height: 1.8;">
-                            <li><strong>Collecte automatique</strong> de tous tes articles, ventes et messages</li>
-                            <li><strong>Synchronisation temps réel</strong> avec ton dashboard Hermès Tool</li>
-                            <li><strong>Fonctionne en arrière-plan</strong> tant que Vinted est ouvert</li>
-                            <li><strong>Interface de contrôle</strong> directement sur Vinted</li>
-                            <li><strong>Export des données</strong> en JSON pour sauvegarde</li>
-                        </ul>
-                    </div>
-                    
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <button onclick="window.open('https://github.com/votre-repo/hermes-extension', '_blank')" style="background: linear-gradient(135deg, #2196f3, #1976d2); color: white; padding: 1rem; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem;">
-                            <i class="fab fa-github" style="margin-right: 0.5rem;"></i>
-                            Télécharger sur GitHub
-                        </button>
-                        
-                        <button onclick="this.parentNode.parentNode.remove()" style="background: linear-gradient(135deg, #4caf50, #45a049); color: white; padding: 1rem; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem;">
-                            <i class="fas fa-check" style="margin-right: 0.5rem;"></i>
-                            Compris !
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            document.body.appendChild(modal);
-        }
-        
-        // Actualiser le statut de l'extension
-        function refreshExtensionStatus() {
-            showNotification('🔄 Vérification extension...');
-            
-            if (vintedDataManager) {
-                vintedDataManager.checkExtensionData().then(() => {
-                    // Recharger l'onglet comptabilité pour afficher le nouveau statut
-                    showDashboardTab('comptabilite');
-                });
-            } else {
-                // Réinitialiser le gestionnaire de données
-                vintedDataManager = new VintedDataManager();
-                
-                setTimeout(() => {
-                    showDashboardTab('comptabilite');
-                }, 2000);
-            }
-        }
-        function showDashboard() {
-            if (!currentUser) {
-                showNotification('⚠️ Vous devez être connecté', 'error');
-                showLogin();
-                return;
-            }
-            
-            const dashboardPage = document.getElementById('dashboardPage');
-            dashboardPage.innerHTML = getDashboardHTML();
-            changePage('dashboard');
-            
-            // Afficher l'onglet par défaut après un court délai pour s'assurer que le DOM est prêt
-            setTimeout(() => {
-                showDashboardTab('overview');
-                
-                // S'assurer que la sidebar est bien visible
-                const sidebar = document.getElementById('dashboardSidebar');
-                if (sidebar) {
-                    sidebar.style.display = 'block';
-                    sidebar.style.visibility = 'visible';
-                }
-            }, 100);
-            
-            console.log('✅ Dashboard affiché');
-        }
-        
-        // HTML principal du dashboard
-        function getDashboardHTML() {
-            return `
-                <div style="min-height: 100vh; background: linear-gradient(135deg, #0a0a0c 0%, #1a1a1e 100%); color: #e5e5e5; display: flex;">
-                    
-                    <!-- SIDEBAR NAVIGATION -->
-                    <div style="width: 280px; background: rgba(26, 26, 30, 0.95); border-right: 2px solid #ff8c42; position: fixed; height: 100vh; overflow-y: auto; z-index: 100;">
-                        
-                        <!-- Header Sidebar -->
-                        <div style="padding: 2rem 1.5rem; border-bottom: 1px solid rgba(255, 140, 66, 0.3);">
-                            <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                                <i class="fas fa-bolt" style="color: #ff8c42; font-size: 1.8rem; margin-right: 12px;"></i>
-                                <span style="color: #ff8c42; font-weight: bold; font-size: 1.4rem;">HERMÈS TOOL</span>
-                            </div>
-                            <div style="color: white; font-weight: 500;">
-                                👋 <strong style="color: #ff8c42;">${currentUser.firstName}</strong>
-                                <div style="background: #4caf50; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem; margin-top: 0.5rem; display: inline-block;">
-                                    ${currentUser.plan}
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Menu Navigation -->
-                        <nav style="padding: 1.5rem 0;">
-                            
-                            <div class="nav-item" onclick="showDashboardTab('overview')" style="display: flex; align-items: center; padding: 1rem 1.5rem; cursor: pointer; transition: all 0.3s; border-left: 4px solid transparent;">
-                                <i class="fas fa-home" style="color: #ff8c42; font-size: 1.2rem; margin-right: 12px; width: 20px;"></i>
-                                <span style="color: #e5e5e5; font-weight: 600;">Dashboard</span>
-                            </div>
-                            
-                            <div class="nav-item" onclick="showDashboardTab('comptabilite')" style="display: flex; align-items: center; padding: 1rem 1.5rem; cursor: pointer; transition: all 0.3s; border-left: 4px solid transparent;">
-                                <i class="fas fa-calculator" style="color: #2196f3; font-size: 1.2rem; margin-right: 12px; width: 20px;"></i>
-                                <span style="color: #e5e5e5; font-weight: 600;">Comptabilité</span>
-                            </div>
-                            
-                            <div class="nav-item" onclick="showDashboardTab('ia-messages')" style="display: flex; align-items: center; padding: 1rem 1.5rem; cursor: pointer; transition: all 0.3s; border-left: 4px solid transparent;">
-                                <i class="fas fa-robot" style="color: #9c27b0; font-size: 1.2rem; margin-right: 12px; width: 20px;"></i>
-                                <span style="color: #e5e5e5; font-weight: 600;">IA Messages</span>
-                            </div>
-                            
-                            <div class="nav-item" onclick="showDashboardTab('republication')" style="display: flex; align-items: center; padding: 1rem 1.5rem; cursor: pointer; transition: all 0.3s; border-left: 4px solid transparent;">
-                                <i class="fas fa-sync-alt" style="color: #4caf50; font-size: 1.2rem; margin-right: 12px; width: 20px;"></i>
-                                <span style="color: #e5e5e5; font-weight: 600;">Republication Auto</span>
-                            </div>
-                            
-                            <!-- Séparateur -->
-                            <div style="height: 1px; background: rgba(255, 140, 66, 0.3); margin: 1.5rem 1rem;"></div>
-                            
-                            <!-- Déconnexion -->
-                            <div onclick="logout()" style="display: flex; align-items: center; padding: 1rem 1.5rem; cursor: pointer; transition: all 0.3s; margin-top: 2rem;">
-                                <i class="fas fa-sign-out-alt" style="color: #f44336; font-size: 1.2rem; margin-right: 12px; width: 20px;"></i>
-                                <span style="color: #f44336; font-weight: 600;">Déconnexion</span>
-                            </div>
-                            
-                        </nav>
-                    </div>
-                    
-                    <!-- CONTENU PRINCIPAL -->
-                    <div style="margin-left: 280px; flex: 1; min-height: 100vh;">
-                        <div id="dashboardContent" style="padding: 2rem;">
-                            <!-- Le contenu sera injecté ici selon l'onglet sélectionné -->
-                        </div>
-                    </div>
-                    
-                </div>
-            `;
-        }
-        
-        // Changer d'onglet dans le dashboard
-        function showDashboardTab(tabName) {
-            currentDashboardTab = tabName;
-            
-            // S'assurer que la sidebar reste visible
-            const sidebar = document.getElementById('dashboardSidebar');
-            if (sidebar) {
-                sidebar.style.display = 'block';
-                sidebar.style.visibility = 'visible';
-            }
-            
-            // Afficher le contenu correspondant
-            const contentDiv = document.getElementById('dashboardContent');
-            if (!contentDiv) {
-                console.error('Dashboard content div not found');
-                return;
-            }
-            
-            switch(tabName) {
-                case 'overview':
-                    contentDiv.innerHTML = getDashboardOverviewHTML();
-                    break;
-                case 'comptabilite':
-                    contentDiv.innerHTML = getComptabiliteHTML();
-                    break;
-                case 'ia-messages':
-                    contentDiv.innerHTML = getIAMessagesHTML();
-                    break;
-                case 'republication':
-                    contentDiv.innerHTML = getRepublicationHTML();
-                    break;
-                default:
-                    contentDiv.innerHTML = getDashboardOverviewHTML();
-            }
-            
-            // Mettre à jour l'apparence de la navigation
-            updateDashboardNavigation(tabName);
-        }
-        
-        // Mettre à jour l'apparence de la navigation
-        function updateDashboardNavigation(activeTab) {
-            // Retirer la classe active de tous les éléments
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-                item.style.background = 'transparent';
-                item.style.borderLeft = '4px solid transparent';
-            });
-            
-            // Ajouter la classe active au bon élément selon l'onglet
-            const tabMapping = {
-                'overview': 0,
-                'comptabilite': 1,
-                'ia-messages': 2,
-                'republication': 3
-            };
-            
-            const activeIndex = tabMapping[activeTab];
-            if (activeIndex !== undefined) {
-                const navItems = document.querySelectorAll('.nav-item');
-                if (navItems[activeIndex]) {
-                    navItems[activeIndex].classList.add('active');
-                    navItems[activeIndex].style.background = 'rgba(255, 140, 66, 0.1)';
-                    navItems[activeIndex].style.borderLeft = '4px solid #ff8c42';
-                }
-            }
-        }
-        
-        // HTML de l'overview (dashboard principal)
-        function getDashboardOverviewHTML() {
-            return `
-                <!-- Header de la page -->
-                <div style="background: linear-gradient(135deg, #4caf50, #45a049); color: white; padding: 3rem; margin-bottom: 2rem; border-radius: 20px; text-align: center;">
-                    <h1 style="margin: 0; font-size: 2.5rem; font-weight: bold;">🎉 Salut ${currentUser.firstName} !</h1>
-                    <p style="margin: 1rem 0 0 0; font-size: 1.2rem; opacity: 0.9;">Dashboard principal Hermès Tool • Plan ${currentUser.plan}</p>
-                </div>
-                
-                <!-- Stats principales -->
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-                    <div style="background: linear-gradient(135deg, #ff8c42, #f57c00); color: white; padding: 2rem; border-radius: 16px; text-align: center;">
-                        <h3 style="font-size: 2rem; margin-bottom: 0.5rem; font-weight: bold;">${currentUser.stats.monthlyRevenue}€</h3>
-                        <p style="margin: 0; opacity: 0.9;">Revenus ce mois</p>
-                    </div>
-                    
-                    <div style="background: linear-gradient(135deg, #2196f3, #1976d2); color: white; padding: 2rem; border-radius: 16px; text-align: center;">
-                        <h3 style="font-size: 2rem; margin-bottom: 0.5rem; font-weight: bold;">${currentUser.stats.totalSales}</h3>
-                        <p style="margin: 0; opacity: 0.9;">Ventes totales</p>
-                    </div>
-                    
-                    <div style="background: linear-gradient(135deg, #4caf50, #45a049); color: white; padding: 2rem; border-radius: 16px; text-align: center;">
-                        <h3 style="font-size: 2rem; margin-bottom: 0.5rem; font-weight: bold;">${Math.floor(Math.random() * 20 + 5)}.${Math.floor(Math.random() * 9)}K</h3>
-                        <p style="margin: 0; opacity: 0.9;">Vues cette semaine</p>
-                    </div>
-                    
-                    <div style="background: linear-gradient(135deg, #9c27b0, #7b1fa2); color: white; padding: 2rem; border-radius: 16px; text-align: center;">
-                        <h3 style="font-size: 2rem; margin-bottom: 0.5rem; font-weight: bold;">${currentUser.stats.totalReposts}</h3>
-                        <p style="margin: 0; opacity: 0.9;">Reposts auto</p>
-                    </div>
-                </div>
-
-                <!-- Actions rapides -->
-                <div style="background: rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 2rem;">
-                    <h2 style="color: #ff8c42; margin-bottom: 1.5rem; font-size: 1.8rem;">
-                        <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>
-                        Actions rapides
-                    </h2>
-                    
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                        <button onclick="showDashboardTab('comptabilite')" class="btn-primary" style="padding: 1rem; font-size: 1rem;">
-                            <i class="fas fa-calculator"></i> Voir comptabilité
-                        </button>
-                        
-                        <button onclick="showDashboardTab('ia-messages')" class="btn-primary" style="padding: 1rem; font-size: 1rem; background: linear-gradient(135deg, #9c27b0, #7b1fa2);">
-                            <i class="fas fa-robot"></i> IA Messages
-                        </button>
-                        
-                        <button onclick="showDashboardTab('republication')" class="btn-primary" style="padding: 1rem; font-size: 1rem; background: linear-gradient(135deg, #4caf50, #45a049);">
-                            <i class="fas fa-sync-alt"></i> Auto-repost
-                        </button>
-                        
-                        <button onclick="showAnalyticsAlert()" class="btn-primary" style="padding: 1rem; font-size: 1rem; background: linear-gradient(135deg, #2196f3, #1976d2);">
-                            <i class="fas fa-chart-bar"></i> Analytics
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-        
-        // Fonctions utilitaires
-        function saveUser(userData) {
-            usersDatabase[userData.email] = userData;
-        }
-        
-        function emailExists(email) {
-            return usersDatabase.hasOwnProperty(email);
-        }
-        
-        function authenticateUser(email, password) {
-            const user = usersDatabase[email];
-            if (user && user.password === password && user.isActive) {
-                currentUser = user;
-                return true;
-            }
-            return false;
-        }
-        
-        function isValidEmail(email) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-        }
-        
-        function logout() {
-            console.log('🚪 Déconnexion');
+            // Réinitialiser les variables
             currentUser = null;
-            showNotification('👋 Déconnexion réussie');
-            setTimeout(() => showHome(), 1000);
-        }
-        
-        // Fonctions d'alerte pour le dashboard
-        function showRepostAlert() {
-            alert(`🔄 Hey ${currentUser.firstName} ! Tes ${Math.floor(Math.random() * 50 + 20)} articles vont être repostés.`);
-        }
-        
-        function showAnalyticsAlert() {
-            alert(`📊 Analytics pour ${currentUser.firstName}: Top catégories selon ton plan ${currentUser.plan}`);
-        }
-        
-        function showAIAlert() {
-            if (currentUser.plan === 'Néophyte') {
-                alert('🔒 Fonctionnalité IA disponible avec les plans Métrios et Archon !');
-            } else {
-                alert(`✨ IA activée pour ${currentUser.firstName} ! Optimisation ${currentUser.plan} en cours...`);
-            }
-        }
-        
-        function showUsersList() {
-            const userCount = Object.keys(usersDatabase).length;
-            alert(`📊 Base de données Hermès Tool\n\n👥 Utilisateurs inscrits: ${userCount}\n\nMode démo actif !`);
-        }
-        
-        // Fonction pour connecter Vinted (simulation sécurisée)
-        function connectVinted() {
-            // Simuler une popup de connexion Vinted
-            const modal = document.createElement('div');
-            modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 99999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px);';
+            userEmail = null;
+            isLoggedIn = false;
             
-            modal.innerHTML = `
-                <div style="background: white; border-radius: 20px; padding: 2.5rem; max-width: 500px; width: 90%; box-shadow: 0 25px 50px rgba(0,0,0,0.3); position: relative;">
-                    <button onclick="this.parentNode.parentNode.remove()" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: #8898aa; cursor: pointer;">×</button>
-                    
-                    <div style="text-align: center; margin-bottom: 2rem;">
-                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #4caf50, #45a049); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);">
-                            <i class="fas fa-link" style="font-size: 2rem; color: white;"></i>
-                        </div>
-                        <h2 style="color: #0a0a0c; font-size: 2rem; font-weight: bold; margin-bottom: 0.5rem;">Connecter Vinted</h2>
-                        <p style="color: #666; font-size: 1rem;">Liaison sécurisée avec ton compte Vinted</p>
-                    </div>
-                    
-                    <div style="background: rgba(255, 193, 7, 0.1); border: 1px solid #ffc107; border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem;">
-                        <div style="color: #e65100; font-weight: 600; margin-bottom: 0.5rem;">
-                            <i class="fas fa-shield-alt" style="margin-right: 0.5rem;"></i>
-                            Mode Simulation Sécurisée
-                        </div>
-                        <div style="color: #666; font-size: 0.9rem;">
-                            Cette démo simule la connexion à Vinted avec tes données réelles sans compromettre tes vrais identifiants.
-                        </div>
-                    </div>
-                    
-                    <form onsubmit="simulateVintedConnection(event)">
-                        <div style="margin-bottom: 1.5rem;">
-                            <label style="display: block; margin-bottom: 0.5rem; color: #0a0a0c; font-weight: 600;">Email Vinted (simulation)</label>
-                            <input type="email" value="collabwilly@gmail.com" readonly style="width: 100%; padding: 1rem; background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 12px; color: #495057; font-size: 1rem; box-sizing: border-box;">
-                        </div>
-                        
-                        <div style="margin-bottom: 2rem;">
-                            <label style="display: block; margin-bottom: 0.5rem; color: #0a0a0c; font-weight: 600;">Statut</label>
-                            <div style="display: flex; align-items: center; padding: 1rem; background: rgba(76, 175, 80, 0.1); border: 2px solid #4caf50; border-radius: 12px;">
-                                <i class="fas fa-check-circle" style="color: #4caf50; font-size: 1.2rem; margin-right: 0.5rem;"></i>
-                                <span style="color: #2e7d32; font-weight: 600;">Prêt à synchroniser</span>
-                            </div>
-                        </div>
-                        
-                        <button type="submit" style="width: 100%; background: linear-gradient(135deg, #4caf50, #45a049); color: white; padding: 1.2rem; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1.1rem; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'" onclick="simulateVintedConnection(event)">
-                            <i class="fas fa-sync" style="margin-right: 0.5rem;"></i>
-                            Synchroniser mes données Vinted
-                        </button>
-                    </form>
-                    
-                    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e9ecef; text-align: center;">
-                        <div style="color: #666; font-size: 0.8rem; line-height: 1.4;">
-                            🔒 Connexion sécurisée • Données chiffrées • API Officielle Vinted
-                        </div>
-                    </div>
-                </div>
-            `;
+            // Cacher le dashboard
+            document.getElementById('user-dashboard').style.display = 'none';
             
-            document.body.appendChild(modal);
+            // Réafficher la page d'accueil
+            document.getElementById('hero-section').style.display = 'flex';
+            document.getElementById('pricing').style.display = 'block';
+            
+            // Mettre à jour le header
+            document.querySelector('.header-login').style.display = 'block';
+            document.querySelector('.header-user').style.display = 'none';
+            
+            console.log('👋 Déconnexion effectuée');
+            
+            // Notifier l'extension
+            notifyExtension('USER_LOGGED_OUT', {});
         }
-        
-        // Fonction pour simuler la connexion Vinted (VERSION SIMPLIFIÉE)
-        function simulateVintedConnection(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            
-            // Fermer toutes les modals (méthode simple)
-            const modals = document.querySelectorAll('[style*="position: fixed"]');
-            modals.forEach(modal => {
-                if (modal.style.position === 'fixed' && modal.style.zIndex === '99999') {
-                    modal.remove();
-                }
-            });
-            
-            console.log('🔄 Début simulation connexion Vinted...');
-            showNotification('🔄 Connexion à Vinted en cours...');
-            
-            setTimeout(() => {
-                console.log('✅ Simulation: Vinted connecté');
-                // Marquer l'utilisateur comme connecté à Vinted
-                if (currentUser) {
-                    currentUser.vintedConnected = true;
-                    showNotification('✅ Compte Vinted connecté avec succès !');
-                    
-                    setTimeout(() => {
-                        console.log('📊 Simulation: Rechargement comptabilité');
-                        showNotification('📊 Synchronisation des données terminée !');
-                        // Recharger l'onglet comptabilité pour montrer les vraies données
-                        if (currentDashboardTab === 'comptabilite') {
-                            showDashboardTab('comptabilite');
-                        }
-                    }, 2000);
-                } else {
-                    console.error('❌ currentUser non défini');
-                    showNotification('❌ Erreur: utilisateur non connecté', 'error');
-                }
-            }, 3000);
-        }
-        
-        // Fonctions pour les actions de comptabilité
-        function exportComptabilite() {
-            showNotification('📊 Génération du fichier CSV...');
-            
-            setTimeout(() => {
-                // Créer les données CSV
-                let csvData = 'Date,Type,Article,Acheteur,Montant,Frais,Benefice\n';
-                
-                if (currentUser && currentUser.transactions) {
-                    currentUser.transactions.forEach(t => {
-                        csvData += `${t.date},${t.type},"${t.article}","${t.acheteur || ''}",${t.montant},${t.frais},${t.benefice}\n`;
-                    });
-                } else {
-                    // Données de démo
-                    csvData += '05/08/2025,Vente,"T-shirt Vintage","Demo_User",25.00,2.50,22.50\n';
-                    csvData += '04/08/2025,Vente,"Jean Levis","Demo_User",45.00,4.50,40.50\n';
-                }
-                
-                // Simuler le téléchargement
-                const blob = new Blob([csvData], { type: 'text/csv' });
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `comptabilite_hermes_tool_${currentUser ? currentUser.firstName : 'demo'}_${new Date().toISOString().split('T')[0]}.csv`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-                
-                showNotification('✅ Fichier comptabilité téléchargé !');
-            }, 2000);
-        }
-        
-        function syncVinted() {
-            if (!currentUser.vintedConnected) {
-                showNotification('⚠️ Connecte d\'abord ton compte Vinted !', 'error');
-                return;
-            }
-            
-            showNotification('🔄 Synchronisation avec Vinted...');
-            
-            // Simuler l'ajout de nouvelles transactions
-            setTimeout(() => {
-                showNotification('📥 Récupération des nouvelles ventes...');
-            }, 1000);
-            
-            setTimeout(() => {
-                showNotification('💰 2 nouvelles ventes détectées !');
-            }, 2500);
-            
-            setTimeout(() => {
-                // Ajouter quelques nouvelles transactions simulées
-                if (currentUser && currentUser.transactions) {
-                    const newTransactions = [
-                        { date: '06/08/2025', type: 'Vente', article: 'Hoodie Supreme', montant: 150.00, frais: 15.00, benefice: 135.00, acheteur: 'Nathan_R' },
-                        { date: '06/08/2025', type: 'Vente', article: 'Jordans 1 Mid', montant: 95.00, frais: 9.50, benefice: 85.50, acheteur: 'Julie_S' }
-                    ];
-                    
-                    // Ajouter au début du tableau
-                    currentUser.transactions.unshift(...newTransactions);
-                    
-                    // Mettre à jour les stats
-                    currentUser.stats.totalSales += 2;
-                    currentUser.stats.monthlyRevenue += 245;
-                }
-                
-                showNotification('✅ Données Vinted synchronisées ! 2 nouvelles ventes ajoutées.');
-                
-                // Recharger l'onglet comptabilité
-                showDashboardTab('comptabilite');
-            }, 4000);
-        }
-        
-        function calculerTaxes() {
-            showNotification('🧮 Calcul des taxes en cours...');
-            
-            setTimeout(() => {
-                let totalBenefice = 0;
-                
-                if (currentUser && currentUser.transactions) {
-                    totalBenefice = currentUser.transactions
-                        .filter(t => t.type === 'Vente')
-                        .reduce((sum, t) => sum + t.benefice, 0);
-                } else {
-                    totalBenefice = 187.10; // Données de démo
-                }
-                
-                const tauxTaxe = 0.15; // 15% estimation
-                const estimationTaxes = totalBenefice * tauxTaxe;
-                const beneficeApresImpots = totalBenefice - estimationTaxes;
-                
-                // Créer une popup avec les détails
-                const modal = document.createElement('div');
-                modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 99999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px);';
-                
-                modal.innerHTML = `
-                    <div style="background: white; border-radius: 20px; padding: 2.5rem; max-width: 500px; width: 90%; box-shadow: 0 25px 50px rgba(0,0,0,0.3); position: relative;">
-                        <button onclick="this.parentNode.parentNode.remove()" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: #8898aa; cursor: pointer;">×</button>
-                        
-                        <div style="text-align: center; margin-bottom: 2rem;">
-                            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #ff9800, #f57c00); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
-                                <i class="fas fa-percentage" style="font-size: 2rem; color: white;"></i>
-                            </div>
-                            <h2 style="color: #0a0a0c; font-size: 2rem; font-weight: bold; margin-bottom: 0.5rem;">Calcul des taxes</h2>
-                            <p style="color: #666; font-size: 1rem;">Estimation fiscale ${new Date().getFullYear()}</p>
-                        </div>
-                        
-                        <div style="background: #f8f9fa; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #e9ecef;">
-                                <span style="color: #495057; font-weight: 600;">Bénéfice total:</span>
-                                <span style="color: #28a745; font-weight: bold;">${totalBenefice.toFixed(2)}€</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #e9ecef;">
-                                <span style="color: #495057; font-weight: 600;">Estimation taxes (15%):</span>
-                                <span style="color: #dc3545; font-weight: bold;">-${estimationTaxes.toFixed(2)}€</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between;">
-                                <span style="color: #495057; font-weight: 600;">Bénéfice après impôts:</span>
-                                <span style="color: #ff8c42; font-weight: bold; font-size: 1.2rem;">${beneficeApresImpots.toFixed(2)}€</span>
-                            </div>
-                        </div>
-                        
-                        <div style="background: rgba(255, 193, 7, 0.1); border: 1px solid #ffc107; border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem;">
-                            <div style="color: #e65100; font-weight: 600; margin-bottom: 0.5rem;">
-                                <i class="fas fa-exclamation-triangle" style="margin-right: 0.5rem;"></i>
-                                Estimation indicative
-                            </div>
-                            <div style="color: #666; font-size: 0.9rem;">
-                                Consulte un expert-comptable pour un calcul précis selon ta situation fiscale.
-                            </div>
-                        </div>
-                        
-                        <button onclick="this.parentNode.parentNode.remove()" style="width: 100%; background: linear-gradient(135deg, #ff9800, #f57c00); color: white; padding: 1rem; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem;">
-                            Compris, merci !
-                        </button>
-                    </div>
-                `;
-                
-                document.body.appendChild(modal);
-                
-                showNotification(`📋 Estimation: ${estimationTaxes.toFixed(2)}€ de taxes sur ${totalBenefice.toFixed(2)}€ de bénéfices`);
-            }, 2000);
-        }
-        
-        function generateRapport() {
-            showNotification('📄 Génération du rapport PDF...');
-            
-            setTimeout(() => {
-                let totalVentes = 0;
-                let totalBenefice = 0;
-                let nombreArticles = 0;
-                
-                if (currentUser && currentUser.transactions) {
-                    const ventes = currentUser.transactions.filter(t => t.type === 'Vente');
-                    totalVentes = ventes.reduce((sum, t) => sum + t.montant, 0);
-                    totalBenefice = ventes.reduce((sum, t) => sum + t.benefice, 0);
-                    nombreArticles = ventes.length;
-                }
-                
-                // Créer une popup avec le rapport
-                const modal = document.createElement('div');
-                modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 99999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px);';
-                
-                modal.innerHTML = `
-                    <div style="background: white; border-radius: 20px; padding: 2.5rem; max-width: 700px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px rgba(0,0,0,0.3); position: relative;">
-                        <button onclick="this.parentNode.parentNode.remove()" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: #8898aa; cursor: pointer;">×</button>
-                        
-                        <div style="text-align: center; margin-bottom: 2rem;">
-                            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #9c27b0, #7b1fa2); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
-                                <i class="fas fa-file-pdf" style="font-size: 2rem; color: white;"></i>
-                            </div>
-                            <h2 style="color: #0a0a0c; font-size: 2rem; font-weight: bold; margin-bottom: 0.5rem;">Rapport Comptable</h2>
-                            <p style="color: #666; font-size: 1rem;">${currentUser ? currentUser.firstName + ' ' + currentUser.lastName : 'Utilisateur'} • ${new Date().toLocaleDateString('fr-FR')}</p>
-                        </div>
-                        
-                        <!-- Résumé -->
-                        <div style="background: #f8f9fa; border-radius: 12px; padding: 2rem; margin-bottom: 2rem;">
-                            <h3 style="color: #495057; font-size: 1.3rem; margin-bottom: 1.5rem; text-align: center;">📊 Résumé de l'activité</h3>
-                            
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; text-align: center;">
-                                <div>
-                                    <div style="color: #28a745; font-size: 1.8rem; font-weight: bold;">${totalVentes.toFixed(2)}€</div>
-                                    <div style="color: #6c757d; font-size: 0.9rem;">Chiffre d'affaires</div>
-                                </div>
-                                <div>
-                                    <div style="color: #ff8c42; font-size: 1.8rem; font-weight: bold;">${totalBenefice.toFixed(2)}€</div>
-                                    <div style="color: #6c757d; font-size: 0.9rem;">Bénéfice net</div>
-                                </div>
-                                <div>
-                                    <div style="color: #9c27b0; font-size: 1.8rem; font-weight: bold;">${nombreArticles}</div>
-                                    <div style="color: #6c757d; font-size: 0.9rem;">Articles vendus</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Informations légales -->
-                        <div style="background: rgba(255, 193, 7, 0.1); border: 1px solid #ffc107; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
-                            <h4 style="color: #e65100; margin-bottom: 1rem;">
-                                <i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>
-                                Informations importantes
-                            </h4>
-                            <ul style="color: #666; margin: 0; padding-left: 1.2rem; line-height: 1.6;">
-                                <li>Ce rapport est généré automatiquement par Hermès Tool</li>
-                                <li>Les données proviennent de ton compte Vinted connecté</li>
-                                <li>Consulte un expert-comptable pour tes déclarations officielles</li>
-                                <li>Conserve tes justificatifs de vente originaux</li>
-                            </ul>
-                        </div>
-                        
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                            <button onclick="window.print()" style="background: linear-gradient(135deg, #2196f3, #1976d2); color: white; padding: 1rem; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem;">
-                                <i class="fas fa-print" style="margin-right: 0.5rem;"></i>
-                                Imprimer
-                            </button>
-                            
-                            <button onclick="this.parentNode.parentNode.remove()" style="background: linear-gradient(135deg, #4caf50, #45a049); color: white; padding: 1rem; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem;">
-                                <i class="fas fa-check" style="margin-right: 0.5rem;"></i>
-                                Terminé
-                            </button>
-                        </div>
-                    </div>
-                `;
-                
-                document.body.appendChild(modal);
-                
-                showNotification('✅ Rapport comptable PDF généré !');
-            }, 2500);
-        }
-        
-        function loadMoreTransactions() {
-            showNotification('📊 Chargement de transactions supplémentaires...');
-        }
-        
-        // Fonction pour afficher l'avertissement de sécurité
-        function showSecurityWarning() {
-            setTimeout(() => {
-                const modal = document.createElement('div');
-                modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); z-index: 99999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px);';
-                
-                modal.innerHTML = `
-                    <div style="background: white; border-radius: 20px; padding: 3rem; max-width: 600px; width: 90%; box-shadow: 0 25px 50px rgba(0,0,0,0.5); position: relative; border: 3px solid #f44336;">
-                        
-                        <div style="text-align: center; margin-bottom: 2rem;">
-                            <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #f44336, #d32f2f); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; animation: pulse 2s infinite;">
-                                <i class="fas fa-shield-alt" style="font-size: 3rem; color: white;"></i>
-                            </div>
-                            <h2 style="color: #d32f2f; font-size: 2.2rem; font-weight: bold; margin-bottom: 1rem;">🔒 SÉCURITÉ IMPORTANTE</h2>
-                        </div>
-                        
-                        <div style="background: rgba(244, 67, 54, 0.1); border: 2px solid #f44336; border-radius: 15px; padding: 2rem; margin-bottom: 2rem;">
-                            <h3 style="color: #d32f2f; font-weight: bold; margin-bottom: 1rem; font-size: 1.3rem;">
-                                ⚠️ Mots de passe exposés dans le chat !
-                            </h3>
-                            <div style="color: #666; line-height: 1.6; margin-bottom: 1.5rem;">
-                                Tu as partagé tes <strong>vrais mots de passe</strong> dans notre conversation. C'est <strong>très risqué</strong> !
-                            </div>
-                            
-                            <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
-                                <div style="color: #856404; font-weight: bold; margin-bottom: 0.5rem;">🚨 Actions URGENTES à faire :</div>
-                                <ul style="color: #856404; margin: 0; padding-left: 1.2rem;">
-                                    <li>Change ton mot de passe <strong>Hermès Tool</strong> immédiatement</li>
-                                    <li>Change ton mot de passe <strong>Vinted</strong> immédiatement</li>
-                                    <li>Active la <strong>double authentification</strong> sur tes comptes</li>
-                                </ul>
-                            </div>
-                        </div>
-                        
-                        <div style="background: rgba(76, 175, 80, 0.1); border: 1px solid #4caf50; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
-                            <div style="color: #2e7d32; font-weight: bold; margin-bottom: 0.5rem;">
-                                <i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>
-                                Cette démo est sécurisée
-                            </div>
-                            <div style="color: #666; font-size: 0.9rem;">
-                                J'ai utilisé un mot de passe de démo et des données simulées pour protéger tes vrais identifiants.
-                            </div>
-                        </div>
-                        
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                            <button onclick="this.parentNode.parentNode.remove()" style="background: linear-gradient(135deg, #f44336, #d32f2f); color: white; padding: 1rem; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem;">
-                                <i class="fas fa-exclamation-triangle" style="margin-right: 0.5rem;"></i>
-                                Je vais changer mes MDP !
-                            </button>
-                            
-                            <button onclick="window.open('https://support.google.com/accounts/answer/185833', '_blank')" style="background: linear-gradient(135deg, #2196f3, #1976d2); color: white; padding: 1rem; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem;">
-                                <i class="fas fa-shield-alt" style="margin-right: 0.5rem;"></i>
-                                Guide sécurité
-                            </button>
-                        </div>
-                        
-                        <div style="text-align: center; margin-top: 1.5rem; color: #666; font-size: 0.8rem;">
-                            💡 Règle d'or : Ne JAMAIS partager de vrais mots de passe dans un chat ou email
-                        </div>
-                    </div>
-                `;
-                
-                document.body.appendChild(modal);
-            }, 3000);
-        }
-        
-        // Fonctions de navigation smooth
-        function scrollToSection(sectionId) {
-            const section = document.getElementById(sectionId);
-            if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-        
-        function playDemo() {
-            showNotification('🎥 Démo bientôt disponible !');
-        }
-        
-        // Initialisation au chargement
-        document.addEventListener('DOMContentLoaded', function() {
-            try {
-                // Initialiser Stripe
-                initializeStripe();
-                
-                // Animation on scroll
-                const observerOptions = {
-                    threshold: 0.1,
-                    rootMargin: '0px 0px -50px 0px'
-                };
 
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.style.opacity = '1';
-                            entry.target.style.transform = 'translateY(0)';
-                        }
-                    });
-                }, observerOptions);
+        // Afficher le dashboard utilisateur
+        function showUserDashboard() {
+            // Cacher les sections publiques
+            document.getElementById('hero-section').style.display = 'none';
+            document.getElementById('pricing').style.display = 'none';
+            
+            // Afficher le dashboard
+            document.getElementById('user-dashboard').style.display = 'block';
+            
+            // Mettre à jour le header
+            document.querySelector('.header-login').style.display = 'none';
+            document.querySelector('.header-user').style.display = 'flex';
+            
+            // Mettre à jour les infos utilisateur
+            updateUserInterface();
+        }
 
-                // Observer les cards
-                setTimeout(() => {
-                    document.querySelectorAll('.feature-card, .testimonial-card, .pricing-card').forEach(card => {
-                        card.style.transition = 'all 0.8s ease-out';
-                        observer.observe(card);
-                    });
-                }, 100);
-
-                // Header scroll effect
-                window.addEventListener('scroll', () => {
-                    const header = document.querySelector('.header');
-                    if (header) {
-                        if (window.scrollY > 100) {
-                            header.style.background = 'linear-gradient(135deg, rgba(10,10,12,0.95) 0%, rgba(26,26,30,0.95) 100%)';
-                            header.style.backdropFilter = 'blur(10px)';
-                        } else {
-                            header.style.background = 'linear-gradient(135deg, #0a0a0c 0%, #1a1a1e 100%)';
-                            header.style.backdropFilter = 'none';
-                        }
-                    }
+        // Mettre à jour l'interface utilisateur
+        function updateUserInterface() {
+            if (currentUser) {
+                // Email
+                document.querySelectorAll('[data-user-email]').forEach(el => {
+                    el.textContent = currentUser.email;
                 });
                 
-                console.log('✅ Hermès Tool PRODUCTION avec Dashboard Navigation + Vraies données ! 💰🏠📊');
+                // Plan
+                document.querySelectorAll('[data-user-plan]').forEach(el => {
+                    el.textContent = currentUser.plan || 'Néophyte';
+                });
                 
-            } catch (error) {
-                console.error('❌ Erreur d\'initialisation:', error);
+                // Nom
+                document.querySelectorAll('[data-user-name]').forEach(el => {
+                    el.textContent = currentUser.firstName || 'Utilisateur';
+                });
             }
-        });
-        
-        console.log('🎯 Hermès Tool - PRODUCTION LIVE avec Dashboard Navigation ! 💰🏠');
+        }
+
+        // Notification vers l'extension Chrome
+        function notifyExtension(type, data) {
+            // Cette fonction essaie de communiquer avec l'extension si elle est installée
+            if (window.chrome && window.chrome.runtime) {
+                try {
+                    // L'extension écoutera ces messages
+                    window.postMessage({
+                        source: 'hermes-tool-website',
+                        type: type,
+                        data: data
+                    }, '*');
+                } catch (e) {
+                    // L'extension n'est pas installée ou pas active
+                }
+            }
+        }
+
+        // Fermer la modal en cliquant à l'extérieur
+        window.onclick = function(event) {
+            const modal = document.getElementById('authModal');
+            if (event.target === modal) {
+                closeAuthModal();
+            }
+        }
+
+        // Vérifier périodiquement la validité de la session
+        setInterval(() => {
+            const savedSession = localStorage.getItem('hermesUserSession');
+            if (savedSession) {
+                const session = JSON.parse(savedSession);
+                if (new Date().getTime() > session.expiresAt) {
+                    handleLogout();
+                    alert('⏰ Votre session a expiré, veuillez vous reconnecter');
+                }
+            }
+        }, 60000); // Vérifier toutes les minutes
     </script>
 </body>
 </html>
