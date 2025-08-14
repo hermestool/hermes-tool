@@ -1,5 +1,5 @@
 // netlify/functions/auth-extension.js
-// Authentification unifiée pour l'extension
+// Authentification unifiée pour l'extension Chrome
 
 exports.handler = async (event, context) => {
     const headers = {
@@ -24,6 +24,8 @@ exports.handler = async (event, context) => {
     try {
         const { action, email, password, token } = JSON.parse(event.body);
         
+        console.log('🔐 Auth request:', action, email ? '✓' : '✗');
+        
         switch(action) {
             case 'login':
                 return await handleLogin(email, password, headers);
@@ -39,6 +41,7 @@ exports.handler = async (event, context) => {
                 };
         }
     } catch (error) {
+        console.error('❌ Erreur auth:', error);
         return {
             statusCode: 500,
             headers,
@@ -48,7 +51,7 @@ exports.handler = async (event, context) => {
 };
 
 async function handleLogin(email, password, headers) {
-    // Base de données temporaire (même que validate-user.js)
+    // Base de données temporaire unifiée
     const validUsers = {
         'admin@hermestool.com': {
             password: 'admin123',
@@ -79,8 +82,9 @@ async function handleLogin(email, password, headers) {
     const user = validUsers[email?.toLowerCase()];
     
     if (!user || user.password !== password) {
+        console.log('❌ Auth failed for:', email);
         return {
-            statusCode: 401,
+            statusCode: 200,
             headers,
             body: JSON.stringify({ 
                 success: false, 
@@ -89,8 +93,10 @@ async function handleLogin(email, password, headers) {
         };
     }
     
-    // Générer un token qui dure 30 jours
-    const token = generateLongLivedToken(email);
+    // Générer un token unique
+    const token = generateToken(email);
+    
+    console.log('✅ Auth success for:', email);
     
     return {
         statusCode: 200,
@@ -103,6 +109,8 @@ async function handleLogin(email, password, headers) {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 plan: user.plan,
+                userId: Buffer.from(email).toString('base64'),
+                tokenCreatedAt: new Date().toISOString(),
                 features: getPlanFeatures(user.plan)
             }
         })
@@ -112,7 +120,7 @@ async function handleLogin(email, password, headers) {
 async function verifyToken(token, headers) {
     if (!token) {
         return {
-            statusCode: 401,
+            statusCode: 200,
             headers,
             body: JSON.stringify({ 
                 success: false, 
@@ -121,73 +129,60 @@ async function verifyToken(token, headers) {
         };
     }
     
-    const decoded = decodeToken(token);
-    
-    if (!decoded || !decoded.email) {
+    try {
+        const decoded = decodeToken(token);
+        
+        if (!decoded || !decoded.email || decoded.expired) {
+            return {
+                statusCode: 200,
+                headers,
+                body: JSON.stringify({ 
+                    success: false, 
+                    error: 'Token invalide ou expiré' 
+                })
+            };
+        }
+        
+        console.log('✅ Token valid for:', decoded.email);
+        
         return {
-            statusCode: 401,
+            statusCode: 200,
+            headers,
+            body: JSON.stringify({
+                success: true,
+                email: decoded.email
+            })
+        };
+        
+    } catch (error) {
+        return {
+            statusCode: 200,
             headers,
             body: JSON.stringify({ 
                 success: false, 
-                error: 'Token invalide ou expiré' 
+                error: 'Token invalide' 
             })
         };
     }
-    
-    // Pour l'instant on retourne des données statiques
-    // En prod : récupérer depuis la BDD
-    const userData = {
-        'admin@hermestool.com': { plan: 'Archon', firstName: 'Admin' },
-        'shinolegrandieu@gmail.com': { plan: 'Archon', firstName: 'Shino' },
-        'collabwilly@gmail.com': { plan: 'Métrios', firstName: 'Willy' },
-        'test@hermestool.com': { plan: 'Néophyte', firstName: 'Test' }
-    };
-    
-    const user = userData[decoded.email];
-    
-    if (!user) {
-        return {
-            statusCode: 401,
-            headers,
-            body: JSON.stringify({ 
-                success: false, 
-                error: 'Utilisateur non trouvé' 
-            })
-        };
-    }
-    
-    return {
-        statusCode: 200,
-        headers,
-        body: JSON.stringify({
-            success: true,
-            user: {
-                email: decoded.email,
-                firstName: user.firstName,
-                plan: user.plan,
-                features: getPlanFeatures(user.plan)
-            }
-        })
-    };
 }
 
-function generateLongLivedToken(email) {
-    const expiresAt = Date.now() + (30 * 24 * 60 * 60 * 1000); // 30 jours
-    const random = Math.random().toString(36).substr(2, 9);
-    const data = `${email}:${expiresAt}:${random}`;
+function generateToken(email) {
+    const timestamp = Date.now();
+    const expiry = timestamp + (30 * 24 * 60 * 60 * 1000); // 30 jours
+    const random = Math.random().toString(36).substr(2, 15);
+    const data = `${email}|${timestamp}|${expiry}|${random}`;
     return Buffer.from(data).toString('base64');
 }
 
 function decodeToken(token) {
     try {
         const decoded = Buffer.from(token, 'base64').toString();
-        const [email, expiresAt] = decoded.split(':');
+        const [email, timestamp, expiry] = decoded.split('|');
         
-        if (Date.now() > parseInt(expiresAt)) {
-            return null; // Token expiré
-        }
+        const now = Date.now();
+        const expired = now > parseInt(expiry);
         
-        return { email };
+        return { email, timestamp, expiry, expired };
     } catch {
         return null;
     }
@@ -199,34 +194,23 @@ function getPlanFeatures(plan) {
             maxItems: 100,
             autoRepost: true,
             basicAnalytics: true,
-            emailSupport: true,
-            aiMessages: false,
-            multiAccounts: false,
-            prioritySupport: false
+            emailSupport: true
         },
         'Métrios': {
             maxItems: 500,
             autoRepost: true,
-            basicAnalytics: true,
             advancedAnalytics: true,
-            emailSupport: true,
             aiMessages: true,
-            imageGeneration: true,
-            multiAccounts: false,
             prioritySupport: true
         },
         'Archon': {
             maxItems: -1,
             autoRepost: true,
-            basicAnalytics: true,
             advancedAnalytics: true,
-            emailSupport: true,
             aiMessages: true,
-            imageGeneration: true,
             multiAccounts: true,
-            prioritySupport: true,
             apiAccess: true,
-            customAutomation: true
+            prioritySupport: true
         }
     };
     
